@@ -63,8 +63,8 @@
 #let wedge = math.and
 #let wedgespace = math.scripts(math.inline(wedge.big))
 #let hodge = math.class("unary", math.star)
-#let sharp = "♯"
-#let flat = "♭"
+#let sharp = sym.sharp
+#let flat = sym.flat
 
 #let dif = math.class("unary", math.upright($d$))
 
@@ -87,3 +87,14 @@
 #let vol = "vol"
 
 #let dom = "dom"
+
+// Approximate-magnitude prefix: tight tilde (unary class, no operator spacing).
+#let ap = math.class("unary", sym.tilde.op)
+
+// Render a CSV scientific-notation string "a.bce-0d" as $a.bc times 10^(-d)$.
+#let sci(s) = {
+  let parts = s.split("e")
+  let mant = calc.round(float(parts.at(0)), digits: 2)
+  let exp = int(parts.at(1))
+  $#mant times 10^#exp$
+}

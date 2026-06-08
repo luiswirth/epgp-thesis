@@ -1,6 +1,6 @@
 #import "../setup-math.typ": *
 
-= Numerical Implementation
+= Numerical Implementation <sec:impl>
 
 In numerical realization, both transmitter and receiver locations are chosen as
 vertices of a triangulation of $Lambda$. For each transmitting dipole indexed
@@ -68,7 +68,7 @@ EP-GP posterior.
 == Deterministic Reference Solution
 
 For the deterministic baseline and the generation of reference solutions,
-the Boundary Element Method (BEM) library Bembel @bembel will be used.
+the Boundary Element Method (BEM) library Bembel @bembel was used.
 
 Bembel provides an isogeometric boundary element implementation for
 three-dimensional electromagnetic problems and allows efficient solution of the
@@ -76,7 +76,7 @@ interior curl--curl equation in smooth geometries.
 
 == Probabilistic Reconstruction
 
-The thesis project will take advantage of and extend the software implementation
+The thesis project took advantage of and extended the software implementation
 of the EP-GP framework developed in the context of @felix.
 
 The Gaussian process workflow is structured as follows. First, an EP plane-wave
@@ -96,7 +96,7 @@ curl--curl equation in $D$, which is a direct consequence of the source-free
 time-harmonic Maxwell system. The EP prior considered in enforces the full
 homogeneous Maxwell system exactly and therefore automatically satisfies the
 curl-curl equation. Since the problem is purely interior, no radiation condition
-is required. Moreover, the reaction field is smooth throughout $D$, making it
+is required. The reaction field is also smooth throughout $D$, making it
 well matched to spectral and plane-wave representations.
 
 

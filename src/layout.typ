@@ -29,6 +29,8 @@
   content
 )
 
+#let remark(body) = [*Remark:* #body]
+
 #let circletext(content) = box(
   baseline: 0.2em,
   stroke: fgcolor,

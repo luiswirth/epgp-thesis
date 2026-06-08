@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-typst build src/main.typ out/thesis.pdf --root $(pwd)
+typst compile src/main.typ out/thesis.pdf --root $(pwd)

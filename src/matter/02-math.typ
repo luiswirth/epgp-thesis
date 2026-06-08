@@ -19,7 +19,7 @@
 - not whole EP theory, but explain how to enfroce homogeneous Maxwell system.
 - Details see @felix.
 
-Geometric construction of EP plane-wave Gaussian process priors for Maxwell’s
+Geometric construction of EP plane-wave Gaussian process priors for Maxwell's
 equations.
 
 == Boundary Element Method

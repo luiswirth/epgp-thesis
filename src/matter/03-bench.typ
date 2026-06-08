@@ -43,7 +43,7 @@ We use a wavevector $k=2$.
 
 == Forward Model
 
-Mapping the transmitter dipole to the incident field and calculating the boundary trace on ∂D
+Mapping the transmitter dipole to the incident field and calculating the boundary trace on $partial D$
 
 == Probabilistic Reconstruction
 
@@ -51,7 +51,7 @@ How the EP-GP prior is conditioned on the boundary data
 
 == Receiver Evaluation
 
-Extracting the tangential traces on Λ to build the deterministic response map
+Extracting the tangential traces on $Lambda$ to build the deterministic response map
 
 
 

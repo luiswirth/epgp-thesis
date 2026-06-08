@@ -7,7 +7,7 @@
 First-Principles AI, physics-informed machine learning, the need for exact physics constraints
 
 This semester thesis is part of an ongoing research effort @felix on
-constructing Gaussian process (GP) priors that intrinsically satisfy Maxwell’s
+constructing Gaussian process (GP) priors that intrinsically satisfy Maxwell's
 equations. The approach follows a geometric perspective based on differential
 forms and Hertz potential.
 
@@ -25,9 +25,9 @@ a physically meaningful, non-trivial test case that
 - admits synthetic data generation,
 - is particularly well matched to an EP plane wave GP prior (purely interior, no radiation conditions)
 
-The goal of the semester thesis is to establish this benchmark as a robust
-numerical example for probabilistic field reconstruction suitable for
-publication. For a selected set of transmitting dipoles on $Lambda$, the
+The goal of the semester thesis is to establish this benchmark as a
+high-fidelity numerical example for probabilistic field reconstruction suitable
+for publication. For a selected set of transmitting dipoles on $Lambda$, the
 deterministic excitation map from dipole sources to boundary data on $partial
 D$ was computed explicitly. Based on these boundary traces, an EP
 plane-wave Gaussian process prior enforcing the homogeneous Maxwell system
