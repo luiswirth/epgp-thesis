@@ -17,7 +17,7 @@
   key: r => int(r.at(0))
 )
 
-= Results and Discussion
+= Results and Discussion <sec:results>
 
 This chapter reports the numerical results of the benchmark. We first establish
 the deterministic BEM reference and characterize its convergence in @sec:res-bem,

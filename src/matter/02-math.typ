@@ -1,6 +1,6 @@
 #import "../setup-math.typ": *
 
-= Mathematical Background
+= Mathematical Background <sec:math>
 
 == Time-Harmonic Maxwell's Equations
 

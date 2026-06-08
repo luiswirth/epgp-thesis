@@ -74,12 +74,12 @@
       v(30pt)
     } else {
       let size = 20pt - 4pt * (it.level - 1)
-      set text(size, weight: "bold")
-      v(size, weak: true)
-      counter(heading).display()
-      h(size, weak: true)
-      it.body
-      v(size, weak: true)
+      block(sticky: true, above: size, below: size, {
+        set text(size, weight: "bold")
+        counter(heading).display()
+        h(size, weak: true)
+        it.body
+      })
     }
   }
 
@@ -102,12 +102,12 @@
       v(30pt)
     } else {
       let size = 20pt - 4pt * (it.level - 1)
-      set text(size, weight: "bold")
-      v(size, weak: true)
-      counter(heading).display()
-      h(size, weak: true)
-      it.body
-      v(size, weak: true)
+      block(sticky: true, above: size, below: size, {
+        set text(size, weight: "bold")
+        counter(heading).display()
+        h(size, weak: true)
+        it.body
+      })
     }
   }
 
@@ -127,12 +127,12 @@
       v(50pt, weak: true)
     } else {
       let size = 20pt - 4pt * (it.level - 1)
-      set text(size, weight: "bold")
-      v(size, weak: true)
-      counter(heading).display()
-      h(size, weak: true)
-      it.body
-      v(size, weak: true)
+      block(sticky: true, above: size, below: size, {
+        set text(size, weight: "bold")
+        counter(heading).display()
+        h(size, weak: true)
+        it.body
+      })
     }
   }
 

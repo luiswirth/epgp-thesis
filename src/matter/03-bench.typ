@@ -1,6 +1,6 @@
 #import "../setup-math.typ": *
 
-= Benchmark Formulation
+= Benchmark Formulation <sec:bench>
 
 
 Reaction-field formulation for interior
