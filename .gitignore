@@ -1,0 +1,5 @@
+out/
+*.pdf
+
+# exclude res, in draft phase
+res/
