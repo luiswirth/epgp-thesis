@@ -137,7 +137,7 @@ shared, so agreement of the computed operators validates both simultaneously.
 
 We quantify it by the relative difference of the two operators,
 $
-  epsilon := norm(amat(T)_"EPGP" - amat(T)_"BEM") / norm(amat(T)_"BEM"),
+  epsilon := norm(amat(T)_"EPGP" - amat(T)_"BEM") / norm(amat(T)_"BEM")
 $ <eq:epsilon>
 measured against the p4m4 BEM reference. As reported in @tab:comparison
 and plotted in @fig:comparison, $epsilon$ decreases monotonically with $n_"spec"$,

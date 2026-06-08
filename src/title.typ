@@ -60,11 +60,11 @@
 
 #v(1cm)
 Supervised by\
-#v(0.2cm)
-#text(21pt)[
+#v(0.1cm)
+#text(16pt)[
   _Prof. Dr.-Ing. Stefan Kurz_ \
 ]
-ETH Zurich, Seminar for Applied Mathematics
+Seminar for Applied Mathematics
 
 #[
   #set align(bottom)
