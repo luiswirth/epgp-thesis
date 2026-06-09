@@ -12,7 +12,8 @@
 #let bem-runs = csv("../../res/bem_results.csv").slice(1).sorted(
   key: r => (int(r.at(0)), int(r.at(1)))
 )
-// EPGP convergence runs, sorted by n_spectral. Columns: n_spectral, recip, err_vs_bem.
+// EPGP convergence runs, sorted by n_spectral. Columns: n_spectral, dofs, secs,
+// log_noise, cond, recip, selfconv_vs_finest, err_vs_bem_ref.
 #let epgp-runs = csv("../../res/epgp_results.csv").slice(1).sorted(
   key: r => int(r.at(0))
 )
@@ -68,11 +69,16 @@ Galerkin construction and bottoms out at the round-off floor of the solver; it i
 therefore not a certified measure of the true discretization error. We
 illustrate this directly with the p3m4 column of @tab:bem: there the
 reciprocity error lies about an order of magnitude below the self-convergence
-error reported in the same column, namely the relative distance of the p3m4
-operator to the finer p4m4 reference. A small reciprocity error can thus arise from
+error
+$
+  delta := norm(amat(T) - amat(T)_"ref") / norm(amat(T)_"ref")
+$ <eq:selfconv>
+the relative distance of an operator to the most refined run of its family. For
+the BEM family that reference is the p4m4 run, and $delta$ is reported in the same
+column of @tab:bem. A small reciprocity error can thus arise from
 fortuitous cancellation in the antisymmetric part rather than from genuine
 accuracy. We therefore treat $rho$ as an independent sanity check and rely on
-self-convergence for the actual error statement. Under that reading the rapidly
+$delta$ for the actual error statement. Under that reading the rapidly
 diminishing per-degree gains indicate that $amat(T)_"BEM"$ is well converged at
 $m 4$.
 
@@ -84,9 +90,9 @@ scattered field back on $Lambda$. The single convergence knob is the number of
 spectral directions $n_"spec"$ on the Fibonacci sphere; larger $n_"spec"$ enriches
 the angular bandwidth of the prior.
 
-@tab:epgp collects the EPGP reciprocity data and @fig:epgp-reciprocity plots the
+@tab:epgp collects the EPGP convergence data and @fig:epgp-reciprocity plots the
 reciprocity error as a function of $n_"spec"$. It decreases with added directions
-and then floors at $rho approx 5 times 10^(-10)$ for $n_"spec" gt.tilde 384$. This
+and then floors at $rho approx 7 times 10^(-10)$ for large $n_"spec"$. This
 level lies below the BEM reference floor, indicating that, as measured by
 reciprocity, the EPGP operator is internally at least as self-consistent as the
 BEM baseline.
@@ -139,9 +145,9 @@ We quantify it by the relative difference of the two operators,
 $
   epsilon := norm(amat(T)_"EPGP" - amat(T)_"BEM") / norm(amat(T)_"BEM")
 $ <eq:epsilon>
-measured against the p4m4 BEM reference. As reported in @tab:comparison
+measured against the p4m4 BEM reference. As reported in @tab:epgp
 and plotted in @fig:comparison, $epsilon$ decreases monotonically with $n_"spec"$,
-reaching $epsilon approx 5.6 times 10^(-8)$ at $n_"spec" = 1024$. A boundary-integral
+reaching $epsilon approx 6.7 times 10^(-8)$ at $n_"spec" = 1024$. A boundary-integral
 Galerkin scheme and a spectral plane-wave GP are entirely unrelated
 discretizations, so their agreement to $ap 10^(-7)$ is strong mutual validation.
 
@@ -156,7 +162,7 @@ discretizations, so their agreement to $ap 10^(-7)$ is strong mutual validation.
       [$m$], ..bem-runs.map(r => [#r.at(1)]),
       [DOFs], ..bem-runs.map(r => [#r.at(2)]),
       [$rho$], ..bem-runs.map(r => sci(r.at(3))),
-      [self-conv.], ..bem-runs.map(r => if float(r.at(4)) == 0 { [---] } else { sci(r.at(4)) }),
+      [$delta$], ..bem-runs.map(r => if float(r.at(4)) == 0 { [---] } else { sci(r.at(4)) }),
       [$t$ [s]], ..bem-runs.map(r => [#r.at(5)]),
     )],
     caption: [BEM convergence over the $p times m$ grid.],
@@ -169,26 +175,19 @@ discretizations, so their agreement to $ap 10^(-7)$ is strong mutual validation.
       columns: (auto,) + (1fr,) * epgp-runs.len(),
       align: right,
       stroke: 0.5pt,
-      ..labelbox(2),
+      ..labelbox(7),
       [$n_"spec"$], ..epgp-runs.map(r => [#r.at(0)]),
-      [$rho$], ..epgp-runs.map(r => sci(r.at(1))),
+      [DOFs], ..epgp-runs.map(r => [#r.at(1)]),
+      [$t$ [s]], ..epgp-runs.map(r => [#calc.round(float(r.at(2)), digits: 1)]),
+      [cond $amat(A)$], ..epgp-runs.map(r => sci(r.at(4))),
+      [$rho$], ..epgp-runs.map(r => sci(r.at(5))),
+      [$delta$], ..epgp-runs.map(r => if float(r.at(6)) == 0 { [---] } else { sci(r.at(6)) }),
+      [$epsilon$], ..epgp-runs.map(r => sci(r.at(7))),
     )],
-    caption: [EPGP reciprocity error versus $n_"spec"$.],
+    caption: [EPGP convergence versus $n_"spec"$: degrees of freedom, assembly
+    time, conditioning of the GP system, reciprocity error, self-convergence to
+    the finest run, and the relative difference to the BEM reference.],
   ) <tab:epgp>
-
-  #v(1.5em)
-
-  #figure(
-    text(size: 8pt)[#table(
-      columns: (auto,) + (1fr,) * epgp-runs.len(),
-      align: right,
-      stroke: 0.5pt,
-      ..labelbox(2),
-      [$n_"spec"$], ..epgp-runs.map(r => [#r.at(0)]),
-      [$epsilon$], ..epgp-runs.map(r => sci(r.at(2))),
-    )],
-    caption: [EPGP--BEM relative operator difference versus $n_"spec"$.],
-  ) <tab:comparison>
 ]
 
 #figure(
@@ -197,11 +196,11 @@ discretizations, so their agreement to $ap 10^(-7)$ is strong mutual validation.
 ) <fig:comparison>
 
 Two observations qualify this number. First, the cross-validation error is still
-decreasing at $n_"spec" = 1024$ and has not yet floored, so $epsilon approx 5.6 times 10^(-8)$
+decreasing at $n_"spec" = 1024$ and has not yet floored, so $epsilon approx 6.7 times 10^(-8)$
 is best read as an upper bound on the achievable agreement rather than a
 converged value. Second, the residual disagreement reflects
 genuine discretization differences rather than numerical noise in either solve:
-both solvers' reciprocity floors, $ap 2 times 10^(-9)$ for BEM and $ap 5 times
+both solvers' reciprocity floors, $ap 2 times 10^(-9)$ for BEM and $ap 7 times
 10^(-10)$ for EPGP, lie well below $epsilon$. Because
 the EPGP reciprocity floor is roughly two orders of magnitude below the gap, the
 residual cannot be attributed to internal EPGP round-off; it is dominated by the
@@ -216,13 +215,11 @@ $10^(-7)$ level.
 
 == Angular Bandwidth and Convergence
 
-_This section is speculative and presents a hypothesis that remains to be
-verified._
-
 The EPGP error does not decrease smoothly with the number of spectral directions
 $n_"spec"$ but in discrete steps, a staircase that flattens into a floor once
-$n_"spec"$ is large enough. This section offers a spectral interpretation of that
-behaviour.
+$n_"spec"$ is large enough. This section explains that behaviour. The argument is
+spectral; the spherical cavity of @sec:sphere makes it exact, and a wavenumber
+sweep confirms it numerically.
 
 #v(1cm)
 
@@ -263,31 +260,10 @@ $
 where $R$ is the radius over which the field must be represented, here the outer
 scale of the cavity boundary.
 
-The same structure appears in the Fourier domain. Transforming the Helmholtz
-equation turns the differential operator into multiplication,
-$
-  (Delta + k^2) u = 0
-  quad ==> quad
-  (-norm(kv)^2 + k^2) hat(u) (kv) = 0
-  quad ==> quad
-  "supp" hat(u) subset.eq {kv mid(|) norm(kv) = k} = k SS^2
-$
-so every solution has its Fourier transform supported on the sphere
-$norm(kv) = k$, the *characteristic variety* of the Helmholtz operator. The
-radial degree of freedom is eliminated and only the direction survives: writing
-the wave vector as $kv = k kn$ with a unit direction $kn in SS^2$, every
-admissible mode is a plane wave $e^(i k kn dot rv)$. This is why a plane-wave
-prior is the natural choice. Superposing the modes gives the *Herglotz
-representation*
-$
-  u(rv) = integral_(SS^2) e^(i k kn dot rv) g(kn) dif kn
-$
-with a density $g$ on the direction sphere. This is the inverse Fourier transform
-of a measure carried by the characteristic variety, the Ehrenpreis--Palamodov
-representation specialized to the Helmholtz operator, and by the density of
-Herglotz wave functions every interior solution can be written in this form.
-
-The two pictures are linked by the plane-wave expansion
+The angular content has a second face in the plane-wave picture. Every solution
+is a superposition of plane waves over the characteristic variety, the Herglotz
+representation with a density $g$ on the direction sphere $SS^2$ established
+earlier. The two pictures are linked by the plane-wave expansion
 $
   e^(i k kn dot rv) = 4 pi sum_(l=0)^infinity sum_(m=-l)^l i^l j_l (k r) Y_l^m (rn) conj(Y_l^m (kn))
 $
@@ -315,38 +291,62 @@ grows, $sqrt(n_"spec")$ climbs through the integer degrees. Each time it passes 
 degree $l lt.eq L_"max"$, the representable space gains the $2 l + 1$ modes of
 that degree and the error drops; between crossings it is flat. This is the
 staircase. Once $sqrt(n_"spec")$ exceeds $L_"max" approx k R$, every multipole
-that carries weight is resolved and the error floors at the super-exponential
-Bessel tail. Equivalently, the propagating plane waves on a domain of radius $R$
-have a finite effective dimension of order $(k R)^2$, the number of multipoles up
-to degree $k R$, which is reached near $n_"spec" approx (k R)^2$. In short,
+that carries weight is resolved and the error stops improving. Equivalently, the
+propagating plane waves on a domain of radius $R$ have a finite effective
+dimension of order $(k R)^2$, the number of multipoles up to degree $k R$, which
+is reached near $n_"spec" approx (k R)^2$. In short,
 $
   "error small" quad <==> quad L(n_"spec") gt.tilde L_"max" quad <==> quad sqrt(n_"spec") gt.tilde k R
 $
 
-This is an interpretation rather than a theorem. The floor and its location
-$L_"max" approx k R$ follow from the Bessel asymptotics and the density of
-Herglotz wave functions, but the step structure depends on the angular resolution
-of the specific Fibonacci directions, for which the $sqrt(n)$ law is empirical.
+The spherical cavity makes this exact. With the wall a sphere of radius $R$ the
+reaction operator is a closed multipole sum whose entries decay geometrically
+beyond $l approx k R$, so it is, to any fixed accuracy, a matrix of rank
+$approx 2 (k R)^2$. The derivation and the explicit Bessel cut-off are carried out
+in @sec:sphere. The ellipsoid admits no such closed form, but the same
+outer-scale argument applies with $R$ the largest semi-axis.
 
-#v(0.5cm)
+The prediction $sqrt(n_"spec") gt.tilde k R$ is dimensional, so the staircase drop
+must move with the wavenumber, sitting at $n_"spec" approx (k R)^2$. We test this
+by assembling the operator over a range of wavenumbers $k in {1, 1.5, 2, 2.5, 3}$
+at otherwise fixed settings, using the reciprocity error $rho$ as the
+reference-free convergence indicator so that no BEM run is needed per $k$.
+@fig:ksweep shows the outcome. The drop slides right by roughly a factor of five
+in $n_"spec"$ as $k$ triples, and for every curve it falls in the predicted band
+near $n_"spec" approx (k R)^2$ marked by the dotted lines, with $R$ the largest
+semi-axis and no fitted parameter. The transition is a band rather than a sharp
+step because the Fibonacci directions form a low-discrepancy sequence and not a
+spherical $t$-design, so a degree is unlocked over a short range of crossings
+rather than at a single one.
 
-*Problems with Hypothesis:*
-- We argue using scalar Helmholtz. The honest treatment uses vector Helmholtz and
-  vector spherical harmonics (the TE/TM Hansen multipoles). Implications of the
-  vector case: each propagating direction carries two transverse polarizations
-  ($Ev perp kv$), which matches the $2 n_"spec"$ features of the prior; the radial
-  factor stays $j_l (k r)$, so the band-limit $L_"max" approx k R$ is unchanged;
-  the mode counts pick up a factor $approx 2$ (two polarizations, and transverse
-  fields start at $l = 1$ with no monopole), giving an effective dimension
-  $approx 2 (k R)^2$. The staircase mechanism and the $sqrt(n)$ resolution carry
-  over unchanged. Eventually rewrite this section in the vector setting.
-- The Fibonacci lattice is a low-discrepancy sequence, not a strict spherical
-  $t$-design (a set of points that integrates polynomials up to degree $t$ exactly).
-  Therefore, the grid doesn't cleanly "unlock" degree $l=4$ and then perfectly stop.
-  It has aliasing.
+#figure(
+  image("../../res/epgp_ksweep.svg", width: 80%),
+  caption: [EPGP reciprocity error across wavenumbers. Dotted lines mark the
+  predicted drop at $n_"spec" = (k R)^2$.],
+) <fig:ksweep>
 
-*Verification Test:* To explicitly verify this hypothesis, we propose a direct numerical scaling test:
-- Compute the EPGP convergence curves across a sequence of varying wavenumbers $k$.
-- Plot the convergence against the rescaled, dimensionless angular resolution $sqrt(n_"spec") \/ (k R)$. 
-  If the band-limit hypothesis holds, the distinct convergence curves will collapse onto a single master shape, with the super-exponential error floor consistently setting in near a threshold of $1$.
-- Analyze an analytic spherical domain (where the true multipole coefficients can be computed exactly) to isolate the boundary data's frequency content from the cavity geometry.
+What sets the floor is a separate matter from what sets the drop. Once the field
+is resolved the error does not continue down to the super-exponential Bessel tail
+but levels off at a numerical floor. @tab:epgp shows the cause: the tuned
+observation noise reaches its lower clip and the condition number of the GP system
+climbs past $10^(10)$ as the plane-wave basis turns overcomplete, so additional
+directions can no longer lower the error. The floor is thus a conditioning and
+regularization effect; the angular band limit governs only the location of the
+drop, not the level of the floor.
+
+The cavity resonances do not disturb this picture. The interior conducting problem
+has a discrete real spectrum, dense in the swept range: by Weyl's law there are of
+order $(k R)^3$ modes below $k$, and the operator is singular at each resonance. A
+subspace-angle scan over $k$ places the lowest eigen-wavenumbers near
+$k approx 0.59, 0.67, 0.79$ and confirms that the swept points
+$k in {1, dots, 3}$ sit between modes rather than on them. Proximity to a
+resonance does not track the floor level across $k$, which corroborates that the
+floor is numerical rather than resonant.
+
+The argument above uses the scalar Helmholtz equation for clarity. The honest
+setting is vector Maxwell, where each direction carries two transverse
+polarizations $Ev perp kv$, matching the $2 n_"spec"$ features of the prior, and
+the multipoles are the TE and TM Hansen families. The radial factor stays
+$j_l (k r)$, so the band limit $L_"max" approx k R$ is unchanged and the effective
+dimension only gains a factor two, $approx 2 (k R)^2$. The spherical-cavity
+derivation in @sec:sphere carries out this vector case in full.

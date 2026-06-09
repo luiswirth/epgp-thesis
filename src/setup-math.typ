@@ -107,6 +107,6 @@
 #let sci(s) = {
   let parts = s.split("e")
   let mant = calc.round(float(parts.at(0)), digits: 2)
-  let exp = int(parts.at(1))
+  let exp = int(parts.at(1).trim("+"))
   $#mant times 10^#exp$
 }
