@@ -102,6 +102,67 @@ where $nv_Lambda$ is the unit normal on $Lambda$. Collecting these responses ove
 all dipole excitations defines the reaction operator, the central object of the
 benchmark.
 
+== Characteristic Variety and Plane Waves
+
+The field equations have constant coefficients, so the Fourier transform turns
+them into algebra. Writing the transform of a field as
+$hat(Ev)(xiv) = integral Ev(xv) e^(-i xiv dot xv) dif xv$, each spatial
+derivative becomes multiplication by the frequency variable, so that
+$curl |-> i xiv times$ and $Delta |-> -norm(xiv)^2$.
+
+Each Cartesian component of the electric field solves the scalar Helmholtz
+equation. Transforming it leaves an algebraic relation,
+$
+  (Delta + k^2) u = 0 quad ==> quad (norm(xiv)^2 - k^2) hat(u)(xiv) = 0
+$
+Off the sphere $norm(xiv) = k$ the prefactor is nonzero and forces
+$hat(u) = 0$, so the transform of every solution is supported on
+$
+  V = {xiv in RR^3 mid(|) norm(xiv) = k} = k SS^2
+$
+the *characteristic variety* of the Helmholtz operator. The wavenumber is fixed
+and only the direction of the wave vector remains free. This sphere is the
+time-harmonic slice of a larger object. Keeping the time dependence, the wave
+operator $c^(-2) partial_t^2 - Delta$ has as its variety the *light cone*
+$norm(xiv) = abs(omega) \/ c$ in space-time frequency, and fixing a single
+frequency $omega$ with $k = omega \/ c$ cuts the cone at the sphere $V$.
+
+The vector equation refines which fields these wave vectors may carry.
+Transforming the curl--curl equation with $curl |-> i xiv times$ gives
+$
+  curl curl Ev - k^2 Ev = 0 quad ==> quad (norm(xiv)^2 - k^2) hat(Ev) - xiv (xiv dot hat(Ev)) = 0
+$
+A nonzero amplitude requires the matrix $(norm(xiv)^2 - k^2) amat(I) - xiv xiv^transp$
+to be singular. Its determinant $-k^2 (norm(xiv)^2 - k^2)^2$ vanishes only on the
+same sphere $norm(xiv) = k$, so the Maxwell variety coincides with the Helmholtz
+one. There the relation collapses to $xiv (xiv dot hat(Ev)) = 0$, that is
+$xiv dot hat(Ev) = 0$: admissible amplitudes are transverse to the wave vector.
+The longitudinal polarization is excluded, which is the Fourier face of the
+divergence-free condition $div Ev = 0$, and each direction on the variety carries
+a two-dimensional space of polarizations.
+
+Every solution is therefore built from transverse plane waves
+$avec(a) e^(i k kn dot rv)$ with direction $kn in SS^2$ and amplitude
+$avec(a) perp kn$. That such waves exhaust the solution space is the content of
+the *Ehrenpreis--Palamodov principle*: for a constant-coefficient system
+$P(partial) u = 0$ every solution on a convex domain is a superposition
+$
+  u(xv) = integral_V e^(i xiv dot xv) dif mu(xiv)
+$
+of exponential modes carried by the characteristic variety
+$V = {xiv mid(|) det P(xiv) = 0}$, an inverse Fourier transform of a measure on
+$V$. In general the modes are weighted by polynomial multiplier operators that
+encode the multiplicity of the variety. For the Helmholtz operator the variety
+is the simple sphere, no multiplier is needed, and the principle is the classical
+*Herglotz representation*
+$
+  Ev(rv) = integral_(SS^2) avec(a)(kn) e^(i k kn dot rv) dif kn quad quad avec(a)(kn) perp kn
+$
+with a tangential amplitude density $avec(a)$ on the direction sphere. The
+transversality $avec(a) perp kn$ is precisely the multiplier of the Maxwell
+system, selecting the two physical polarizations on the variety. The prior of the
+next section is a Gaussian measure placed on exactly this density.
+
 == Ehrenpreis-Palamodov Gaussian Processes
 
 - High-level overview of the EP-GP framework.
