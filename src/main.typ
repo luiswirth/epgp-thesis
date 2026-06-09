@@ -16,6 +16,7 @@
 ]
 
 #appendix-style[
+  #include "sphere-analytic.typ"
   #include "appendix.typ"
 ]
 
