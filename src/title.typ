@@ -27,27 +27,6 @@
   for PEC Cavity Reaction Field*
 ]
 
-
-#block(
-  //stroke: ("left": 0.5pt, "right": 0.5pt),
-  //fill: black.lighten(90%),
-  inset: 5pt
-)[
-  #set text(10pt)
-  #set align(left)
-
-  *Keywords:*
-  First-Principles AI, 
-  Hybrid Modeling, 
-  Physics Informed, 
-  Gaussian Process, 
-  Uncertainty Quantification, 
-  Boundary Element Method, 
-  Maxwell, 
-  Electromagnetism, 
-  de Rham Complex.
-]
-
 #v(1cm)
 #text(20pt)[
   _Luis Wirth_
