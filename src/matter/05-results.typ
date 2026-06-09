@@ -211,3 +211,142 @@ benchmark conclusion stands: two unrelated Maxwell solvers agree at the
 $10^(-7)$ level.
 
 == Sensitivity and Uncertainty Analysis
+
+#pagebreak(weak: true)
+
+== Angular Bandwidth and Convergence
+
+_This section is speculative and presents a hypothesis that remains to be
+verified._
+
+The EPGP error does not decrease smoothly with the number of spectral directions
+$n_"spec"$ but in discrete steps, a staircase that flattens into a floor once
+$n_"spec"$ is large enough. This section offers a spectral interpretation of that
+behaviour.
+
+#v(1cm)
+
+On the unit sphere $SS^2$ the eigenfunctions of the Laplace--Beltrami operator
+are the *spherical harmonics* $Y_l^m$,
+$
+  -Delta_(SS^2) Y_l^m = l(l + 1) Y_l^m
+$
+indexed by the degree $l in NN$ and the order $m in {-l, dots, +l}$, its two
+quantum numbers. The degree-$l$ eigenspace has dimension $2 l + 1$, so the
+harmonics up to degree $L$ span a space of dimension
+$
+  sum_(l=0)^L (2 l + 1) = (L + 1)^2
+$
+They are the Fourier modes of the sphere, just as the plane waves
+$e^(i kv dot rv)$ are the Fourier modes of Euclidean space $RR^n$.
+
+Separating variables for the Helmholtz equation in spherical coordinates
+multiplies each angular mode by a radial factor. A solution regular at the origin
+admits the *multipole expansion*
+$
+  u(rv) = sum_(l=0)^infinity sum_(m=-l)^l c_(l m) j_l (k r) Y_l^m (rn)
+$
+where $r = norm(rv)$ is the radius, $rn = rv \/ r$ the direction, and the
+*spherical Bessel functions* $j_l$ are the radial eigenfunctions regular at the
+origin. The decisive property of $j_l$ is its behaviour in the degree $l$ at a
+fixed argument $x = k r$: it oscillates for $l < k r$ and, once the degree
+exceeds the argument, decays super-exponentially,
+$
+  j_l (x) approx x^l / (2l + 1)!! quad "for" l gt.tilde x
+$
+since the double factorial $(2l + 1)!!$ grows super-exponentially in $l$. The
+field is therefore effectively band-limited in angular degree, with significant
+content only up to
+$
+  L_"max" approx k R
+$
+where $R$ is the radius over which the field must be represented, here the outer
+scale of the cavity boundary.
+
+The same structure appears in the Fourier domain. Transforming the Helmholtz
+equation turns the differential operator into multiplication,
+$
+  (Delta + k^2) u = 0
+  quad ==> quad
+  (-norm(kv)^2 + k^2) hat(u) (kv) = 0
+  quad ==> quad
+  "supp" hat(u) subset.eq {kv mid(|) norm(kv) = k} = k SS^2
+$
+so every solution has its Fourier transform supported on the sphere
+$norm(kv) = k$, the *characteristic variety* of the Helmholtz operator. The
+radial degree of freedom is eliminated and only the direction survives: writing
+the wave vector as $kv = k kn$ with a unit direction $kn in SS^2$, every
+admissible mode is a plane wave $e^(i k kn dot rv)$. This is why a plane-wave
+prior is the natural choice. Superposing the modes gives the *Herglotz
+representation*
+$
+  u(rv) = integral_(SS^2) e^(i k kn dot rv) g(kn) dif kn
+$
+with a density $g$ on the direction sphere. This is the inverse Fourier transform
+of a measure carried by the characteristic variety, the Ehrenpreis--Palamodov
+representation specialized to the Helmholtz operator, and by the density of
+Herglotz wave functions every interior solution can be written in this form.
+
+The two pictures are linked by the plane-wave expansion
+$
+  e^(i k kn dot rv) = 4 pi sum_(l=0)^infinity sum_(m=-l)^l i^l j_l (k r) Y_l^m (rn) conj(Y_l^m (kn))
+$
+Expanding the density in the same harmonics,
+$
+  g(kn) = sum_(l=0)^infinity sum_(m=-l)^l g_(l m) Y_l^m (kn)
+$
+and inserting both into the Herglotz integral shows that the multipole
+coefficient of the field is the harmonic coefficient of the density weighted by
+the Bessel factor,
+$
+  c_(l m) = 4 pi i^l j_l (k r) g_(l m)
+$
+so resolving the field up to degree $l$ is the same as resolving the density $g$
+on $SS^2$ up to degree $l$.
+
+Here the discrete prior enters. The EPGP uses $n_"spec"$ plane-wave directions,
+that is $n_"spec"$ samples of the density on $SS^2$. Resolving degree $L$ needs
+its $(L + 1)^2$ modes, so $n$ points on the sphere reach only up to
+$
+  n gt.tilde (L + 1)^2 quad ==> quad L(n) approx sqrt(n)
+$
+As $n_"spec"$
+grows, $sqrt(n_"spec")$ climbs through the integer degrees. Each time it passes a
+degree $l lt.eq L_"max"$, the representable space gains the $2 l + 1$ modes of
+that degree and the error drops; between crossings it is flat. This is the
+staircase. Once $sqrt(n_"spec")$ exceeds $L_"max" approx k R$, every multipole
+that carries weight is resolved and the error floors at the super-exponential
+Bessel tail. Equivalently, the propagating plane waves on a domain of radius $R$
+have a finite effective dimension of order $(k R)^2$, the number of multipoles up
+to degree $k R$, which is reached near $n_"spec" approx (k R)^2$. In short,
+$
+  "error small" quad <==> quad L(n_"spec") gt.tilde L_"max" quad <==> quad sqrt(n_"spec") gt.tilde k R
+$
+
+This is an interpretation rather than a theorem. The floor and its location
+$L_"max" approx k R$ follow from the Bessel asymptotics and the density of
+Herglotz wave functions, but the step structure depends on the angular resolution
+of the specific Fibonacci directions, for which the $sqrt(n)$ law is empirical.
+
+#v(0.5cm)
+
+*Problems with Hypothesis:*
+- We argue using scalar Helmholtz. The honest treatment uses vector Helmholtz and
+  vector spherical harmonics (the TE/TM Hansen multipoles). Implications of the
+  vector case: each propagating direction carries two transverse polarizations
+  ($Ev perp kv$), which matches the $2 n_"spec"$ features of the prior; the radial
+  factor stays $j_l (k r)$, so the band-limit $L_"max" approx k R$ is unchanged;
+  the mode counts pick up a factor $approx 2$ (two polarizations, and transverse
+  fields start at $l = 1$ with no monopole), giving an effective dimension
+  $approx 2 (k R)^2$. The staircase mechanism and the $sqrt(n)$ resolution carry
+  over unchanged. Eventually rewrite this section in the vector setting.
+- The Fibonacci lattice is a low-discrepancy sequence, not a strict spherical
+  $t$-design (a set of points that integrates polynomials up to degree $t$ exactly).
+  Therefore, the grid doesn't cleanly "unlock" degree $l=4$ and then perfectly stop.
+  It has aliasing.
+
+*Verification Test:* To explicitly verify this hypothesis, we propose a direct numerical scaling test:
+- Compute the EPGP convergence curves across a sequence of varying wavenumbers $k$.
+- Plot the convergence against the rescaled, dimensionless angular resolution $sqrt(n_"spec") \/ (k R)$. 
+  If the band-limit hypothesis holds, the distinct convergence curves will collapse onto a single master shape, with the super-exponential error floor consistently setting in near a threshold of $1$.
+- Analyze an analytic spherical domain (where the true multipole coefficients can be computed exactly) to isolate the boundary data's frequency content from the cavity geometry.

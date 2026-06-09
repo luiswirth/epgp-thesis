@@ -34,7 +34,19 @@
 #let yv = $avec(y)$
 #let zv = $avec(z)$
 
+#let rv = $avec(r)$
+#let rn = $nvec(r)$
+
+#let kv = $avec(k)$
+#let kn = $nvec(k)$
+
+#let dv = $avec(d)$
+#let dn = $nvec(d)$
+
+#let xiv = $avec(xi)$
+
 #let nv = $avec(n)$
+
 #let pv = $avec(p)$
 #let Ev = $avec(E)$
 

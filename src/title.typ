@@ -49,18 +49,18 @@
 ]
 
 #v(1cm)
-#text(25pt)[
+#text(20pt)[
   _Luis Wirth_
 ]
 \
-#text(15pt)[
+#text(13pt)[
   #weblink("mailto:luwirth@ethz.ch", "luwirth@ethz.ch") \
   #weblink("http://ethz.lwirth.com", "ethz.lwirth.com")
 ]
 
 #v(1cm)
-Supervised by\
-#v(0.1cm)
+Supervised by
+
 #text(16pt)[
   _Prof. Dr.-Ing. Stefan Kurz_ \
 ]
