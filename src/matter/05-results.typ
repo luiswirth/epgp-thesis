@@ -215,6 +215,8 @@ $10^(-7)$ level.
 
 == Angular Bandwidth and Convergence
 
+_DISCLAIMER: This section has not been fully verified._
+
 The EPGP error does not decrease smoothly with the number of spectral directions
 $n_"spec"$ but in discrete steps, a staircase that flattens into a floor once
 $n_"spec"$ is large enough. This section explains that behaviour. The argument is
