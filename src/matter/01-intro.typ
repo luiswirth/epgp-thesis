@@ -10,7 +10,7 @@ data-driven model ignores the known physical structure and must rediscover the
 laws from data alone, which is wasteful and typically inaccurate outside the
 regime it was trained on. The more principled approach embeds established
 physical knowledge into the model from the outset. This idea appears under
-several names, including *first-principles AI*, *hybrid modeling*, and
+several names, including *first-principles AI (FPAI)*, *hybrid modeling*, and
 *physics-informed ML*, which all refer to essentially the same goal: letting the
 governing equations constrain the model rather than fitting them as targets.
 

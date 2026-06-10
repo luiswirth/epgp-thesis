@@ -34,11 +34,24 @@ $
   delta := norm(amat(T) - amat(T)_"fin") / norm(amat(T)_"fin")
 $ <eq:errors>
 
+
+#pagebreak(weak: true)
 == Analytic Spherical Cavity <sec:res-sphere>
 
 Analytic reference operator $amat(T)_star$ derived in @sec:sphere.
 Unlimited accuracy.
 PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$.
+
+
+#figure(
+  grid(
+    columns: 1,
+    row-gutter: 6pt,
+    image("../../res/sphere_field_real.png"),
+    image("../../res/sphere_field_lic.png"),
+  ),
+  caption: [EPGP scattered field on a $2"D"$ spherical cavity slice.],
+)
 
 The EPGP operator is accurate to the $10^(-9)$ level.
 
@@ -48,6 +61,7 @@ The EPGP operator is accurate to the $10^(-9)$ level.
 ) <fig:sphere-convergence>
 
 
+#pagebreak(weak: true)
 == Ellipsoidal Cavity <sec:res-ellipse>
 
 No closed-form operator.
@@ -64,8 +78,8 @@ BEMBEL library.
     image("../../res/field_real.png"),
     image("../../res/field_lic.png"),
   ),
-  caption: [EPGP scattered field on a $2"D"$ cavity slice.],
-) <fig:field>
+  caption: [EPGP scattered field on a $2"D"$ ellipsoidal cavity slice.],
+)
 
 === BEM Reference Solution <sec:res-bem>
 
@@ -82,7 +96,7 @@ This is the reference $amat(T)_"BEM"$.
   caption: [BEM reciprocity error.],
 ) <fig:bem-convergence>
 
-@fig:field: posterior-mean scattered field on a 2D slice (real part + LIC of field
+posterior-mean scattered field on a 2D slice (real part + LIC of field
 lines), smooth and artefact-free. Scattered field carries power; total field is a
 standing wave (lossless PEC, no net power flow), real up to global phase.
 
@@ -106,12 +120,14 @@ $epsilon$ decreases monotonically, reaching $approx 6.7 times 10^(-8)$ at $n_"sp
   caption: [EPGP convergence on the ellipsoid.],
 ) <fig:ellipse-conv>
 
-Qualifications: (i) $epsilon$ is still decreasing at $n_"spec" = 1024$, so it is an
-upper bound, not converged. (ii) Both reciprocity floors ($ap 2 times 10^(-9)$ BEM,
-$ap 7 times 10^(-10)$ EPGP) lie well below $epsilon$, so the residual is genuine
-discretization difference, not round-off. Cross-referencing @sec:res-sphere, the
-EPGP operator is itself accurate to $10^(-9)$, so the ellipsoidal residual is set
-by the finite BEM mesh; the cross-validation understates the EPGP accuracy.
+- $epsilon$ is still decreasing at $n_"spec" = 1024$, so it is an upper bound,
+  not converged.
+- Both reciprocity floors ($ap 2 times 10^(-9)$ BEM, $ap 7 times 10^(-10)$ EPGP)
+  lie well below $epsilon$, so the residual is genuine discretization difference,
+  not round-off.
+- The EPGP operator is itself accurate to $10^(-9)$, so the ellipsoidal residual
+  is set by the finite BEM mesh; the cross-validation understates the EPGP
+  accuracy.
 
 #page(flipped: true, margin: 1.3cm)[
   #set table(inset: (x: 6pt, y: 5pt))
