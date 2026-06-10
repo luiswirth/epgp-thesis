@@ -17,6 +17,10 @@
 #let epgp-runs = csv("../../res/epgp_results.csv").slice(1).sorted(
   key: r => int(r.at(0))
 )
+// EPGP runs on the spherical cavity, same columns but err_vs_analytic last.
+#let sphere-runs = csv("../../res/sphere_results.csv").slice(1).sorted(
+  key: r => int(r.at(0))
+)
 
 = Results and Discussion <sec:results>
 
@@ -151,7 +155,8 @@ reaching $epsilon approx 6.7 times 10^(-8)$ at $n_"spec" = 1024$. A boundary-int
 Galerkin scheme and a spectral plane-wave GP are entirely unrelated
 discretizations, so their agreement to $ap 10^(-7)$ is strong mutual validation.
 
-#page(flipped: true)[
+#page(flipped: true, margin: 1.3cm)[
+  #set table(inset: (x: 6pt, y: 5pt))
   #figure(
     text(size: 8pt)[#table(
       columns: (auto,) + (1fr,) * bem-runs.len(),
@@ -165,10 +170,10 @@ discretizations, so their agreement to $ap 10^(-7)$ is strong mutual validation.
       [$delta$], ..bem-runs.map(r => if float(r.at(4)) == 0 { [---] } else { sci(r.at(4)) }),
       [$t$ [s]], ..bem-runs.map(r => [#r.at(5)]),
     )],
-    caption: [BEM convergence over the $p times m$ grid.],
+    caption: [BEM convergence on the ellipsoidal cavity.],
   ) <tab:bem>
 
-  #v(1.5em)
+  #v(2em)
 
   #figure(
     text(size: 8pt)[#table(
@@ -184,10 +189,27 @@ discretizations, so their agreement to $ap 10^(-7)$ is strong mutual validation.
       [$delta$], ..epgp-runs.map(r => if float(r.at(6)) == 0 { [---] } else { sci(r.at(6)) }),
       [$epsilon$], ..epgp-runs.map(r => sci(r.at(7))),
     )],
-    caption: [EPGP convergence versus $n_"spec"$: degrees of freedom, assembly
-    time, conditioning of the GP system, reciprocity error, self-convergence to
-    the finest run, and the relative difference to the BEM reference.],
+    caption: [EPGP convergence on the ellipsoidal cavity.],
   ) <tab:epgp>
+
+  #v(2em)
+
+  #figure(
+    text(size: 8pt)[#table(
+      columns: (auto,) + (1fr,) * sphere-runs.len(),
+      align: right,
+      stroke: 0.5pt,
+      ..labelbox(7),
+      [$n_"spec"$], ..sphere-runs.map(r => [#r.at(0)]),
+      [DOFs], ..sphere-runs.map(r => [#r.at(1)]),
+      [$t$ [s]], ..sphere-runs.map(r => [#calc.round(float(r.at(2)), digits: 1)]),
+      [cond $amat(A)$], ..sphere-runs.map(r => sci(r.at(4))),
+      [$rho$], ..sphere-runs.map(r => sci(r.at(5))),
+      [$delta$], ..sphere-runs.map(r => if float(r.at(6)) == 0 { [---] } else { sci(r.at(6)) }),
+      [$epsilon_star$], ..sphere-runs.map(r => sci(r.at(7))),
+    )],
+    caption: [EPGP convergence on the spherical cavity.],
+  ) <tab:sphere>
 ]
 
 #figure(
@@ -209,6 +231,58 @@ mesh. Both solvers thus operate well within their numerical floors, and the
 benchmark conclusion stands: two unrelated Maxwell solvers agree at the
 $10^(-7)$ level.
 
+== Spherical Benchmark <sec:res-sphere>
+
+The ellipsoidal cavity has no closed-form reaction operator, so the
+cross-validation above is bounded by the accuracy of the BEM reference. A
+spherical cavity removes that limit: its reaction operator is available in closed
+form as a multipole sum, derived in @sec:sphere. This is a reference of
+essentially unlimited accuracy against which the EPGP solver can be measured
+directly. We use a perfectly conducting sphere of radius $R = 4$ with the same
+interior surface $Lambda$ and wavenumber $k = 2$, and write the analytic operator
+$amat(T)_star$.
+
+@tab:sphere and @fig:sphere-convergence report the relative error
+$epsilon_star = norm(amat(T)_"EPGP" - amat(T)_star) \/ norm(amat(T)_star)$ of the
+EPGP operator against $amat(T)_star$ as $n_"spec"$ grows. It falls to about
+$10^(-9)$, two orders of magnitude below the ellipsoidal cross-validation floor
+$epsilon approx 6.7 times 10^(-8)$. The residual on the ellipsoid is therefore set by the finite BEM mesh
+rather than the EPGP solver: measured against an exact reference, the EPGP
+operator is accurate to the $10^(-9)$ level. The cross-validation understates the
+accuracy of the probabilistic solver.
+
+#figure(
+  image("../../res/sphere_convergence.svg", width: 68%),
+  caption: [EPGP convergence to $amat(T)_star$.],
+) <fig:sphere-convergence>
+
+The error stays near unity until $n_"spec"$ reaches about $(k R)^2$ and then drops
+steeply, so the angular band limit is now confirmed against an exact reference
+rather than through reciprocity. The drop is a transition over a range of degrees
+rather than a sharp step, because the Fibonacci directions sample the sphere
+without forming an exact spherical design. @fig:sphere-ksweep repeats the
+measurement over a range of wavenumbers and shows the drop sliding to larger
+$n_"spec"$ as $k$ grows, tracking $n_"spec" approx (k R)^2$.
+
+#figure(
+  image("../../res/sphere_ksweep.svg", width: 68%),
+  caption: [EPGP error against $amat(T)_star$ across wavenumbers.],
+) <fig:sphere-ksweep>
+
+Because the reference is exact, its angular content can be resolved degree by
+degree. @fig:sphere-multipole shows the contribution of each multipole degree $l$
+to $amat(T)_star$. It falls off past $l approx k R$, the band limit, and
+geometrically as $(a \/ R)^(2 l)$ because the measurement surface lies interior to
+the wall. The operator is band-limited at degree $L_"max" approx k R$ with an
+effective rank of order $2 (k R)^2$. Its content thus decays even faster than the
+field on the wall, but the solver must resolve the field, so its convergence
+follows the wider scale $k R$.
+
+#figure(
+  image("../../res/sphere_multipole.svg", width: 68%),
+  caption: [Multipole spectrum of $amat(T)_star$.],
+) <fig:sphere-multipole>
+
 == Sensitivity and Uncertainty Analysis
 
 #pagebreak(weak: true)
@@ -220,8 +294,8 @@ _DISCLAIMER: This section has not been fully verified._
 The EPGP error does not decrease smoothly with the number of spectral directions
 $n_"spec"$ but in discrete steps, a staircase that flattens into a floor once
 $n_"spec"$ is large enough. This section explains that behaviour. The argument is
-spectral; the spherical cavity of @sec:sphere makes it exact, and a wavenumber
-sweep confirms it numerically.
+spectral; the spherical cavity of @sec:sphere makes it exact, and the spherical
+benchmark of @sec:res-sphere confirms it against an exact reference.
 
 #v(1cm)
 
@@ -323,8 +397,7 @@ rather than at a single one.
 
 #figure(
   image("../../res/epgp_ksweep.svg", width: 80%),
-  caption: [EPGP reciprocity error across wavenumbers. Dotted lines mark the
-  predicted drop at $n_"spec" = (k R)^2$.],
+  caption: [EPGP reciprocity error across wavenumbers.],
 ) <fig:ksweep>
 
 What sets the floor is a separate matter from what sets the drop. Once the field

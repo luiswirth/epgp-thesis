@@ -2,6 +2,57 @@
 
 = Benchmark Formulation <sec:bench>
 
+#align(center)[
+  #block(
+    stroke: 0.5pt + luma(150),
+    inset: 15pt,
+    radius: 5pt,
+    fill: luma(250),
+    [
+      #set align(center)
+      #grid(
+        columns: 5,
+        align: horizon,
+        column-gutter: 15pt,
+        
+        rect(stroke: 1pt, inset: 10pt, radius: 3pt, fill: white)[
+          *Transmitter* \
+          Dipole $pv$ on $Lambda$
+        ],
+        
+        [
+          #set text(size: 9pt)
+          Fundamental \
+          Solution \
+          $==>$ \
+          _Deterministic_
+        ],
+        
+        rect(stroke: 1pt, inset: 10pt, radius: 3pt, fill: white)[
+          *Boundary Trace* \
+          $avec(h)$ on $partial D$
+        ],
+        
+        [
+          #set text(size: 9pt)
+          EP-GP \ Posterior \
+          $==>$ \
+          _Probabilistic_
+        ],
+        
+        rect(stroke: 1pt, inset: 10pt, radius: 3pt, fill: white)[
+          *Reaction Field* \
+          $Ev^s$ in $D$ \
+          #v(0.1cm)
+          $arrow.b$ \
+          #v(0.1cm)
+          *Receiver Response* \
+          $yv$ on $Lambda$
+        ]
+      )
+    ]
+  )
+]
 
 Reaction-field formulation for interior
 Maxwell problems in PEC cavities.
