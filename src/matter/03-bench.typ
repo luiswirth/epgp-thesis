@@ -92,6 +92,15 @@ $
 We use a wavevector $k=2$.
 
 
+== Reference Solution
+
+No closed-form operator.
+We need a numerical reference solution.
+The accuracy is established by agreement of two unrelated solvers.
+
+We use the Boundary Element Method (BEM) to compute a reference.
+BEMBEL library.
+
 == Forward Model
 
 Mapping the transmitter dipole to the incident field and calculating the boundary trace on $partial D$

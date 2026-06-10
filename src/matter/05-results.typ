@@ -1,12 +1,12 @@
 #import "../setup-math.typ": *
 
-#let bem-runs = csv("../../res/bem_results.csv").slice(1).sorted(
+#let bem-runs = csv("../../res/ellipse_bem_results.csv").slice(1).sorted(
   key: r => (int(r.at(0)), int(r.at(1)))
 )
-#let epgp-runs = csv("../../res/epgp_results.csv").slice(1).sorted(
+#let epgp-runs = csv("../../res/ellipse_epgp_results.csv").slice(1).sorted(
   key: r => int(r.at(0))
 )
-#let sphere-runs = csv("../../res/sphere_results.csv").slice(1).sorted(
+#let sphere-runs = csv("../../res/sphere_epgp_results.csv").slice(1).sorted(
   key: r => int(r.at(0))
 )
 
@@ -47,8 +47,8 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
   grid(
     columns: 1,
     row-gutter: 6pt,
-    image("../../res/sphere_field_real.png"),
-    image("../../res/sphere_field_lic.png"),
+    image("../../res/sphere_epgp_field_real.png"),
+    image("../../res/sphere_epgp_field_lic.png"),
   ),
   caption: [EPGP scattered field on a $2"D"$ spherical cavity slice.],
 )
@@ -56,7 +56,7 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
 The EPGP operator is accurate to the $10^(-9)$ level.
 
 #figure(
-  image("../../res/sphere_convergence.svg", width: 68%),
+  image("../../res/sphere_epgp_convergence.svg", width: 68%),
   caption: [EPGP convergence on spherical cavity.],
 ) <fig:sphere-convergence>
 
@@ -64,51 +64,40 @@ The EPGP operator is accurate to the $10^(-9)$ level.
 #pagebreak(weak: true)
 == Ellipsoidal Cavity <sec:res-ellipse>
 
-No closed-form operator.
-We need a numerical reference solution.
-The accuracy is established by agreement of two unrelated solvers.
 
-We use the Boundary Element Method (BEM) to compute a reference.
-BEMBEL library.
 
 #figure(
   grid(
     columns: 1,
     row-gutter: 6pt,
-    image("../../res/field_real.png"),
-    image("../../res/field_lic.png"),
+    image("../../res/ellipse_epgp_field_real.png"),
+    image("../../res/ellipse_epgp_field_lic.png"),
   ),
   caption: [EPGP scattered field on a $2"D"$ ellipsoidal cavity slice.],
 )
 
+Total field is a standing wave (static).
+Incident and scattered fields carry power (dynamic).
+
 === BEM Reference Solution <sec:res-bem>
 
-Indirect single-layer formulation of @sec:impl, assembled over a $p times m$ grid:
-mesh $h$-refinement level $m$ and polynomial $p$-refinement,
-
+Runs over a $p times m$ grid.
 Analytic boundary, so $h$ converges algebraically and $p$ geometrically.
 
-Best run p4m4 ($4332$ DOFs) reaches $rho approx 2.0 times 10^(-9)$, near the dense-solver floor.
+Best run p4m4 ($4332$ DOFs) reaches $rho approx 2.0 times 10^(-9)$.
 This is the reference $amat(T)_"BEM"$.
 
 #figure(
-  image("../../res/bem_convergence.svg"),
+  image("../../res/ellipse_bem_convergence.svg"),
   caption: [BEM reciprocity error.],
 ) <fig:bem-convergence>
 
-posterior-mean scattered field on a 2D slice (real part + LIC of field
-lines), smooth and artefact-free. Scattered field carries power; total field is a
-standing wave (lossless PEC, no net power flow), real up to global phase.
 
 
 === EPGP Reconstruction <sec:res-epgp>
 
-Condition the Maxwell plane-wave GP prior on the tangential-trace data, evaluate
-posterior-mean scattered field on $Lambda$.
-Single knob: $n_"spec"$, the number of spectral directions on the Fibonacci sphere.
-
-$rho$ decreases with $n_"spec"$ and floors at $approx 7 times 10^(-10)$,
-below the BEM floor.
+$rho$ decreases with $n_"spec"$ and floors at $approx 7 times 10^(-10)$, below
+the BEM floor.
 
 === Cross-Validation <sec:res-comparison>
 
@@ -116,7 +105,7 @@ Reference error $epsilon$ against the p4m4 BEM operator.
 $epsilon$ decreases monotonically, reaching $approx 6.7 times 10^(-8)$ at $n_"spec" = 1024$.
 
 #figure(
-  image("../../res/ellipse_convergence.svg", width: 68%),
+  image("../../res/ellipse_epgp_convergence.svg", width: 68%),
   caption: [EPGP convergence on the ellipsoid.],
 ) <fig:ellipse-conv>
 
@@ -224,17 +213,17 @@ $
 #grid(
   columns: 2,
   figure(
-    image("../../res/epgp_ksweep.svg"),
+    image("../../res/ellipse_epgp_ksweep.svg"),
     caption: [Ellipsoidal EPGP reciprocity error across wavenumbers.],
   ),
   figure(
-    image("../../res/sphere_ksweep.svg"),
+    image("../../res/sphere_epgp_ksweep.svg"),
     caption: [Spherical EPGP reference error across wavenumbers.],
   )
 )
 
 #figure(
-  image("../../res/sphere_multipole.svg", width: 80%),
+  image("../../res/sphere_analytic_multipole.svg", width: 80%),
   caption: [Spherical multipole spectrum of $amat(T)_star$.],
 )
 

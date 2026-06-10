@@ -21,6 +21,8 @@ Bembel provides an isogeometric boundary element implementation for
 three-dimensional electromagnetic problems and allows efficient solution of the
 interior curl--curl equation in smooth geometries.
 
+Indirect single-layer formulation 
+
 == Probabilistic Reconstruction
 
 The thesis project took advantage of and extended the software implementation
@@ -46,4 +48,8 @@ curl-curl equation. Since the problem is purely interior, no radiation condition
 is required. The reaction field is also smooth throughout $D$, making it
 well matched to spectral and plane-wave representations.
 
+
+Condition the Maxwell plane-wave GP prior on the tangential-trace data, evaluate
+posterior-mean scattered field on $Lambda$.
+Single knob: $n_"spec"$, the number of spectral directions on the Fibonacci sphere.
 
