@@ -16,8 +16,9 @@
 ]
 
 #appendix-style[
-  #include "sphere-analytic.typ"
-  #include "appendix.typ"
+  #include "appendix/sphere-analytic.typ"
+  #include "appendix/src-impl.typ"
+  #include "appendix/src-doc.typ"
 ]
 
 #postface-style[

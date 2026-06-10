@@ -14,7 +14,7 @@
   set text(fill: fgcolor)
 
   set page(paper: "a4")
-  set page(margin: 2cm)
+  set page(margin: 1.5cm)
   set text(size: 10pt)
 
   set par(justify: true)
@@ -91,6 +91,9 @@
 
   set heading(numbering: "A.1.1")
   counter(heading).update(0)
+
+  show heading.where(level: 2): set heading(outlined: false)
+  show heading.where(level: 3): set heading(outlined: false)
 
   show heading: it => {
     if it.level == 1 {

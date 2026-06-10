@@ -13,5 +13,6 @@
 #pagebreak(weak: true)
 #outline(
   title: "Table of Contents",
-  indent: auto
+  indent: auto,
+  depth: 2,
 )

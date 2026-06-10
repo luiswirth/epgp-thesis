@@ -12,10 +12,7 @@ regime it was trained on. The more principled approach embeds established
 physical knowledge into the model from the outset. This idea appears under
 several names, including *first-principles AI*, *hybrid modeling*, and
 *physics-informed ML*, which all refer to essentially the same goal: letting the
-governing equations constrain the model rather than fitting them as targets. A
-further demand specific to science and engineering is *uncertainty
-quantification*: a prediction is only actionable when it carries a calibrated
-estimate of its own reliability.
+governing equations constrain the model rather than fitting them as targets.
 
 Many physical laws take the form of *partial differential equations (PDEs)*, and
 there are two ways to make a model respect such a law. Weak enforcement adds
@@ -29,8 +26,10 @@ law it is meant to obey.
 
 Among ML models, the *Gaussian process (GP)* is particularly well suited to
 strong enforcement. A GP is a probabilistic model over functions that returns a
-full posterior distribution rather than a point estimate, so uncertainty
-quantification is intrinsic to it. If the GP prior is built so that its samples
+full posterior distribution rather than a point estimate. As an added benefit,
+*uncertainty quantification* then comes for free: every prediction carries a
+calibrated estimate of its own reliability at no extra cost. If the GP prior is
+built so that its samples
 satisfy a PDE exactly, the model is strongly physics-informed and probabilistic
 at the same time. Using a GP this way to represent the solution of a PDE places
 the method within *probabilistic numerics*, and the resulting object is a

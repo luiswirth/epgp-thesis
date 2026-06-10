@@ -1,11 +1,10 @@
 #import "setup.typ": *
 
-#set page(numbering: none)
 #show heading: none
 #heading()[Title]
+#set page(footer: none)
 
 #image("../res/ethz-logo.svg")
-
 
 #set align(center + horizon)
 #set text(12pt)
@@ -50,3 +49,4 @@ Seminar for Applied Mathematics
   #set text(15pt)
   #datetime.today().display("[day]th [month repr:long] [year]")
 ]
+

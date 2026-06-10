@@ -1,59 +1,22 @@
-#import "setup.typ": *
+#import "../setup.typ": *
 
 = Analytic Solution for Spherical Cavity <sec:sphere>
 
 _DISCLAIMER: This section has not been fully verified._
 
-The ellipsoidal cavity of the benchmark has no closed-form reaction operator. If
-the wall is replaced by a perfectly electrically conducting sphere the problem
-separates, and the reaction operator is obtained in closed form as a multipole
-sum. This appendix carries out that derivation. The spherical cavity is the
-exactly solvable model that isolates the mechanism behind the angular band limit
-hypothesized in the results chapter.
+== Problem Setup
 
-We keep the wavenumber $k$, the wall radius $R$, and the radius $a$ of the
-interior source and measurement surface $Lambda$ symbolic, with $a < R$; the
-benchmark uses $a = 1$. The time convention is $e^(-i omega t)$ throughout,
-consistent with the fundamental solution
-$Phi(xv, zv) = e^(i k norm(xv - zv)) \/ (4 pi norm(xv - zv))$ and the curl--curl
-equation of the background chapter.
-
-== Scalar Warm-Up: Interior Dirichlet Problem
-
-Consider first the scalar Helmholtz equation $Delta u + k^2 u = 0$ on the ball
-$norm(rv) < R$ with the Dirichlet condition $u = 0$ at $r = R$. Separation of
-variables in spherical coordinates factors each mode into a radial part and a
-spherical harmonic. The radial equation is the spherical Bessel equation, whose
-solution regular at the origin is the spherical Bessel function $j_l$. A field
-regular in the interior therefore admits the multipole expansion
-$
-  u(rv) = sum_(l=0)^infinity sum_(m=-l)^l c_(l m) j_l (k r) Y_l^m (rn)
-$
-with $r = norm(rv)$ and $rn = rv \/ r$. The irregular solution $y_l$, and with it
-the outgoing $h_l^((1)) = j_l + i y_l$, is admitted only in regions excluding the
-origin.
-
-A point source at $zv$ with $norm(zv) = a$ is expanded about the cavity centre by
-the addition theorem for the free-space Green's function,
-$
-  Phi(xv, zv) = i k sum_(l=0)^infinity sum_(m=-l)^l
-    j_l (k r_<) h_l^((1)) (k r_>) Y_l^m (rn_x) conj(Y_l^m (rn_z))
-$
-with $r_< = min(norm(xv), norm(zv))$ and $r_> = max(norm(xv), norm(zv))$. The
-scattered field is interior-regular, $u^s = sum c^s_(l m) j_l (k r) Y_l^m$.
-Evaluating the total field at the wall, where the field point is the outer one so
-$r_< = a$ and $r_> = R$, and imposing $u^i + u^s = 0$ mode by mode gives
-$
-  c^s_(l m) = -i k j_l (k a) (h_l^((1)) (k R)) / (j_l (k R)) conj(Y_l^m (rn_z))
-$
-The ratio $h_l^((1)) (k R) \/ j_l (k R)$ is the scalar interior reflection
-coefficient. It is singular exactly at the zeros of $j_l (k R)$, the Dirichlet
-eigenvalues of the ball, and the same structure recurs in the vector problem.
+The domain is the ball $norm(rv) < R$ with a perfectly electrically conducting
+wall at $r = R$. A dipole source sits at $zv$ on the interior sphere $Lambda$ of
+radius $a < R$, and the scattered field is measured back on $Lambda$. We keep
+$k$, $R$, and $a$ symbolic. The time convention is $e^(-i omega t)$, with the
+fundamental solution
+$Phi(xv, zv) = e^(i k norm(xv - zv)) \/ (4 pi norm(xv - zv))$.
 
 == Vector Spherical Harmonics and Hansen Multipoles
 
-For the Maxwell problem the angular basis is vector-valued. From the scalar
-harmonics $Y_l^m$ build the three orthonormal vector spherical harmonics
+The angular basis is vector-valued. From the scalar harmonics $Y_l^m$ build the
+three orthonormal vector spherical harmonics
 $
   avec(Y)_(l m) = Y_l^m rn quad quad
   avec(Psi)_(l m) = 1 / sqrt(l(l + 1)) nabla_(SS^2) Y_l^m quad quad
@@ -90,17 +53,15 @@ out of the tangential trace.
 
 == Dipole Field in Multipoles
 
-The dipole field of the background chapter is $Ev^i = (i \/ k) curl curl (Phi pv)$.
-Away from the source $curl curl (Phi pv) = nabla (nabla Phi dot pv) + k^2 Phi pv$,
-so
+The dipole field is $Ev^i = (i \/ k) curl curl (Phi pv)$. Away from the source
+$curl curl (Phi pv) = nabla (nabla Phi dot pv) + k^2 Phi pv$, so
 $
   Ev^i (xv; zv, pv) = i k (amat(I) + 1 / k^2 nabla nabla) Phi(xv, zv) pv
     = i k amat(G)(xv, zv) pv
 $
 with $amat(G)$ the free-space dyadic Green's function. Its spherical-wave
 expansion places the source point on regular multipoles and the field point on
-outgoing ones. For a field point outside the source radius, $r_x > r_z$, the
-standard expansion in the normalized basis above reads
+outgoing ones. For a field point outside the source radius, $r_x > r_z$,
 $
   amat(G)(xv, zv) = i k sum_(l=1)^infinity sum_(m=-l)^l
     [ avec(M)^((1))_(l m) (xv) conj(avec(M)_(l m) (zv))
@@ -140,13 +101,10 @@ $
     & Gamma_l^"TM" &= (xi_l' (k R)) / (psi_l' (k R))
 $
 These are the interior PEC reflection coefficients. The TE coefficient is fixed by
-the value $j_l (k R)$, the TM coefficient by the derivative
-$psi_l' (k R) = [x j_l (x)]'_(x = k R)$, exactly the two boundary conditions of an
-interior conducting sphere. Each is singular at the corresponding cavity
-resonance: $Gamma_l^"TE"$ blows up at the zeros of $j_l (k R)$, and
-$Gamma_l^"TM"$ at the zeros of $psi_l' (k R)$. These are the resonant wavenumbers
-of the empty PEC sphere, where a source-free interior mode exists and the
-steady-state response is undefined.
+the value $j_l (k R)$, the TM coefficient by the derivative $psi_l' (k R)$. Each is
+singular at the corresponding cavity resonance: $Gamma_l^"TE"$ blows up at the
+zeros of $j_l (k R)$, and $Gamma_l^"TM"$ at the zeros of $psi_l' (k R)$, the
+resonant wavenumbers of the empty PEC sphere.
 
 == Reaction Operator
 
@@ -167,9 +125,9 @@ $
     & -Gamma_l^"TE" j_l (k a) avec(Psi)_(l m) (rn_x) times.o conj(avec(M)_(l m) (zv)) \
     & + Gamma_l^"TM" (psi_l' (k a)) / (k a) avec(Phi)_(l m) (rn_x) times.o conj(avec(N)_(l m) (zv)) ]
 $
-This is the closed-form ground truth: an explicit multipole sum in
-$j_l, h_l^((1))$ and their Riccati derivatives, fully computable once $k$, $R$,
-$a$ are fixed and the points $xv, zv in Lambda$ are chosen.
+This is the closed-form solution: an explicit multipole sum in $j_l, h_l^((1))$ and
+their Riccati derivatives, fully computable once $k$, $R$, $a$ are fixed and the
+points $xv, zv in Lambda$ are chosen.
 
 === Consistency Checks
 
@@ -180,25 +138,22 @@ conj(avec(A)_(l m) (zv))$ with the same scalar $Gamma_l$ on both slots and the
 same multipole family $avec(A) in {avec(M), avec(N)}$ on each side. Swapping $xv$
 and $zv$ and transposing therefore returns the same operator, since $Gamma_l$ is
 independent of $m$ and the $m$-sum is real-symmetric through
-$conj(Y_l^m) = (-1)^m Y_l^(-m)$. The benchmark operator inherits this symmetry,
-which is one of the cross-checks satisfied by both numerical solvers.
+$conj(Y_l^m) = (-1)^m Y_l^(-m)$.
 
 The no-wall limit $R -> infinity$ must recover free space, where the scattered
-field vanishes and the measured reaction is zero. The reflection coefficients do
-not vanish pointwise in $R$ because a lossless cavity always supports a standing
-wave; the correct statement uses the limiting-absorption principle. Giving $k$ a
-small positive imaginary part, the outgoing $h_l^((1)) (k R)$ decays exponentially
-while $j_l (k R) = (h_l^((1)) + h_l^((2))) \/ 2$ grows through its $h_l^((2))$
-part, so $Gamma_l^"TE", Gamma_l^"TM" -> 0$ and $Ev^s -> 0$. The bounded cavity
-collapses to the free-space dipole, as required.
+field vanishes. The reflection coefficients do not vanish pointwise in $R$ because
+a lossless cavity always supports a standing wave; the correct statement uses the
+limiting-absorption principle. Giving $k$ a small positive imaginary part, the
+outgoing $h_l^((1)) (k R)$ decays exponentially while
+$j_l (k R) = (h_l^((1)) + h_l^((2))) \/ 2$ grows through its $h_l^((2))$ part, so
+$Gamma_l^"TE", Gamma_l^"TM" -> 0$ and $Ev^s -> 0$.
 
 == Angular Band Limit
 
-The payoff is the band limit, here exact rather than heuristic. The scattered
-field over the ball of radius $R$ is represented on the regular multipoles
-$avec(M)_(l m), avec(N)_(l m)$, whose radial factor is $j_l (k r)$ evaluated up to
-the outer scale $r = R$. The decisive property of $j_l$ is its decay in the degree
-at fixed argument: for $l gt.tilde k r$,
+The scattered field over the ball of radius $R$ is represented on the regular
+multipoles $avec(M)_(l m), avec(N)_(l m)$, whose radial factor is $j_l (k r)$
+evaluated up to the outer scale $r = R$. The decisive property of $j_l$ is its
+decay in the degree at fixed argument: for $l gt.tilde k r$,
 $
   j_l (k r) approx (k r)^l / (2 l + 1)!!
 $
@@ -208,9 +163,6 @@ therefore effectively truncated at
 $
   L_"max" approx k R
 $
-This is the same band limit the results chapter argues for the ellipsoid through
-the outer scale of its boundary, obtained here without approximation: the sphere
-isolates the mechanism, the radial Bessel cut-off, free of geometry.
 
 The reaction operator inherits the cut-off in sharpened form. For $l gt.tilde k R$
 the reflection coefficient and the measurement factor combine, using the
@@ -221,8 +173,7 @@ $
 $
 and likewise for the TM channel. Beyond the band edge $l approx k R$ each operator
 entry decays geometrically with ratio $(a \/ R)^2 < 1$, set purely by the radius
-ratio of measurement surface to wall. The onset of decay is at $l approx k R$, so
-the operator is band-limited at the same degree the field is.
+ratio of measurement surface to wall.
 
 Counting modes makes the effective dimension explicit. The harmonics up to degree
 $L_"max" approx k R$ span a space of dimension
@@ -233,6 +184,3 @@ dimension is
 $
   dim_"eff" approx 2 (k R)^2
 $
-This is the geometry-free statement of the band-limit hypothesis: the
-infinite-dimensional reaction operator of the spherical cavity is, to any fixed
-accuracy, a matrix of rank $approx 2 (k R)^2$.
