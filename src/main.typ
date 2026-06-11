@@ -17,6 +17,7 @@
 
 #appendix-style[
   #include "appendix/sphere-analytic.typ"
+  #include "appendix/angular-bandwidth.typ"
   #include "appendix/src-impl.typ"
   #include "appendix/src-doc.typ"
 ]

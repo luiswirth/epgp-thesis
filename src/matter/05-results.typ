@@ -56,14 +56,8 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
 The EPGP operator is accurate to the $10^(-9)$ level.
 
 #figure(
-  grid(
-    columns: (1fr, 1fr),
-    column-gutter: 6pt,
-    image("../../res/sphere_epgp_convergence.svg"),
-    image("../../res/sphere_epgp_rate.svg"),
-  ),
-  caption: [EPGP convergence on spherical cavity; left versus $n_"spec"$,
-    right the spectral rate versus $sqrt(n_"spec")$.],
+  image("../../res/sphere_epgp_convergence.svg", width: 68%),
+  caption: [EPGP convergence on spherical cavity versus $n_"spec"$.],
 ) <fig:sphere-convergence>
 
 
@@ -111,14 +105,8 @@ Reference error $epsilon$ against the p4m4 BEM operator.
 $epsilon$ decreases monotonically, reaching $approx 6.7 times 10^(-8)$ at $n_"spec" = 1024$.
 
 #figure(
-  grid(
-    columns: (1fr, 1fr),
-    column-gutter: 6pt,
-    image("../../res/ellipse_epgp_convergence.svg"),
-    image("../../res/ellipse_epgp_rate.svg"),
-  ),
-  caption: [EPGP convergence on the ellipsoid; left versus $n_"spec"$,
-    right the spectral rate versus $sqrt(n_"spec")$.],
+  image("../../res/ellipse_epgp_convergence.svg", width: 68%),
+  caption: [EPGP convergence on the ellipsoid versus $n_"spec"$.],
 ) <fig:ellipse-conv>
 
 - $epsilon$ is still decreasing at $n_"spec" = 1024$, so it is an upper bound,
@@ -194,48 +182,4 @@ $epsilon$ decreases monotonically, reaching $approx 6.7 times 10^(-8)$ at $n_"sp
   ) <tab:epgp>
 ]
 
-== Angular Bandwidth and Convergence <sec:res-bandwidth>
-
-_DISCLAIMER: This section has not been fully verified._
-
-// STUB. Spectral explanation of the staircase + floor; condense.
-
-The EPGP error drops in discrete steps and then floors. The argument is spectral.
-
-On $SS^2$ the Laplace--Beltrami eigenfunctions are the spherical harmonics
-$-Delta_(SS^2) Y_l^m = l(l + 1) Y_l^m$, degree-$l$ eigenspace dimension $2 l + 1$,
-so degrees up to $L$ span $(L + 1)^2$ modes. Separating the Helmholtz equation
-gives the multipole expansion $u = sum c_(l m) j_l (k r) Y_l^m$. The Bessel factor
-$j_l (x) approx x^l \/ (2 l + 1)!!$ for $l gt.tilde x$ decays super-exponentially,
-so the field is band-limited at $L_"max" approx k R$ with $R$ the outer scale.
-
-Plane-wave picture: via $e^(i k kn dot rv) = 4 pi sum i^l j_l (k r) Y_l^m (rn)
-conj(Y_l^m (kn))$ and a harmonic expansion of the Herglotz density $g$, the
-multipole coefficient is $c_(l m) = 4 pi i^l j_l (k r) g_(l m)$. Resolving the
-field to degree $l$ equals resolving $g$ on $SS^2$ to degree $l$. The EPGP samples
-$g$ at $n_"spec"$ directions, so reaching degree $L$ needs $n gt.tilde (L + 1)^2$,
-i.e. $L(n) approx sqrt(n)$. Each integer degree crossed by $sqrt(n_"spec")$ unlocks
-$2 l + 1$ modes and drops the error; between crossings it is flat (the staircase).
-Once $sqrt(n_"spec") gt.tilde L_"max" approx k R$, every weighted multipole is
-resolved:
-$
-  "error small" quad <==> quad sqrt(n_"spec") gt.tilde k R
-$
-
-#grid(
-  columns: 2,
-  figure(
-    image("../../res/ellipse_epgp_ksweep.svg"),
-    caption: [Ellipsoidal EPGP reciprocity error across wavenumbers.],
-  ),
-  figure(
-    image("../../res/sphere_epgp_ksweep.svg"),
-    caption: [Spherical EPGP reference error across wavenumbers.],
-  )
-)
-
-#figure(
-  image("../../res/sphere_analytic_multipole.svg", width: 80%),
-  caption: [Spherical multipole spectrum of $amat(T)_star$.],
-)
 
