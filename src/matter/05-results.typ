@@ -56,8 +56,14 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
 The EPGP operator is accurate to the $10^(-9)$ level.
 
 #figure(
-  image("../../res/sphere_epgp_convergence.svg", width: 68%),
-  caption: [EPGP convergence on spherical cavity.],
+  grid(
+    columns: (1fr, 1fr),
+    column-gutter: 6pt,
+    image("../../res/sphere_epgp_convergence.svg"),
+    image("../../res/sphere_epgp_rate.svg"),
+  ),
+  caption: [EPGP convergence on spherical cavity; left versus $n_"spec"$,
+    right the spectral rate versus $sqrt(n_"spec")$.],
 ) <fig:sphere-convergence>
 
 
@@ -105,8 +111,14 @@ Reference error $epsilon$ against the p4m4 BEM operator.
 $epsilon$ decreases monotonically, reaching $approx 6.7 times 10^(-8)$ at $n_"spec" = 1024$.
 
 #figure(
-  image("../../res/ellipse_epgp_convergence.svg", width: 68%),
-  caption: [EPGP convergence on the ellipsoid.],
+  grid(
+    columns: (1fr, 1fr),
+    column-gutter: 6pt,
+    image("../../res/ellipse_epgp_convergence.svg"),
+    image("../../res/ellipse_epgp_rate.svg"),
+  ),
+  caption: [EPGP convergence on the ellipsoid; left versus $n_"spec"$,
+    right the spectral rate versus $sqrt(n_"spec")$.],
 ) <fig:ellipse-conv>
 
 - $epsilon$ is still decreasing at $n_"spec" = 1024$, so it is an upper bound,
