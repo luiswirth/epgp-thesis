@@ -2,23 +2,107 @@
 
 = Mathematical Background <sec:math>
 
-== Time-Harmonic Maxwell's Equations
+== Ehrenpreis--Palamodov Fundamental Principle
+
+- Characteristic Variety
+- Inverse Fourier Transform
+- Superposition of Plane Waves
+
+$
+  exp(i (kv dot xv - omega t))
+$
+
+4D Frequency space
+$
+  (omega, k_x, k_y, k_z)
+$
+
+== Ehrenpreis--Palamodov Gaussian Processes
+
+High-level overview of the EP-GP framework.
+
+Replace integral with sum.
+- use finite superpositions.
+- use quadrature.
+
+Put normal prior on plane wave coefficents.
+-> Obtain Gaussian Process
+
+
+#pagebreak(weak: true)
+== Maxwell's Equations
 
 Electromagnetism is governed by Maxwell's equations, which in vacuum read
 $
-  curl Ev = -partial_t avec(B) quad quad & div avec(D) = rho \
-  curl Hvec = avec(J) + partial_t avec(D) quad quad & div avec(B) = 0
+ "Faraday's Law"& quad curl Ev = -partial_t avec(B) quad quad & div avec(D) = rho quad "Gauss' Law" \
+ "Ampere-Maxwell Law"& quad curl Hvec = avec(J) + partial_t avec(D) quad quad & div avec(B) = 0 quad "Gauss' Law" \
 $
 closed by the constitutive relations
 $
   avec(D) = epsilon_0 Ev quad quad avec(B) = mu_0 Hvec
 $
 
+
+Get vector wave-equation
+
+Take curl of Faraday
+$
+  curl curl Ev = -partial_t curl avec(B)
+  \
+  curl curl Ev = -partial_t (mu_0 avec(J) + mu_0 epsilon_0 partial_t Ev)
+  \
+  (1/c^2 partial_t^2 + curl curl) Ev = -mu_0 partial_t avec(J)
+$
+
+Use
+$
+  curl curl = grad div - Delta
+$
+
+Gives master equation
+$
+  (1/c^2 partial_t^2 + grad div - Delta) Ev = -mu_0 partial_t avec(J)
+$
+
+Now use Gauss and arrive at the *Maxwell Wave Equation*
+$
+  square Ev = (1/c^2 partial_t^2 - Delta) Ev = -grad rho/epsilon_0 - mu_0 partial_t avec(J)
+$
+
+Under the Fourier transform on Minkowski space $RR^(1,3)$ with signature $(-,+,+,+)$
+$
+  &partial_t &&limits(|->)^cal(F) -i omega
+  \
+  grad = &nabla &&limits(|->)^cal(F) i kv
+  \
+  curl = &nabla times &&limits(|->)^cal(F) i kv times
+  \
+  div = &nabla dot &&limits(|->)^cal(F) i kv dot
+  \
+  Delta = &nabla dot nabla &&limits(|->)^cal(F) i kv dot i kv = -abs(kv)^2
+$
+
+The principle symbol is
+$
+  P(omega, kv) = -omega^2/c^2 + abs(kv)^2
+$
+
+The characteristic variety (light 3-cone in 4D) is
+$
+  Lambda = {(omega, kv) mid(|) abs(kv)^2 = omega^2/c^2}
+$
+
+== Time-Harmonic Maxwell's Equations
+
+$
+  Ev (t, xv) = Ev(x) exp(i omega_0 t)
+$
+
 We pass to time-harmonic fields of angular frequency $omega$ under the
 $e^(-i omega t)$ convention, so that $partial_t$ acts as $-i omega$. In a
 source-free region the two curl equations become
 $
-  curl Ev = i omega mu_0 Hvec quad quad curl Hvec = -i omega epsilon_0 Ev
+  curl Ev = i omega B quad quad curl Hvec = -i omega D
 $
 Eliminating the magnetic field by taking the curl of the first equation yields
 the time-harmonic curl--curl equation
@@ -37,11 +121,16 @@ $
 so each Cartesian component solves the scalar Helmholtz equation, the starting
 point for the plane-wave representations of later sections.
 
-On a perfectly electrically conducting wall the tangential electric field
-vanishes,
+Principle symbol
 $
-  nv_(partial D) times Ev = 0 quad "on" partial D
-$ <eq:pec>
+  P(kv) = -abs(k)^2 + k_0^2
+$
+
+Characteristic Variety (2-Sphere in 3D)
+$
+  Lambda = {kv | abs(kv)^2 = k_0^2}
+$
+
 
 == Fundamental Solution
 
@@ -163,14 +252,6 @@ transversality $avec(a) perp kn$ is precisely the multiplier of the Maxwell
 system, selecting the two physical polarizations on the variety. The prior of the
 next section is a Gaussian measure placed on exactly this density.
 
-== Ehrenpreis-Palamodov Gaussian Processes
-
-- High-level overview of the EP-GP framework.
-- not whole EP theory, but explain how to enfroce homogeneous Maxwell system.
-- Details see @felix.
-
-Geometric construction of EP plane-wave Gaussian process priors for Maxwell's
-equations.
 
 == Boundary Element Method
 

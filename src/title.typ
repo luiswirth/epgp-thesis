@@ -15,9 +15,10 @@
 ]
 #v(1cm)
 
-// Alternative Title:
-// Learning Electromagnetic Fields in PEC Cavities:
-// A Boundary Element Method Benchmark for Ehrenpreis-Palamodov Gaussian Processes
+// Alternative Titles:
+// - Learning Electromagnetic Fields in PEC Cavities: A Boundary Element Method Benchmark for Ehrenpreis-Palamodov Gaussian Processes
+// - Flagship Example for Learning Electromagnetic Fields through Ehrenpreis-Palamodov Gaussian Processes
+
 #[
   #set text(25pt)
   *Ehrenpreis--Palamodov Gaussian Process \
