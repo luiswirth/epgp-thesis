@@ -34,6 +34,9 @@ $
   delta := norm(amat(T) - amat(T)_"fin") / norm(amat(T)_"fin")
 $ <eq:errors>
 
+NOTE: Reciprocity is symmetric by Galerkin construction...
+Use instead the self-convergence error!
+
 
 #pagebreak(weak: true)
 == Analytic Spherical Cavity <sec:res-sphere>
@@ -84,7 +87,7 @@ Incident and scattered fields carry power (dynamic).
 Runs over a $p times m$ grid.
 Analytic boundary, so $h$ converges algebraically and $p$ geometrically.
 
-Best run p4m4 ($4332$ DOFs) reaches $rho approx 2.0 times 10^(-9)$.
+Best run p5m4 ($4800$ DOFs) reaches $rho approx 1.4 times 10^(-10)$.
 This is the reference $amat(T)_"BEM"$.
 
 #figure(
@@ -96,13 +99,13 @@ This is the reference $amat(T)_"BEM"$.
 
 === EPGP Reconstruction <sec:res-epgp>
 
-$rho$ decreases with $n_"spec"$ and floors at $approx 7 times 10^(-10)$, below
-the BEM floor.
+$rho$ decreases with $n_"spec"$ and floors at $approx 7 times 10^(-10)$, close to
+the BEM reference floor.
 
 === Cross-Validation <sec:res-comparison>
 
-Reference error $epsilon$ against the p4m4 BEM operator.
-$epsilon$ decreases monotonically, reaching $approx 6.7 times 10^(-8)$ at $n_"spec" = 1024$.
+Reference error $epsilon$ against the p5m4 BEM operator.
+$epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $n_"spec" = 1024$.
 
 #figure(
   image("../../res/ellipse_epgp_convergence.svg", width: 68%),
