@@ -68,6 +68,15 @@ the reference configuration, Dis chosen as a smooth ellipsoid, while the sources
 and measurements are taken on an interior sphere $Lambda subset.eq D$.
 
 
+STUB. \
+The operator we benchmark is a discretization of the near-field operator of
+@cavity, $(cal(F) phi)(xv) = integral_Lambda nu(xv) times Ev^s (xv, yv,
+phi(yv)) dif s(yv)$, which maps tangential dipole densities on $Lambda$ to the
+rotated tangential trace of the scattered field on $Lambda$. Our reaction matrix
+$T$ is its discretization in the chosen tangent frame, so the benchmark targets
+the same operator that underlies their linear sampling method, not an ad hoc
+construction.
+
 Through its connection to the inverse scattering literature on cavities
 @cavity, the benchmark is positioned within a well-established research field
 rather than being a purely synthetic test case. The interior solution operator
@@ -90,6 +99,30 @@ $
 $
 
 We use a wavevector $k=2$.
+
+
+STUB. \
+The interior reaction operator is well-defined only when $k^2$ is not a Maxwell
+eigenvalue of the cavity $D$ nor of the interior of $Lambda$. @cavity assume
+this but do not verify it for their geometry, and their qualitative
+reconstruction tolerates proximity to resonances; our high-fidelity target does
+not. We must therefore confirm $k=2$ sits comfortably away from the Maxwell
+eigenvalues of both $D$ and $Lambda$. The ellipsoidal cavity is electrically
+large with dense interior resonances; the resonance sweep (TODO ref) supports
+that $k=2$ is well separated from them.
+
+
+
+== Relation to Originating Setup
+
+STUB. \
+Cavity geometry, surface $Lambda$, and wavenumber $k$ are inherited from
+@cavity; transmitters and receivers coincide on $Lambda$, exploiting the same
+reaction-operator reciprocity. We differ in intent and fidelity:
+- forward solver: high-fidelity BEM and EP-GP, versus their linear edge-element FEM
+- accuracy: relative errors near $10^(-7)$ to $10^(-9)$, versus their roughly $10%$
+- goal: a reference forward reaction operator, versus inverse shape reconstruction by linear sampling
+- sampling: $32$ quasi-uniform points on $Lambda$, versus their $78$ sphere-mesh vertices
 
 
 == Reference Solution
