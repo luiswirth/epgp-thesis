@@ -12,13 +12,6 @@
 
 = Results and Discussion <sec:results>
 
-
-Two benchmarks are reported.
-- The spherical cavity (@sec:res-sphere) has a closed-form reaction operator, so
-  the EPGP operator is measured directly against an exact reference.
-- The ellipsoidal cavity (@sec:res-ellipse) has no closed form, so the EPGP
-  operator is instead cross-validated against an independent BEM solve.
-
 There are three relative error measures that we will be using throughout.
 All of them are a Frobenius-norm operator difference normalized by some baseline.
 - The *reciprocity error* $rho$ is reference-free: transmitters and receivers
@@ -34,14 +27,10 @@ $
   delta := norm(amat(T) - amat(T)_"fin") / norm(amat(T)_"fin")
 $ <eq:errors>
 
-NOTE: Reciprocity is symmetric by Galerkin construction...
-Use instead the self-convergence error!
-
-
 #pagebreak(weak: true)
 == Analytic Spherical Cavity <sec:res-sphere>
 
-Analytic reference operator $amat(T)_star$ derived in @sec:sphere.
+Analytic reference operator $amat(T)_star$.
 Unlimited accuracy.
 PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$.
 
@@ -50,8 +39,8 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
   grid(
     columns: 1,
     row-gutter: 6pt,
-    image("../../res/sphere_epgp_field_real.png"),
-    image("../../res/sphere_epgp_field_lic.png"),
+    image("../../res/epgp_sphere_field_real.png"),
+    image("../../res/epgp_sphere_field_lic.png"),
   ),
   caption: [EPGP scattered field on a $2"D"$ spherical cavity slice.],
 )
@@ -59,7 +48,7 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
 The EPGP operator is accurate to the $10^(-9)$ level.
 
 #figure(
-  image("../../res/sphere_epgp_convergence.svg", width: 68%),
+  image("../../res/epgp_sphere_convergence.svg", width: 68%),
   caption: [EPGP convergence on spherical cavity versus $n_"spec"$.],
 ) <fig:sphere-convergence>
 
@@ -73,8 +62,8 @@ The EPGP operator is accurate to the $10^(-9)$ level.
   grid(
     columns: 1,
     row-gutter: 6pt,
-    image("../../res/ellipse_epgp_field_real.png"),
-    image("../../res/ellipse_epgp_field_lic.png"),
+    image("../../res/epgp_ellipse_field_real.png"),
+    image("../../res/epgp_ellipse_field_lic.png"),
   ),
   caption: [EPGP scattered field on a $2"D"$ ellipsoidal cavity slice.],
 )
@@ -91,7 +80,7 @@ Best run p5m4 ($4800$ DOFs) reaches $rho approx 1.4 times 10^(-10)$.
 This is the reference $amat(T)_"BEM"$.
 
 #figure(
-  image("../../res/ellipse_bem_convergence.svg"),
+  image("../../res/bem_ellipse_convergence.svg"),
   caption: [BEM reciprocity error.],
 ) <fig:bem-convergence>
 
@@ -102,15 +91,15 @@ This is the reference $amat(T)_"BEM"$.
 $rho$ decreases with $n_"spec"$ and floors at $approx 7 times 10^(-10)$, close to
 the BEM reference floor.
 
+#figure(
+  image("../../res/epgp_ellipse_convergence.svg", width: 68%),
+  caption: [EPGP reciprocity error on the ellipsoidal cavity versus $n_"spec"$.],
+) <fig:ellipse-conv>
+
 === Cross-Validation <sec:res-comparison>
 
 Reference error $epsilon$ against the p5m4 BEM operator.
 $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $n_"spec" = 1024$.
-
-#figure(
-  image("../../res/ellipse_epgp_convergence.svg", width: 68%),
-  caption: [EPGP convergence on the ellipsoid versus $n_"spec"$.],
-) <fig:ellipse-conv>
 
 - $epsilon$ is still decreasing at $n_"spec" = 1024$, so it is an upper bound,
   not converged.
@@ -142,7 +131,7 @@ $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $n_"sp
       [cond $amat(A)$], ..sphere-runs.map(r => sci(r.at(4))),
       [$rho$], ..sphere-runs.map(r => sci(r.at(5))),
       [$delta$], ..sphere-runs.map(r => if float(r.at(6)) == 0 { [---] } else { sci(r.at(6)) }),
-      [$epsilon_star$], ..sphere-runs.map(r => sci(r.at(7))),
+      [$epsilon$], ..sphere-runs.map(r => sci(r.at(7))),
       [mem [GiB]], ..sphere-runs.map(r => if r.len() > 8 and float(r.at(8)) > 0 { [#calc.round(float(r.at(8)) / 1048576.0, digits: 1)] } else { [---] }),
     )],
     caption: [EPGP convergence on the spherical cavity.],

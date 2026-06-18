@@ -49,6 +49,7 @@
 
 #let pv = $avec(p)$
 #let Ev = $avec(E)$
+#let Bv = $avec(B)$
 
 
 #let ii = $dotless.i$

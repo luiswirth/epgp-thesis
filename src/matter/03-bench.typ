@@ -2,6 +2,12 @@
 
 = Benchmark Formulation <sec:bench>
 
+Two benchmarks are reported.
+- The spherical cavity (@sec:res-sphere) has a closed-form reaction operator, so
+  the EPGP operator is measured directly against an exact reference.
+- The ellipsoidal cavity (@sec:res-ellipse) has no closed form, so the EPGP
+  operator is instead cross-validated against an independent BEM solve.
+
 #align(center)[
   #block(
     stroke: 0.5pt + luma(150),
