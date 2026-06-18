@@ -128,7 +128,7 @@ $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s =
       columns: (auto,) + (1fr,) * sphere-runs.len(),
       align: right,
       stroke: 0.5pt,
-      ..labelbox(7),
+      ..labelbox(6),
       [$N_s$],          ..sphere-runs.map(r => [#r.at(0)]),
       [DOFs],           ..sphere-runs.map(r => [#r.at(2)]),
       [$t$ [s]],        ..sphere-runs.map(r => [#r.at(3)]),
