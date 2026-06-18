@@ -102,6 +102,11 @@ the BEM reference floor.
 
 === Cross-Validation <sec:res-comparison>
 
+We use a high-fidelity BEM solution as reference
+to benchmark the EPGP.
+NOTE: This doesn't necessarily have to be from the
+convergence-grid, but can we higher-fidelity and off the grid.
+
 Reference error $epsilon$ against the p5m4 BEM operator.
 $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s = 1024$.
 
