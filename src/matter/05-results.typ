@@ -3,6 +3,9 @@
 #let bem-runs = csv("../../res/ellipse_bem_results.csv").slice(1).sorted(
   key: r => (int(r.at(0)), int(r.at(1)))
 )
+#let bem-sphere-runs = csv("../../res/sphere_bem_results.csv").slice(1).sorted(
+  key: r => (int(r.at(0)), int(r.at(1)))
+)
 #let _epgp-all = csv("../../res/ellipse_epgp_results.csv").slice(1)
 #let _epgp-nb-max = calc.max(.._epgp-all.map(r => int(r.at(1))))
 #let epgp-runs = _epgp-all.filter(r => int(r.at(1)) == _epgp-nb-max).sorted(
@@ -16,19 +19,15 @@
 
 = Results and Discussion <sec:results>
 
-There are three relative error measures that we will be using throughout.
-All of them are a Frobenius-norm operator difference normalized by some baseline.
+There are two relative error measures used throughout.
+Both are Frobenius-norm operator differences normalized by the reference.
 - The *reciprocity error* $rho$ is reference-free: transmitters and receivers
   coincide on $Lambda$, so reciprocity forces the true $amat(T)$ to be symmetric
-  and $rho$ measures the violation or asymmetry, necessary but not sufficient for accuracy.
+  and $rho$ measures the violation, a necessary but not sufficient condition for accuracy.
 - The *reference error* $epsilon$ is the distance to a trusted reference operator.
-- The *self-convergence error* $delta$ uses the highest-fidelity run
-  $amat(T)_"fin"$ of an operator's own family of operators and measures settling
-  of a sequence, not accuracy.
 $
   rho := norm(amat(T) - amat(T)^transp) / norm(amat(T)) quad quad
-  epsilon := norm(amat(T)_"EPGP" - amat(T)_"ref") / norm(amat(T)_"ref") quad quad
-  delta := norm(amat(T) - amat(T)_"fin") / norm(amat(T)_"fin")
+  epsilon := norm(amat(T) - amat(T)_"ref") / norm(amat(T)_"ref")
 $ <eq:errors>
 
 #pagebreak(weak: true)
@@ -38,7 +37,6 @@ Analytic reference operator $amat(T)_star$.
 Unlimited accuracy.
 PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$.
 
-
 #figure(
   grid(
     columns: 1,
@@ -46,21 +44,25 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
     image("../../res/epgp_sphere_field_real.png"),
     image("../../res/epgp_sphere_field_lic.png"),
   ),
-  caption: [EPGP scattered field on a $2"D"$ spherical cavity slice.],
+  caption: [EP-GP scattered field on a 2D spherical cavity slice.],
 )
 
-The EPGP operator is accurate to the $10^(-9)$ level.
+=== BEM <sec:res-sphere-bem>
+
+#figure(
+  image("../../res/bem_sphere_convergence.svg"),
+  caption: [BEM convergence on the spherical cavity versus analytic reference.],
+) <fig:sphere-bem-convergence>
+
+=== EP-GP <sec:res-sphere-epgp>
 
 #figure(
   image("../../res/epgp_sphere_convergence.svg", width: 68%),
-  caption: [EPGP convergence on spherical cavity versus $N_s$.],
-) <fig:sphere-convergence>
-
+  caption: [EP-GP convergence on the spherical cavity versus analytic reference.],
+) <fig:sphere-epgp-convergence>
 
 #pagebreak(weak: true)
 == Ellipsoidal Cavity <sec:res-ellipse>
-
-
 
 #figure(
   grid(
@@ -69,7 +71,7 @@ The EPGP operator is accurate to the $10^(-9)$ level.
     image("../../res/epgp_ellipse_field_real.png"),
     image("../../res/epgp_ellipse_field_lic.png"),
   ),
-  caption: [EPGP scattered field on a $2"D"$ ellipsoidal cavity slice.],
+  caption: [EP-GP scattered field on a 2D ellipsoidal cavity slice.],
 )
 
 Total field is a standing wave (static).
@@ -85,39 +87,32 @@ This is the reference $amat(T)_"BEM"$.
 
 #figure(
   image("../../res/bem_ellipse_convergence.svg"),
-  caption: [BEM reciprocity error.],
+  caption: [BEM reciprocity error on the ellipsoidal cavity.],
 ) <fig:bem-convergence>
 
-
-
-=== EPGP Reconstruction <sec:res-epgp>
+=== EP-GP Reconstruction <sec:res-epgp>
 
 $rho$ decreases with $N_s$ and floors at $approx 7 times 10^(-10)$, close to
 the BEM reference floor.
 
 #figure(
   image("../../res/epgp_ellipse_convergence.svg", width: 68%),
-  caption: [EPGP reciprocity error on the ellipsoidal cavity versus $N_s$.],
+  caption: [EP-GP reciprocity error on the ellipsoidal cavity versus $N_s$.],
 ) <fig:ellipse-conv>
 
 === Cross-Validation <sec:res-comparison>
 
-We use a high-fidelity BEM solution as reference
-to benchmark the EPGP.
-NOTE: This doesn't necessarily have to be from the
-convergence-grid, but can we higher-fidelity and off the grid.
+We use a high-fidelity BEM solution as reference to benchmark the EP-GP.
+The reference is off the convergence grid, produced by a dedicated finer run.
 
-Reference error $epsilon$ against the p5m4 BEM operator.
+Reference error $epsilon$ against the BEM reference operator.
 $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s = 1024$.
 
-- $epsilon$ is still decreasing at $N_s = 1024$, so it is an upper bound,
-  not converged.
-- Both reciprocity floors ($ap 2 times 10^(-9)$ BEM, $ap 7 times 10^(-10)$ EPGP)
-  lie well below $epsilon$, so the residual is genuine discretization difference,
-  not round-off.
-- The EPGP operator is itself accurate to $10^(-9)$, so the ellipsoidal residual
-  is set by the finite BEM mesh; the cross-validation understates the EPGP
-  accuracy.
+- $epsilon$ is still decreasing at $N_s = 1024$, so it is an upper bound, not converged.
+- Both reciprocity floors ($ap 2 times 10^(-9)$ BEM, $ap 7 times 10^(-10)$ EP-GP)
+  lie well below $epsilon$, so the residual is genuine discretization difference, not round-off.
+- The EP-GP operator is itself accurate to $10^(-9)$, so the ellipsoidal residual
+  is set by the finite BEM mesh; the cross-validation understates the EP-GP accuracy.
 
 #page(flipped: true, margin: 1.3cm)[
   #set table(inset: (x: 6pt, y: 5pt))
@@ -127,24 +122,41 @@ $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s =
     table.vline(x: 1, stroke: 1.5pt),
     ..range(n + 1).map(y => table.hline(y: y, end: 1, stroke: 1.5pt)),
   )
-  
+
   #figure(
     text(size: 8pt)[#table(
       columns: (auto,) + (1fr,) * sphere-runs.len(),
       align: right,
       stroke: 0.5pt,
-      ..labelbox(8),
-      [$N_s$], ..sphere-runs.map(r => [#r.at(0)]),
-      [DOFs], ..sphere-runs.map(r => [#r.at(2)]),
-      [$t$ [s]], ..sphere-runs.map(r => [#calc.round(float(r.at(3)), digits: 1)]),
-      [cond $amat(A)$], ..sphere-runs.map(r => sci(r.at(4))),
-      [$rho$], ..sphere-runs.map(r => sci(r.at(6))),
-      [$delta$], ..sphere-runs.map(r => if float(r.at(7)) == 0 { [---] } else { sci(r.at(7)) }),
-      [$epsilon$], ..sphere-runs.map(r => sci(r.at(8))),
-      [mem [GiB]], ..sphere-runs.map(r => if float(r.at(9)) > 0 { [#calc.round(float(r.at(9)) / 1048576.0, digits: 1)] } else { [---] }),
+      ..labelbox(7),
+      [$N_s$],          ..sphere-runs.map(r => [#r.at(0)]),
+      [DOFs],           ..sphere-runs.map(r => [#r.at(2)]),
+      [$t$ [s]],        ..sphere-runs.map(r => [#r.at(3)]),
+      [mem [GiB]],      ..sphere-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
+      [cond $amat(A)$], ..sphere-runs.map(r => sci(r.at(5))),
+      [$epsilon$],      ..sphere-runs.map(r => sci(r.at(7))),
     )],
-    caption: [EPGP convergence on the spherical cavity ($N_b = #_sphere-nb-max$).],
+    caption: [EP-GP convergence on the spherical cavity ($N_b = #_sphere-nb-max$).],
   ) <tab:sphere>
+
+  #v(2em)
+
+  #figure(
+    text(size: 8pt)[#table(
+      columns: (auto,) + (1fr,) * bem-sphere-runs.len(),
+      align: right,
+      stroke: 0.5pt,
+      ..labelbox(7),
+      [$p$],            ..bem-sphere-runs.map(r => [#r.at(0)]),
+      [$m$],            ..bem-sphere-runs.map(r => [#r.at(1)]),
+      [DOFs],           ..bem-sphere-runs.map(r => [#r.at(2)]),
+      [$t$ [s]],        ..bem-sphere-runs.map(r => [#r.at(3)]),
+      [mem [GiB]],      ..bem-sphere-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
+      [cond $amat(A)$], ..bem-sphere-runs.map(r => sci(r.at(5))),
+      [$epsilon$],      ..bem-sphere-runs.map(r => sci(r.at(7))),
+    )],
+    caption: [BEM convergence on the spherical cavity.],
+  ) <tab:sphere-bem>
 
   #v(2em)
 
@@ -153,14 +165,13 @@ $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s =
       columns: (auto,) + (1fr,) * bem-runs.len(),
       align: right,
       stroke: 0.5pt,
-      ..labelbox(7),
-      [$p$], ..bem-runs.map(r => [#r.at(0)]),
-      [$m$], ..bem-runs.map(r => [#r.at(1)]),
-      [DOFs], ..bem-runs.map(r => [#r.at(2)]),
-      [$rho$], ..bem-runs.map(r => sci(r.at(3))),
-      [$delta$], ..bem-runs.map(r => if float(r.at(4)) == 0 { [---] } else { sci(r.at(4)) }),
-      [$t$ [s]], ..bem-runs.map(r => [#r.at(5)]),
-      [mem [GiB]], ..bem-runs.map(r => if r.len() > 6 and float(r.at(6)) > 0 { [#calc.round(float(r.at(6)) / 1048576.0, digits: 1)] } else { [---] }),
+      ..labelbox(6),
+      [$p$],       ..bem-runs.map(r => [#r.at(0)]),
+      [$m$],       ..bem-runs.map(r => [#r.at(1)]),
+      [DOFs],      ..bem-runs.map(r => [#r.at(2)]),
+      [$t$ [s]],   ..bem-runs.map(r => [#r.at(3)]),
+      [mem [GiB]], ..bem-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
+      [$rho$],     ..bem-runs.map(r => sci(r.at(7))),
     )],
     caption: [BEM convergence on the ellipsoidal cavity.],
   ) <tab:bem>
@@ -172,18 +183,15 @@ $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s =
       columns: (auto,) + (1fr,) * epgp-runs.len(),
       align: right,
       stroke: 0.5pt,
-      ..labelbox(8),
-      [$N_s$], ..epgp-runs.map(r => [#r.at(0)]),
-      [DOFs], ..epgp-runs.map(r => [#r.at(2)]),
-      [$t$ [s]], ..epgp-runs.map(r => [#calc.round(float(r.at(3)), digits: 1)]),
-      [cond $amat(A)$], ..epgp-runs.map(r => sci(r.at(4))),
-      [$rho$], ..epgp-runs.map(r => sci(r.at(6))),
-      [$delta$], ..epgp-runs.map(r => if float(r.at(7)) == 0 { [---] } else { sci(r.at(7)) }),
-      [$epsilon$], ..epgp-runs.map(r => sci(r.at(8))),
-      [mem [GiB]], ..epgp-runs.map(r => if float(r.at(9)) > 0 { [#calc.round(float(r.at(9)) / 1048576.0, digits: 1)] } else { [---] }),
+      ..labelbox(7),
+      [$N_s$],          ..epgp-runs.map(r => [#r.at(0)]),
+      [DOFs],           ..epgp-runs.map(r => [#r.at(2)]),
+      [$t$ [s]],        ..epgp-runs.map(r => [#r.at(3)]),
+      [mem [GiB]],      ..epgp-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
+      [cond $amat(A)$], ..epgp-runs.map(r => sci(r.at(5))),
+      [$rho$],          ..epgp-runs.map(r => sci(r.at(7))),
+      [$epsilon$],      ..epgp-runs.map(r => sci(r.at(8))),
     )],
-    caption: [EPGP convergence on the ellipsoidal cavity ($N_b = #_epgp-nb-max$).],
+    caption: [EP-GP convergence on the ellipsoidal cavity ($N_b = #_epgp-nb-max$).],
   ) <tab:epgp>
 ]
-
-
