@@ -51,5 +51,5 @@ well matched to spectral and plane-wave representations.
 
 Condition the Maxwell plane-wave GP prior on the tangential-trace data, evaluate
 posterior-mean scattered field on $Lambda$.
-Single knob: $n_"spec"$, the number of spectral directions on the Fibonacci sphere.
+Single knob: $N_s$, the number of spectral directions on the Fibonacci sphere.
 

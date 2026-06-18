@@ -49,7 +49,7 @@ The EPGP operator is accurate to the $10^(-9)$ level.
 
 #figure(
   image("../../res/epgp_sphere_convergence.svg", width: 68%),
-  caption: [EPGP convergence on spherical cavity versus $n_"spec"$.],
+  caption: [EPGP convergence on spherical cavity versus $N_s$.],
 ) <fig:sphere-convergence>
 
 
@@ -88,20 +88,20 @@ This is the reference $amat(T)_"BEM"$.
 
 === EPGP Reconstruction <sec:res-epgp>
 
-$rho$ decreases with $n_"spec"$ and floors at $approx 7 times 10^(-10)$, close to
+$rho$ decreases with $N_s$ and floors at $approx 7 times 10^(-10)$, close to
 the BEM reference floor.
 
 #figure(
   image("../../res/epgp_ellipse_convergence.svg", width: 68%),
-  caption: [EPGP reciprocity error on the ellipsoidal cavity versus $n_"spec"$.],
+  caption: [EPGP reciprocity error on the ellipsoidal cavity versus $N_s$.],
 ) <fig:ellipse-conv>
 
 === Cross-Validation <sec:res-comparison>
 
 Reference error $epsilon$ against the p5m4 BEM operator.
-$epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $n_"spec" = 1024$.
+$epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s = 1024$.
 
-- $epsilon$ is still decreasing at $n_"spec" = 1024$, so it is an upper bound,
+- $epsilon$ is still decreasing at $N_s = 1024$, so it is an upper bound,
   not converged.
 - Both reciprocity floors ($ap 2 times 10^(-9)$ BEM, $ap 7 times 10^(-10)$ EPGP)
   lie well below $epsilon$, so the residual is genuine discretization difference,
@@ -125,7 +125,7 @@ $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $n_"sp
       align: right,
       stroke: 0.5pt,
       ..labelbox(8),
-      [$n_"spec"$], ..sphere-runs.map(r => [#r.at(0)]),
+      [$N_s$], ..sphere-runs.map(r => [#r.at(0)]),
       [DOFs], ..sphere-runs.map(r => [#r.at(1)]),
       [$t$ [s]], ..sphere-runs.map(r => [#calc.round(float(r.at(2)), digits: 1)]),
       [cond $amat(A)$], ..sphere-runs.map(r => sci(r.at(4))),
@@ -164,7 +164,7 @@ $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $n_"sp
       align: right,
       stroke: 0.5pt,
       ..labelbox(8),
-      [$n_"spec"$], ..epgp-runs.map(r => [#r.at(0)]),
+      [$N_s$], ..epgp-runs.map(r => [#r.at(0)]),
       [DOFs], ..epgp-runs.map(r => [#r.at(1)]),
       [$t$ [s]], ..epgp-runs.map(r => [#calc.round(float(r.at(2)), digits: 1)]),
       [cond $amat(A)$], ..epgp-runs.map(r => sci(r.at(4))),
