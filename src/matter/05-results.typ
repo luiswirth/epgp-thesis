@@ -3,10 +3,14 @@
 #let bem-runs = csv("../../res/ellipse_bem_results.csv").slice(1).sorted(
   key: r => (int(r.at(0)), int(r.at(1)))
 )
-#let epgp-runs = csv("../../res/ellipse_epgp_results.csv").slice(1).sorted(
+#let _epgp-all = csv("../../res/ellipse_epgp_results.csv").slice(1)
+#let _epgp-nb-max = calc.max(.._epgp-all.map(r => int(r.at(1))))
+#let epgp-runs = _epgp-all.filter(r => int(r.at(1)) == _epgp-nb-max).sorted(
   key: r => int(r.at(0))
 )
-#let sphere-runs = csv("../../res/sphere_epgp_results.csv").slice(1).sorted(
+#let _sphere-all = csv("../../res/sphere_epgp_results.csv").slice(1)
+#let _sphere-nb-max = calc.max(.._sphere-all.map(r => int(r.at(1))))
+#let sphere-runs = _sphere-all.filter(r => int(r.at(1)) == _sphere-nb-max).sorted(
   key: r => int(r.at(0))
 )
 
@@ -126,15 +130,15 @@ $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s =
       stroke: 0.5pt,
       ..labelbox(8),
       [$N_s$], ..sphere-runs.map(r => [#r.at(0)]),
-      [DOFs], ..sphere-runs.map(r => [#r.at(1)]),
-      [$t$ [s]], ..sphere-runs.map(r => [#calc.round(float(r.at(2)), digits: 1)]),
+      [DOFs], ..sphere-runs.map(r => [#r.at(2)]),
+      [$t$ [s]], ..sphere-runs.map(r => [#calc.round(float(r.at(3)), digits: 1)]),
       [cond $amat(A)$], ..sphere-runs.map(r => sci(r.at(4))),
-      [$rho$], ..sphere-runs.map(r => sci(r.at(5))),
-      [$delta$], ..sphere-runs.map(r => if float(r.at(6)) == 0 { [---] } else { sci(r.at(6)) }),
-      [$epsilon$], ..sphere-runs.map(r => sci(r.at(7))),
-      [mem [GiB]], ..sphere-runs.map(r => if r.len() > 8 and float(r.at(8)) > 0 { [#calc.round(float(r.at(8)) / 1048576.0, digits: 1)] } else { [---] }),
+      [$rho$], ..sphere-runs.map(r => sci(r.at(6))),
+      [$delta$], ..sphere-runs.map(r => if float(r.at(7)) == 0 { [---] } else { sci(r.at(7)) }),
+      [$epsilon$], ..sphere-runs.map(r => sci(r.at(8))),
+      [mem [GiB]], ..sphere-runs.map(r => if float(r.at(9)) > 0 { [#calc.round(float(r.at(9)) / 1048576.0, digits: 1)] } else { [---] }),
     )],
-    caption: [EPGP convergence on the spherical cavity.],
+    caption: [EPGP convergence on the spherical cavity ($N_b = #_sphere-nb-max$).],
   ) <tab:sphere>
 
   #v(2em)
@@ -165,15 +169,15 @@ $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s =
       stroke: 0.5pt,
       ..labelbox(8),
       [$N_s$], ..epgp-runs.map(r => [#r.at(0)]),
-      [DOFs], ..epgp-runs.map(r => [#r.at(1)]),
-      [$t$ [s]], ..epgp-runs.map(r => [#calc.round(float(r.at(2)), digits: 1)]),
+      [DOFs], ..epgp-runs.map(r => [#r.at(2)]),
+      [$t$ [s]], ..epgp-runs.map(r => [#calc.round(float(r.at(3)), digits: 1)]),
       [cond $amat(A)$], ..epgp-runs.map(r => sci(r.at(4))),
-      [$rho$], ..epgp-runs.map(r => sci(r.at(5))),
-      [$delta$], ..epgp-runs.map(r => if float(r.at(6)) == 0 { [---] } else { sci(r.at(6)) }),
-      [$epsilon$], ..epgp-runs.map(r => sci(r.at(7))),
-      [mem [GiB]], ..epgp-runs.map(r => if r.len() > 8 and float(r.at(8)) > 0 { [#calc.round(float(r.at(8)) / 1048576.0, digits: 1)] } else { [---] }),
+      [$rho$], ..epgp-runs.map(r => sci(r.at(6))),
+      [$delta$], ..epgp-runs.map(r => if float(r.at(7)) == 0 { [---] } else { sci(r.at(7)) }),
+      [$epsilon$], ..epgp-runs.map(r => sci(r.at(8))),
+      [mem [GiB]], ..epgp-runs.map(r => if float(r.at(9)) > 0 { [#calc.round(float(r.at(9)) / 1048576.0, digits: 1)] } else { [---] }),
     )],
-    caption: [EPGP convergence on the ellipsoidal cavity.],
+    caption: [EPGP convergence on the ellipsoidal cavity ($N_b = #_epgp-nb-max$).],
   ) <tab:epgp>
 ]
 
