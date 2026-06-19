@@ -61,6 +61,60 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
   caption: [EP-GP convergence on the spherical cavity versus analytic reference.],
 ) <fig:sphere-epgp-convergence>
 
+=== Accuracy--Runtime Trade-off <sec:res-sphere-pareto>
+
+#figure(
+  image("../../res/pareto_err.svg"),
+  caption: [Accuracy vs wall time for BEM and EP-GP on the spherical cavity.],
+) <fig:pareto-err>
+
+#page(flipped: true, margin: 1.3cm)[
+  #set table(inset: (x: 6pt, y: 5pt))
+
+  #let labelbox(n) = (
+    table.vline(x: 0, stroke: 1.5pt),
+    table.vline(x: 1, stroke: 1.5pt),
+    ..range(n + 1).map(y => table.hline(y: y, end: 1, stroke: 1.5pt)),
+  )
+
+  #figure(
+    text(size: 8pt)[#table(
+      columns: (auto,) + (1fr,) * sphere-runs.len(),
+      align: right,
+      stroke: 0.5pt,
+      ..labelbox(7),
+      [$N_s$],          ..sphere-runs.map(r => [#r.at(0)]),
+      [DOFs],           ..sphere-runs.map(r => [#r.at(2)]),
+      [mem [GiB]],      ..sphere-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
+      [$t$ [s]],        ..sphere-runs.map(r => [#r.at(3)]),
+      [cond $amat(A)$], ..sphere-runs.map(r => sci(r.at(5))),
+      [$rho$],          ..sphere-runs.map(r => sci(r.at(7))),
+      [$epsilon$],      ..sphere-runs.map(r => sci(r.at(8))),
+    )],
+    caption: [EP-GP convergence on the spherical cavity ($N_b = #_sphere-nb-max$).],
+  ) <tab:sphere>
+
+  #v(2em)
+
+  #figure(
+    text(size: 8pt)[#table(
+      columns: (auto,) + (1fr,) * bem-sphere-runs.len(),
+      align: right,
+      stroke: 0.5pt,
+      ..labelbox(8),
+      [$p$],            ..bem-sphere-runs.map(r => [#r.at(0)]),
+      [$m$],            ..bem-sphere-runs.map(r => [#r.at(1)]),
+      [DOFs],           ..bem-sphere-runs.map(r => [#r.at(2)]),
+      [mem [GiB]],      ..bem-sphere-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
+      [$t$ [s]],        ..bem-sphere-runs.map(r => [#r.at(3)]),
+      [cond $amat(A)$], ..bem-sphere-runs.map(r => sci(r.at(5))),
+      [$rho$],          ..bem-sphere-runs.map(r => sci(r.at(7))),
+      [$epsilon$],      ..bem-sphere-runs.map(r => sci(r.at(8))),
+    )],
+    caption: [BEM convergence on the spherical cavity.],
+  ) <tab:sphere-bem>
+]
+
 #pagebreak(weak: true)
 == Ellipsoidal Cavity <sec:res-ellipse>
 
@@ -82,8 +136,8 @@ Incident and scattered fields carry power (dynamic).
 Runs over a $p times m$ grid.
 Analytic boundary, so $h$ converges algebraically and $p$ geometrically.
 
-Best run p5m4 ($4800$ DOFs) reaches $rho approx 1.4 times 10^(-10)$.
-This is the reference $amat(T)_"BEM"$.
+Best grid run p5/m4 ($4800$ DOFs) reaches $rho approx 1.4 times 10^(-10)$.
+The BEM reference $amat(T)_"BEM"$ is a dedicated off-grid run at p6/m4 ($5292$ DOFs, $rho approx 2.5 times 10^(-10)$).
 
 #figure(
   image("../../res/bem_ellipse_convergence.svg"),
@@ -92,8 +146,8 @@ This is the reference $amat(T)_"BEM"$.
 
 === EP-GP Reconstruction <sec:res-epgp>
 
-$rho$ decreases with $N_s$ and floors at $approx 7 times 10^(-10)$, close to
-the BEM reference floor.
+$rho$ decreases with $N_s$ and floors at $approx 3 times 10^(-11)$, below the
+BEM reference floor.
 
 #figure(
   image("../../res/epgp_ellipse_convergence.svg", width: 68%),
@@ -106,13 +160,20 @@ We use a high-fidelity BEM solution as reference to benchmark the EP-GP.
 The reference is off the convergence grid, produced by a dedicated finer run.
 
 Reference error $epsilon$ against the BEM reference operator.
-$epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s = 1024$.
+$epsilon$ decreases monotonically, reaching $approx 1.3 times 10^(-8)$ at $N_s = 1024$.
 
 - $epsilon$ is still decreasing at $N_s = 1024$, so it is an upper bound, not converged.
-- Both reciprocity floors ($ap 2 times 10^(-9)$ BEM, $ap 7 times 10^(-10)$ EP-GP)
+- Both reciprocity floors ($ap 1 times 10^(-10)$ BEM, $ap 3 times 10^(-11)$ EP-GP)
   lie well below $epsilon$, so the residual is genuine discretization difference, not round-off.
 - The EP-GP operator is itself accurate to $10^(-9)$, so the ellipsoidal residual
   is set by the finite BEM mesh; the cross-validation understates the EP-GP accuracy.
+
+=== Accuracy--Runtime Trade-off <sec:res-ellipse-pareto>
+
+#figure(
+  image("../../res/pareto_recip.svg"),
+  caption: [Reciprocity error vs wall time for BEM and EP-GP on both cavities.],
+) <fig:pareto-recip>
 
 #page(flipped: true, margin: 1.3cm)[
   #set table(inset: (x: 6pt, y: 5pt))
@@ -125,53 +186,17 @@ $epsilon$ decreases monotonically, reaching $approx 5.6 times 10^(-8)$ at $N_s =
 
   #figure(
     text(size: 8pt)[#table(
-      columns: (auto,) + (1fr,) * sphere-runs.len(),
-      align: right,
-      stroke: 0.5pt,
-      ..labelbox(6),
-      [$N_s$],          ..sphere-runs.map(r => [#r.at(0)]),
-      [DOFs],           ..sphere-runs.map(r => [#r.at(2)]),
-      [$t$ [s]],        ..sphere-runs.map(r => [#r.at(3)]),
-      [mem [GiB]],      ..sphere-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
-      [cond $amat(A)$], ..sphere-runs.map(r => sci(r.at(5))),
-      [$epsilon$],      ..sphere-runs.map(r => sci(r.at(7))),
-    )],
-    caption: [EP-GP convergence on the spherical cavity ($N_b = #_sphere-nb-max$).],
-  ) <tab:sphere>
-
-  #v(2em)
-
-  #figure(
-    text(size: 8pt)[#table(
-      columns: (auto,) + (1fr,) * bem-sphere-runs.len(),
-      align: right,
-      stroke: 0.5pt,
-      ..labelbox(7),
-      [$p$],            ..bem-sphere-runs.map(r => [#r.at(0)]),
-      [$m$],            ..bem-sphere-runs.map(r => [#r.at(1)]),
-      [DOFs],           ..bem-sphere-runs.map(r => [#r.at(2)]),
-      [$t$ [s]],        ..bem-sphere-runs.map(r => [#r.at(3)]),
-      [mem [GiB]],      ..bem-sphere-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
-      [cond $amat(A)$], ..bem-sphere-runs.map(r => sci(r.at(5))),
-      [$epsilon$],      ..bem-sphere-runs.map(r => sci(r.at(7))),
-    )],
-    caption: [BEM convergence on the spherical cavity.],
-  ) <tab:sphere-bem>
-
-  #v(2em)
-
-  #figure(
-    text(size: 8pt)[#table(
       columns: (auto,) + (1fr,) * bem-runs.len(),
       align: right,
       stroke: 0.5pt,
-      ..labelbox(6),
-      [$p$],       ..bem-runs.map(r => [#r.at(0)]),
-      [$m$],       ..bem-runs.map(r => [#r.at(1)]),
-      [DOFs],      ..bem-runs.map(r => [#r.at(2)]),
-      [$t$ [s]],   ..bem-runs.map(r => [#r.at(3)]),
-      [mem [GiB]], ..bem-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
-      [$rho$],     ..bem-runs.map(r => sci(r.at(7))),
+      ..labelbox(7),
+      [$p$],            ..bem-runs.map(r => [#r.at(0)]),
+      [$m$],            ..bem-runs.map(r => [#r.at(1)]),
+      [DOFs],           ..bem-runs.map(r => [#r.at(2)]),
+      [mem [GiB]],      ..bem-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
+      [$t$ [s]],        ..bem-runs.map(r => [#r.at(3)]),
+      [cond $amat(A)$], ..bem-runs.map(r => sci(r.at(5))),
+      [$rho$],          ..bem-runs.map(r => sci(r.at(7))),
     )],
     caption: [BEM convergence on the ellipsoidal cavity.],
   ) <tab:bem>

@@ -5,6 +5,8 @@ set -euo pipefail
 BENCH=../cavity-benchmark
 FIGS=$BENCH/out/figs
 
+cp "$FIGS/pareto_err.svg"               res/
+cp "$FIGS/pareto_recip.svg"             res/
 cp "$FIGS/bem_ellipse_convergence.svg"  res/
 cp "$FIGS/bem_sphere_convergence.svg"   res/
 cp "$FIGS/epgp_ellipse_convergence.svg" res/
