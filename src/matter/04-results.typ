@@ -44,7 +44,7 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
     image("../../res/epgp_sphere_field_real.png"),
     image("../../res/epgp_sphere_field_lic.png"),
   ),
-  caption: [EP-GP scattered field on a 2D spherical cavity slice.],
+  caption: [EPGP scattered field on a 2D spherical cavity slice.],
 )
 
 === BEM <sec:res-sphere-bem>
@@ -54,18 +54,18 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
   caption: [BEM convergence on the spherical cavity versus analytic reference.],
 ) <fig:sphere-bem-convergence>
 
-=== EP-GP <sec:res-sphere-epgp>
+=== EPGP <sec:res-sphere-epgp>
 
 #figure(
   image("../../res/epgp_sphere_convergence.svg", width: 68%),
-  caption: [EP-GP convergence on the spherical cavity versus analytic reference.],
+  caption: [EPGP convergence on the spherical cavity versus analytic reference.],
 ) <fig:sphere-epgp-convergence>
 
 === Accuracy--Runtime Trade-off <sec:res-sphere-pareto>
 
 #figure(
   image("../../res/pareto_sphere.svg"),
-  caption: [Accuracy vs wall time for BEM and EP-GP on the spherical cavity.],
+  caption: [Accuracy vs wall time for BEM and EPGP on the spherical cavity.],
 ) <fig:pareto-sphere>
 
 #page(flipped: true, margin: 1.3cm)[
@@ -91,7 +91,7 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
       [$rho$],          ..sphere-runs.map(r => sci(r.at(7))),
       [$epsilon$],      ..sphere-runs.map(r => sci(r.at(8))),
     )],
-    caption: [EP-GP convergence on the spherical cavity ($N_b = #_sphere-nb-max$).],
+    caption: [EPGP convergence on the spherical cavity ($N_b = #_sphere-nb-max$).],
   ) <tab:sphere>
 
   #v(2em)
@@ -125,7 +125,7 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
     image("../../res/epgp_ellipse_field_real.png"),
     image("../../res/epgp_ellipse_field_lic.png"),
   ),
-  caption: [EP-GP scattered field on a 2D ellipsoidal cavity slice.],
+  caption: [EPGP scattered field on a 2D ellipsoidal cavity slice.],
 )
 
 Total field is a standing wave (static).
@@ -144,35 +144,35 @@ The BEM reference $amat(T)_"BEM"$ is a dedicated off-grid run at p6/m4 ($5292$ D
   caption: [BEM reciprocity error on the ellipsoidal cavity.],
 ) <fig:bem-convergence>
 
-=== EP-GP Reconstruction <sec:res-epgp>
+=== EPGP Reconstruction <sec:res-epgp>
 
 $rho$ decreases with $N_s$ and floors at $approx 3 times 10^(-11)$, below the
 BEM reference floor.
 
 #figure(
   image("../../res/epgp_ellipse_convergence.svg", width: 68%),
-  caption: [EP-GP reciprocity error on the ellipsoidal cavity versus $N_s$.],
+  caption: [EPGP reciprocity error on the ellipsoidal cavity versus $N_s$.],
 ) <fig:ellipse-conv>
 
 === Cross-Validation <sec:res-comparison>
 
-We use a high-fidelity BEM solution as reference to benchmark the EP-GP.
+We use a high-fidelity BEM solution as reference to benchmark the EPGP.
 The reference is off the convergence grid, produced by a dedicated finer run.
 
 Reference error $epsilon$ against the BEM reference operator.
 $epsilon$ decreases monotonically, reaching $approx 1.3 times 10^(-8)$ at $N_s = 1024$.
 
 - $epsilon$ is still decreasing at $N_s = 1024$, so it is an upper bound, not converged.
-- Both reciprocity floors ($ap 1 times 10^(-10)$ BEM, $ap 3 times 10^(-11)$ EP-GP)
+- Both reciprocity floors ($ap 1 times 10^(-10)$ BEM, $ap 3 times 10^(-11)$ EPGP)
   lie well below $epsilon$, so the residual is genuine discretization difference, not round-off.
-- The EP-GP operator is itself accurate to $10^(-9)$, so the ellipsoidal residual
-  is set by the finite BEM mesh; the cross-validation understates the EP-GP accuracy.
+- The EPGP operator is itself accurate to $10^(-9)$, so the ellipsoidal residual
+  is set by the finite BEM mesh; the cross-validation understates the EPGP accuracy.
 
 === Accuracy--Runtime Trade-off <sec:res-ellipse-pareto>
 
 #figure(
   image("../../res/pareto_ellipse.svg"),
-  caption: [Reciprocity error vs wall time for BEM and EP-GP on the ellipsoidal cavity.],
+  caption: [Reciprocity error vs wall time for BEM and EPGP on the ellipsoidal cavity.],
 ) <fig:pareto-ellipse>
 
 #page(flipped: true, margin: 1.3cm)[
@@ -217,6 +217,6 @@ $epsilon$ decreases monotonically, reaching $approx 1.3 times 10^(-8)$ at $N_s =
       [$rho$],          ..epgp-runs.map(r => sci(r.at(7))),
       [$epsilon$],      ..epgp-runs.map(r => sci(r.at(8))),
     )],
-    caption: [EP-GP convergence on the ellipsoidal cavity ($N_b = #_epgp-nb-max$).],
+    caption: [EPGP convergence on the ellipsoidal cavity ($N_b = #_epgp-nb-max$).],
   ) <tab:epgp>
 ]

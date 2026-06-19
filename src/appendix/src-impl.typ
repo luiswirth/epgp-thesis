@@ -14,7 +14,7 @@ This is the actual EPGP implementation.
 
 == `cavity-epgp`
 
-EP-GP solver for the PEC cavity, thin layer over `maxwellgp`.
+EPGP solver for the PEC cavity, thin layer over `maxwellgp`.
 
 #[
   #set text(size: 20pt)
@@ -34,7 +34,7 @@ The BEM solver for the PEC cavity reference solution.
 
 == `cavity-benchmark`
 
-Cross-validation harness: aggregates BEM and EP-GP results, generates figures.
+Cross-validation harness: aggregates BEM and EPGP results, generates figures.
 
 #[
   #set text(size: 20pt)

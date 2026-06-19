@@ -8,11 +8,10 @@
 
 #body-style[
   #include "matter/01-intro.typ"
-  #include "matter/02-math.typ"
-  #include "matter/03-bench.typ"
-  #include "matter/04-impl.typ"
-  #include "matter/05-results.typ"
-  #include "matter/06-conclusion.typ"
+  #include "matter/02-problem.typ"
+  #include "matter/03-methods.typ"
+  #include "matter/04-results.typ"
+  #include "matter/05-conclusion.typ"
 ]
 
 #appendix-style[
