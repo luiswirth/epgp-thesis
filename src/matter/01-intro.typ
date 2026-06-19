@@ -57,7 +57,7 @@ accuracy to others.
 
 #pagebreak(weak: true)
 
-== Problem Statement
+== Cavity Benchmark
 
 A useful benchmark for the Maxwell EPGP method should satisfy three
 requirements. It should be governed by the time-harmonic Maxwell equations,
@@ -87,4 +87,23 @@ schemes are unlikely to reproduce the same wrong answer.
 
 This thesis makes the following contributions.
 
-TODO
+- Maxwell EPGP library:
+  Improved existing JAX implementation `maxwellgp`: fixed bugs, added support
+  for tangential traces, posterior covariance computation, and sampling.
+- Cavity EPGP solver:
+  Built a probabilistic EPGP solver `cavity-epgp` for the cavity reaction
+  operator in Python using `maxwellgp`, relying on the analytic dipole Green's
+  function.
+- Cavity BEM solver:
+  Built a deterministic boundary element solver `cavity-bem` for the cavity
+  reaction operator in C++ using `Bembel`, relying on an indirect single-layer
+  formulation.
+- Analytic spherical cavity solution:
+  Derived a closed-form reaction operator for the spherical cavity, serving as
+  exact ground truth.
+- Benchmarking:
+  Built a benchmark harness `cavity-benchmark`. Demonstrated convergence of
+  the EPGP and BEM solvers against the analytic solution on the spherical
+  cavity. Demonstrated agreement between the two solvers on the ellipsoidal
+  cavity, which has no analytic solution. Reported a 2D convergence grid and an
+  accuracy-runtime trade-off.
