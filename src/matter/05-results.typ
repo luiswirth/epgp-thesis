@@ -64,9 +64,9 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
 === Accuracy--Runtime Trade-off <sec:res-sphere-pareto>
 
 #figure(
-  image("../../res/pareto_err.svg"),
+  image("../../res/pareto_sphere.svg"),
   caption: [Accuracy vs wall time for BEM and EP-GP on the spherical cavity.],
-) <fig:pareto-err>
+) <fig:pareto-sphere>
 
 #page(flipped: true, margin: 1.3cm)[
   #set table(inset: (x: 6pt, y: 5pt))
@@ -171,9 +171,9 @@ $epsilon$ decreases monotonically, reaching $approx 1.3 times 10^(-8)$ at $N_s =
 === Accuracy--Runtime Trade-off <sec:res-ellipse-pareto>
 
 #figure(
-  image("../../res/pareto_recip.svg"),
-  caption: [Reciprocity error vs wall time for BEM and EP-GP on both cavities.],
-) <fig:pareto-recip>
+  image("../../res/pareto_ellipse.svg"),
+  caption: [Reciprocity error vs wall time for BEM and EP-GP on the ellipsoidal cavity.],
+) <fig:pareto-ellipse>
 
 #page(flipped: true, margin: 1.3cm)[
   #set table(inset: (x: 6pt, y: 5pt))
