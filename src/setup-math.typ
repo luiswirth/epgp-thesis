@@ -55,7 +55,7 @@
 #let ii = $dotless.i$
 
 
-#let angled(a) = math.lr($angle.l #a angle.r$)
+#let angled(a) = math.lr($chevron.l #a chevron.r$)
 
 #let inner(a, b) = angled($#a, #b$)
 #let innerlines(a, b) = angled(math.vec(delim: none, a, b))
