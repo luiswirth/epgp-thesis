@@ -47,6 +47,14 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
   caption: [EPGP scattered field on a 2D spherical cavity slice.],
 )
 
+@fig:sphere-field-std maps the posterior standard deviation of the scattered
+field over the same slice.
+
+#figure(
+  image("../../res/epgp_sphere_field_std.png", width: 60%),
+  caption: [EPGP scattered-field uncertainty on the spherical cavity slice.],
+) <fig:sphere-field-std>
+
 === BEM <sec:res-sphere-bem>
 
 #figure(
@@ -130,6 +138,14 @@ PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
 
 Total field is a standing wave (static).
 Incident and scattered fields carry power (dynamic).
+
+@fig:ellipse-field-std maps the posterior standard deviation of the scattered
+field over the same slice.
+
+#figure(
+  image("../../res/epgp_ellipse_field_std.png", width: 60%),
+  caption: [EPGP scattered-field uncertainty on the ellipsoidal cavity slice.],
+) <fig:ellipse-field-std>
 
 === BEM Reference Solution <sec:res-bem>
 

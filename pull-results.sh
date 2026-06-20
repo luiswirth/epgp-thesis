@@ -13,8 +13,10 @@ cp "$FIGS/epgp_ellipse_convergence.svg" res/
 cp "$FIGS/epgp_sphere_convergence.svg"  res/
 cp "$FIGS/epgp_ellipse_field_real.png"  res/
 cp "$FIGS/epgp_ellipse_field_lic.png"   res/
+cp "$FIGS/epgp_ellipse_field_std.png"   res/
 cp "$FIGS/epgp_sphere_field_real.png"   res/
 cp "$FIGS/epgp_sphere_field_lic.png"    res/
+cp "$FIGS/epgp_sphere_field_std.png"    res/
 
 cp "$BENCH/out/epgp/grid/ellipse/results.csv" res/ellipse_epgp_results.csv
 cp "$BENCH/out/epgp/grid/sphere/results.csv"  res/sphere_epgp_results.csv
