@@ -30,12 +30,24 @@ $
   epsilon := norm(amat(T) - amat(T)_"ref") / norm(amat(T)_"ref")
 $ <eq:errors>
 
+The EPGP operator is the mean of a Gaussian posterior with covariance
+$amat(Sigma)$. The per-receiver posterior standard deviation is
+$sigma_i = sqrt(amat(Sigma)_(i i))$, which depends on the receiver only, not on
+the transmitter. The total relative uncertainty aggregates these over the operator
+$
+  eta := sqrt(M sum_i sigma_i^2) / norm(amat(T)_"ref")
+$ <eq:uncertainty>
+where $M$ is the operator dimension; $eta$ is the expected relative Frobenius
+deviation of the operator from its posterior mean.
+
 #pagebreak(weak: true)
 == Analytic Spherical Cavity <sec:res-sphere>
 
 Analytic reference operator $amat(T)_star$.
 Unlimited accuracy.
 PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$.
+
+=== Field <sec:res-sphere-field>
 
 #figure(
   grid(
@@ -55,21 +67,45 @@ field over the same slice.
   caption: [EPGP scattered-field uncertainty on the spherical cavity slice.],
 ) <fig:sphere-field-std>
 
-=== BEM <sec:res-sphere-bem>
+=== Operator <sec:res-sphere-operator>
+
+#figure(
+  image("../../res/sphere_uq_operator.png"),
+  caption: [Reaction operator $|amat(T)|$ and posterior uncertainty $sigma$, spherical cavity.],
+) <fig:sphere-operator>
+
+// notes (rewrite into prose):
+- $amat(T)$ symmetric (reciprocity), $amat(T) = amat(T)^transp$
+- diagonal-dominant: largest reaction when transmitter and receiver coincide, decaying with separation
+- $M = 64$ configs: each of 32 surface points carries two tangential polarizations, so consecutive index pairs share a $Lambda$ point
+- $sigma$ depends only on the receiver, not the transmitter (uniform along the transmitter axis), since the posterior covariance is shared across excitations
+- spherical symmetry makes all receivers equivalent, so $sigma$ is uniform
+
+==== Noise Influence <sec:res-sphere-noise>
+
+#figure(
+  image("../../res/sphere_noise.svg", width: 68%),
+  caption: [Reconstruction error and predicted uncertainty vs assumed noise, spherical cavity.],
+) <fig:sphere-noise>
+
+// notes (rewrite into prose):
+- more assumed noise, stronger regularization: error and uncertainty both grow
+
+==== Convergence (BEM) <sec:res-sphere-bem>
 
 #figure(
   image("../../res/bem_sphere_convergence.svg"),
   caption: [BEM convergence on the spherical cavity versus analytic reference.],
 ) <fig:sphere-bem-convergence>
 
-=== EPGP <sec:res-sphere-epgp>
+==== Convergence (EPGP) <sec:res-sphere-epgp>
 
 #figure(
   image("../../res/epgp_sphere_convergence.svg", width: 68%),
   caption: [EPGP convergence on the spherical cavity versus analytic reference.],
 ) <fig:sphere-epgp-convergence>
 
-=== Accuracy--Runtime Trade-off <sec:res-sphere-pareto>
+==== Accuracy--Runtime Trade-off <sec:res-sphere-pareto>
 
 #figure(
   image("../../res/pareto_sphere.svg"),
@@ -126,6 +162,8 @@ field over the same slice.
 #pagebreak(weak: true)
 == Ellipsoidal Cavity <sec:res-ellipse>
 
+=== Field <sec:res-ellipse-field>
+
 #figure(
   grid(
     columns: 1,
@@ -147,7 +185,29 @@ field over the same slice.
   caption: [EPGP scattered-field uncertainty on the ellipsoidal cavity slice.],
 ) <fig:ellipse-field-std>
 
-=== BEM Reference Solution <sec:res-bem>
+=== Operator <sec:res-ellipse-operator>
+
+#figure(
+  image("../../res/ellipse_uq_operator.png"),
+  caption: [Reaction operator $|amat(T)|$ and posterior uncertainty $sigma$, ellipsoidal cavity.],
+) <fig:ellipse-operator>
+
+// notes (rewrite into prose):
+- same structure as the sphere: $amat(T)$ symmetric and diagonal-dominant
+- $sigma$ no longer uniform: it grows for receivers deeper inside the cavity, away from the boundary (toward the elongated $z$-axis)
+- intuition: boundary data constrains near-wall receivers more tightly than deep-interior ones
+
+==== Noise Influence <sec:res-ellipse-noise>
+
+#figure(
+  image("../../res/ellipse_noise.svg", width: 68%),
+  caption: [Reconstruction error and predicted uncertainty vs assumed noise, ellipsoidal cavity.],
+) <fig:ellipse-noise>
+
+// notes (rewrite into prose):
+- same trend as the sphere; error measured against the BEM reference
+
+==== BEM Reference Solution <sec:res-bem>
 
 Runs over a $p times m$ grid.
 Analytic boundary, so $h$ converges algebraically and $p$ geometrically.
@@ -160,7 +220,7 @@ The BEM reference $amat(T)_"BEM"$ is a dedicated off-grid run at p6/m4 ($5292$ D
   caption: [BEM reciprocity error on the ellipsoidal cavity.],
 ) <fig:bem-convergence>
 
-=== EPGP Reconstruction <sec:res-epgp>
+==== EPGP Reconstruction <sec:res-epgp>
 
 $rho$ decreases with $N_s$ and floors at $approx 3 times 10^(-11)$, below the
 BEM reference floor.
@@ -170,7 +230,7 @@ BEM reference floor.
   caption: [EPGP reciprocity error on the ellipsoidal cavity versus $N_s$.],
 ) <fig:ellipse-conv>
 
-=== Cross-Validation <sec:res-comparison>
+==== Cross-Validation <sec:res-comparison>
 
 We use a high-fidelity BEM solution as reference to benchmark the EPGP.
 The reference is off the convergence grid, produced by a dedicated finer run.
@@ -184,7 +244,7 @@ $epsilon$ decreases monotonically, reaching $approx 1.3 times 10^(-8)$ at $N_s =
 - The EPGP operator is itself accurate to $10^(-9)$, so the ellipsoidal residual
   is set by the finite BEM mesh; the cross-validation understates the EPGP accuracy.
 
-=== Accuracy--Runtime Trade-off <sec:res-ellipse-pareto>
+==== Accuracy--Runtime Trade-off <sec:res-ellipse-pareto>
 
 #figure(
   image("../../res/pareto_ellipse.svg"),
