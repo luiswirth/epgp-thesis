@@ -103,7 +103,8 @@ solvers both reproduce $amat(T)_star$ to $approx 10^(-10)$ confirms the formula.
 
 // notes (rewrite into prose):
 - cond spikes at interior cavity resonances, where the EFIE operator is near-singular and the interior problem loses uniqueness
-- high spherical symmetry makes the resonances strongly degenerate, so only a few distinct ones fall in the window: the curve is flat apart from an isolated resonance near $k approx 2.05$
+- high spherical symmetry makes the resonances strongly degenerate, so only three fall in the window (TE $l=1$, TE $l=4$, TM $l=6$); the curve is otherwise flat
+- the overlaid analytic resonances (zeros of $j_l (k R)$ and $psi_l' (k R)$) coincide with the numerical spikes to $approx 2 times 10^(-4)$, validating the detector
 - benchmark $k = 2$ sits on the flat baseline, clear of any resonance
 
 === EPGP <sec:res-sphere-epgp>
