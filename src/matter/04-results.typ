@@ -103,8 +103,8 @@ solvers both reproduce $amat(T)_star$ to $approx 10^(-10)$ confirms the formula.
 
 // notes (rewrite into prose):
 - cond spikes at interior cavity resonances, where the EFIE operator is near-singular and the interior problem loses uniqueness
-- spikes are broad at this coarse resolution; they sharpen with refinement
-- benchmark $k = 2$ sits between resonances, where the system is well conditioned
+- high spherical symmetry makes the resonances strongly degenerate, so only a few distinct ones fall in the window: the curve is flat apart from an isolated resonance near $k approx 2.05$
+- benchmark $k = 2$ sits on the flat baseline, clear of any resonance
 
 === EPGP <sec:res-sphere-epgp>
 
@@ -262,9 +262,10 @@ The BEM reference $amat(T)_"BEM"$ is a dedicated off-grid run at p6/m4 ($5292$ D
 ) <fig:ellipse-bem-ksweep>
 
 // notes (rewrite into prose):
-- same picture as the sphere: cond spikes at interior resonances, where the EFIE operator is near-singular
-- resonance wavenumbers shift with the cavity geometry
-- benchmark $k = 2$ sits clear of the spikes
+- the lower symmetry lifts the degeneracy, so the window holds many distinct resonances; the strongly conditioning ones are spaced roughly $0.02$ to $0.03$
+- $k = 2$ happens to land about $0.0015$ above a resonance near $1.9985$, at the lower edge of a $approx 0.03$ gap; a mid-gap value would be better separated, but $k = 2$ is the prescribed benchmark wavenumber
+- the effect is mild: the high-fidelity operator condition number at $k = 2$ ($approx 4 times 10^7$) is only modestly above the resonance-free spherical case at equal resolution ($approx 3 times 10^7$), the bulk being EFIE conditioning that grows with the discretization
+- both solvers converge cleanly at $k = 2$, so it is operationally non-resonant despite the proximity
 
 === EPGP <sec:res-ellipse-epgp>
 
