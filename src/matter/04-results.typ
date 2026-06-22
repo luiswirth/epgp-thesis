@@ -48,11 +48,11 @@ where $M$ is the operator dimension; $eta$ is the expected relative Frobenius
 deviation of the operator from its posterior mean.
 
 #pagebreak(weak: true)
-== Analytic Spherical Cavity <sec:res-sphere>
+== Spherical Cavity <sec:res-sphere>
 
-Analytic reference operator $amat(T)_star$.
-Unlimited accuracy.
 PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$.
+The spherical case admits a closed-form reaction operator $amat(T)_star$ of
+unlimited accuracy, which serves as ground truth for both solvers.
 
 The reaction operator $amat(T)$ shares the same structure for both solvers.
 Reciprocity makes it symmetric, $amat(T) = amat(T)^transp$, and it is
@@ -60,6 +60,30 @@ diagonal-dominant: the reaction is largest when transmitter and receiver
 coincide and decays with their separation. The $M = 64$ configurations come from
 $32$ surface points each carrying two tangential polarizations, so consecutive
 index pairs share a $Lambda$ point.
+
+=== Analytic Solution <sec:res-sphere-analytic>
+
+The scattered field expands in the regular Hansen multipoles
+$avec(M)_(l m), avec(N)_(l m)$, the divergence-free solutions of the curl-curl
+equation regular at the origin @tai,
+$
+  Ev^s (xv) = sum_(l m) [ alpha_(l m) avec(M)_(l m) (xv) + beta_(l m) avec(N)_(l m) (xv) ]
+$ <eq:sphere-scattered>
+The conducting wall at $r = R$ enforces $rn times (Ev^i + Ev^s) = 0$, which
+decouples by polarization into the interior PEC reflection coefficients
+$
+  alpha_(l m) &= k^2 Gamma_l^"TE" (conj(avec(M)_(l m) (zv)) dot pv), wide
+  Gamma_l^"TE" = h_l^((1)) (k R) \/ j_l (k R) \
+  beta_(l m) &= k^2 Gamma_l^"TM" (conj(avec(N)_(l m) (zv)) dot pv), wide
+  Gamma_l^"TM" = xi_l' (k R) \/ psi_l' (k R)
+$ <eq:sphere-gamma>
+with the Riccati-Bessel functions $psi_l (x) = x j_l (x)$ and
+$xi_l (x) = x h_l^((1)) (x)$. The reference operator $amat(T)_star$ follows by
+inserting $Ev^s$ into the same tangential measurement on $Lambda$ used by the
+numerical solvers. The reflection coefficients are singular at the zeros of
+$j_l (k R)$ and $psi_l' (k R)$, the resonant wavenumbers of the empty PEC sphere
+seen numerically in @sec:res-sphere-bem-res. That two methodologically unrelated
+solvers both reproduce $amat(T)_star$ to $approx 10^(-10)$ confirms the formula.
 
 === BEM <sec:res-sphere-bem>
 
