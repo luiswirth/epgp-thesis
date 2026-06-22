@@ -101,7 +101,7 @@ field over the same slice.
 ==== Wavenumber Dependence <sec:res-sphere-ksweep>
 
 #figure(
-  image("../../res/sphere_ksweep.svg", width: 68%),
+  image("../../res/sphere_epgp_ksweep.svg", width: 68%),
   caption: [Conditioning number versus wavenumber, spherical cavity.],
 ) <fig:sphere-ksweep>
 
@@ -230,7 +230,7 @@ field over the same slice.
 ==== Wavenumber Dependence <sec:res-ellipse-ksweep>
 
 #figure(
-  image("../../res/ellipse_ksweep.svg", width: 68%),
+  image("../../res/ellipse_epgp_ksweep.svg", width: 68%),
   caption: [Conditioning number versus wavenumber, ellipsoidal cavity.],
 ) <fig:ellipse-ksweep>
 
