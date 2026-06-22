@@ -21,6 +21,8 @@ cp "$FIGS/ellipse_uq_operator.png"      res/
 cp "$FIGS/sphere_uq_operator.png"       res/
 cp "$FIGS/ellipse_noise.svg"            res/
 cp "$FIGS/sphere_noise.svg"             res/
+cp "$FIGS/ellipse_ksweep.svg"           res/
+cp "$FIGS/sphere_ksweep.svg"            res/
 
 cp "$BENCH/out/epgp/grid/ellipse/results.csv" res/ellipse_epgp_results.csv
 cp "$BENCH/out/epgp/grid/sphere/results.csv"  res/sphere_epgp_results.csv

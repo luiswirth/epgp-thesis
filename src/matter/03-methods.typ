@@ -58,3 +58,54 @@ with the EPGP solver; the same base sphere NURBS mesh is scaled to the prescribe
 semi-axes. Convergence is governed by the polynomial degree $p$ and the refinement
 level $m$. Because the boundary is analytic, the $h$-refinement converges
 algebraically and the $p$-refinement geometrically.
+
+// NOTES (Luis) -- complexity result, methods only, no prose yet.
+// Both solvers factor once and reuse across all D operator columns
+// (D = 2 * n_points dipole configs, transmit = receive on Lambda).
+// So D enters only as lower-order multi-RHS / multi-query terms;
+// the dominant factorization cost is independent of D.
+//
+// BEM (cavity-bem/src/main.cpp): dense, no compression (high-fidelity
+//   reference). PartialPivLU of the N x N complex Galerkin matrix, all D
+//   RHS solved against the single factorization, field eval to form T.
+//     N ~ p^2 4^m surface DOFs.
+//   factorization        O(N^3)
+//   multi-RHS solve       O(N^2 D)
+//   field eval -> T       O(N D^2)
+//   memory (dense op)     O(N^2)
+//   dominant: O(N^3), unchanged by D.
+//
+// EPGP (maxwellgp gp.py:_factorize): solved in feature/weight space.
+//   F = 2 N_s features, M = 3 N_b boundary trace observations.
+//   Gram phi phi^H + Cholesky    O(N_s^2 N_b + N_s^3)
+//   mean weights (all columns)   O(N_s N_b D + N_s^2 D)
+//   operator + covariance        O(N_s D^2 + N_s^2 D)
+//   memory (feature matrix)      O(N_s N_b)
+//   dominant: O(N_s^2 N_b) for D < N_s (ref: D ~ 1e2, N_s = 2048).
+
+== Computational Complexity <sec:methods-complexity>
+
+#let bigO(x) = $cal(O)(#x)$
+
+Both solvers factor once and reuse the factorization across all $D$ columns of
+the reaction operator, so $D$ enters only as lower-order multi-RHS and
+multi-query terms; the dominant factorization cost is independent of $D$.
+
+#figure(
+  table(
+    columns: (auto, auto, auto),
+    align: (left, center, center),
+    stroke: 0.5pt,
+    inset: (x: 8pt, y: 5pt),
+    table.header([], [BEM], [EPGP]),
+    [factorization], bigO($N^3$),        bigO($N_s^2 N_b + N_s^3$),
+    [multi-RHS / mean], bigO($N^2 D$),    bigO($N_s N_b D + N_s^2 D$),
+    [operator assembly], bigO($N D^2$),   bigO($N_s D^2 + N_s^2 D$),
+    [memory],          bigO($N^2$),       bigO($N_s N_b$),
+    table.hline(stroke: 1pt),
+    [*dominant*],      bigO($N^3$),       bigO($N_s^2 N_b$),
+  ),
+  // NOTE prose for later: N ~ p^2 4^m surface DOFs; N_s spectral directions,
+  // N_b boundary points; D dipole configurations. EPGP dominant holds for D < N_s.
+  caption: [Asymptotic cost of assembling the reaction operator.],
+) <tab:complexity>

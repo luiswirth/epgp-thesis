@@ -98,6 +98,19 @@ field over the same slice.
 // notes (rewrite into prose):
 - more assumed noise, stronger regularization: error and uncertainty both grow
 
+==== Wavenumber Dependence <sec:res-sphere-ksweep>
+
+#figure(
+  image("../../res/sphere_ksweep.svg", width: 68%),
+  caption: [Conditioning number versus wavenumber, spherical cavity.],
+) <fig:sphere-ksweep>
+
+// notes (rewrite into prose):
+- cond decreases monotonically with $k$, spanning $approx 10^(10)$ at low $k$ down to $approx 10^2$
+- low-$k$ ill-conditioning: long wavelength makes the plane-wave features nearly collinear over the boundary
+- larger $k$ decorrelates the features and conditions the system
+- no resonance signature: the basis-collinearity trend dominates the conditioning
+
 ==== Convergence (BEM) <sec:res-sphere-bem>
 
 #figure(
@@ -213,6 +226,17 @@ field over the same slice.
 
 // notes (rewrite into prose):
 - same trend as the sphere; error measured against the BEM reference
+
+==== Wavenumber Dependence <sec:res-ellipse-ksweep>
+
+#figure(
+  image("../../res/ellipse_ksweep.svg", width: 68%),
+  caption: [Conditioning number versus wavenumber, ellipsoidal cavity.],
+) <fig:ellipse-ksweep>
+
+// notes (rewrite into prose):
+- same monotone trend as the sphere: low-$k$ basis collinearity dominates the conditioning
+- benchmark wavenumber $k = 2$ still sits on the steep descent, at $approx 10^9$, before the system conditions out at larger $k$
 
 ==== BEM Reference Solution <sec:res-bem>
 
