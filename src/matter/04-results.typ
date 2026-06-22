@@ -30,6 +30,13 @@ $
   epsilon := norm(amat(T) - amat(T)_"ref") / norm(amat(T)_"ref")
 $ <eq:errors>
 
+Because the operator norm is bounded above by the Frobenius norm,
+$
+  norm(amat(A))_"op" <= norm(amat(A))_"F"
+$ <eq:opnorm>
+convergence in $epsilon$ implies convergence in the operator norm, so the
+Frobenius-based metric is a conservative measure of operator agreement.
+
 The EPGP operator is the mean of a Gaussian posterior with covariance
 $amat(Sigma)$. The per-receiver posterior standard deviation is
 $sigma_i = sqrt(amat(Sigma)_(i i))$, which depends on the receiver only, not on
