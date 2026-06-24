@@ -67,7 +67,7 @@
 
 #let conj(u) = math.overline(u)
 #let transp = math.tack.b
-#let hert = math.upright(math.sans("H"))
+#let herm = math.upright(math.sans("H"))
 
 #let clos(a) = math.overline(a)
 #let openint(a,b) = $lr(\] #a, #b \[)$

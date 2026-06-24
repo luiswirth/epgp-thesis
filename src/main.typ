@@ -20,7 +20,7 @@
 ]
 
 #postface-style[
-  #bibliography("bibliography.bib", style: "ieee")
+  #bibliography("bibliography.bib", style: "chicago-author-date")
 
   //#{
   //  set page(margin: 0cm)

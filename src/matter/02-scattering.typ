@@ -24,25 +24,13 @@ $
 
 - source-free interior: no free charges or currents, $rho = 0$, $Jv = 0$
 - eliminate $Hv$: Faraday's law recovers it from $Ev$, $Hv = 1/(i omega mu) curl Ev$
-- substitute into the second law, gives the time-harmonic curl--curl equation for $Ev$
+- substitute into the second law, gives the curl--curl equation for $Ev$,
+  a Helmholtz equation, with the Helmholtz operator $cal(L) := curl curl - k^2$
 $
   curl curl Ev - k^2 Ev = 0, quad k := omega sqrt(epsilon mu) = omega \/ c
 $
 - $k$ is the wavenumber
-
-- equivalent Laplacian form via the identity $curl curl = grad div - Delta$
-$
-  -Delta Ev + grad div Ev - k^2 Ev = 0
-$
-  - the $grad div Ev$ term is a charge source: $div Ev = rho \/ epsilon = 0$ here,
-    so it vanishes and the field is divergence-free
-- reduces to the vector Helmholtz equation, each Cartesian component scalar Helmholtz
-$
-  Delta Ev + k^2 Ev = 0
-$
-- curl--curl is the primitive form; the Helmholtz form holds only on the
-  divergence-free fields
-- this is the governing equation in $D$
+- $cal(L)$ is the governing operator in $D$
 
 == Scattering Problem
 
@@ -160,9 +148,9 @@ $
 ==== Interior BVP
 
 - scattered field $Ev^s: D -> CC^3$ restores the conducting-wall condition
-- satisfies the interior curl--curl boundary value problem, with operator $cal(L) := curl curl - k^2$
+- satisfies the interior curl--curl boundary value problem, with the Helmholtz operator $cal(L)$
 $
-  cal(L) Ev^s = (curl curl - k^2) Ev^s &= 0 quad "in" D \
+  curl curl Ev^s - k^2 Ev^s &= 0 quad "in" D \
   pi_t Ev^s &= avec(h) quad "on" partial D
 $
 - solving the BVP is the inverse $cal(L)^(-1)$ mapping boundary data $avec(h)$ to $Ev^s$
@@ -219,6 +207,7 @@ $
 $
 - the operator collects all pairs, $amat(T) in CC^(M times M)$; one transmitter, all receivers, is one column
 - per-pair reciprocity lifts to operator symmetry, $amat(T) = amat(T)^transp$ (complex-symmetric, not Hermitian)
+- $amat(T)$ is the object both methods compute; the benchmark compares the two operators they produce
 
 - full chain from transmitter to receiver, in its computational steps:
   + transmitter dipole $delta_t = (zv_t, pv_t)$
@@ -236,7 +225,7 @@ $
 - dipole surface $Lambda$ and wavenumber $k = 2$ are taken from @cavity
 - $Lambda$ is the interior unit sphere
 $
-  Lambda := { xv in RR^3 mid(|) norm(xv) = 1 } subset.eq D
+  Lambda := { xv in RR^3 mid(:) norm(xv) = 1 } subset.eq D
 $
 - $N_Lambda = 32$ surface points distributed by a Fibonacci sphere (quasi-uniform), $M = 2 N_Lambda = 64$ configurations
 - physical scale: wavelength $lambda = 2 pi \/ k approx 3.14$, so the cavity spans
@@ -256,7 +245,7 @@ $
 - interior domain: ellipsoidal cavity, the geometry from @cavity
 - semi-axes $avec(a) = (a_1, a_2, a_3) = (4, 4, 6)$
 $
-  D := { (x_1, x_2, x_3) in RR^3 mid(|) (x_1/a_1)^2 + (x_2/a_2)^2 + (x_3/a_3)^2 < 1 }
+  D := { (x_1, x_2, x_3) in RR^3 mid(:) (x_1/a_1)^2 + (x_2/a_2)^2 + (x_3/a_3)^2 < 1 }
 $
 - no analytic solution available
 
@@ -270,7 +259,7 @@ $
 - not from @cavity; obtained from the ellipsoid by shrinking all semi-axes to the shortest, $a_1 = a_2 = 4$
 - gives the interior sphere of radius $R = a_1 = 4$
 $
-  D := { xv in RR^3 mid(|) norm(xv) < R }, quad R = 4
+  D := { xv in RR^3 mid(:) norm(xv) < R }, quad R = 4
 $
 - admits a closed-form analytic solution, used as exact ground truth
 
@@ -281,6 +270,12 @@ $
 
 ==== Analytic Solution
 
+- spherical symmetry makes the interior BVP separable, so the scattered field has a
+  closed form; this is what the sphere case buys over the ellipsoid
+- it serves as exact ground truth, against which the numerical operators are measured
+- the construction: expand the scattered field in multipoles, impose the PEC wall, read
+  off the coefficients, then evaluate the same measurement as in the general problem
+
 - scattered field expands in the regular Hansen multipoles $avec(M)_(l m), avec(N)_(l m)$,
   the divergence-free solutions of the curl--curl equation regular at the origin @tai
 $
@@ -289,9 +284,9 @@ $
 - conducting wall at $r = R$ enforces $pi_t (Ev^i + Ev^s) = 0$
 - decouples by polarization into the interior PEC reflection coefficients
 $
-  alpha_(l m) &= k^2 Gamma_l^"TE" (conj(avec(M)_(l m) (zv)) dot pv), wide
+  alpha_(l m) &= k^2 Gamma_l^"TE" (avec(M)_(l m)^herm (zv) pv), wide
   Gamma_l^"TE" = h_l^((1)) (k R) \/ j_l (k R) \
-  beta_(l m) &= k^2 Gamma_l^"TM" (conj(avec(N)_(l m) (zv)) dot pv), wide
+  beta_(l m) &= k^2 Gamma_l^"TM" (avec(N)_(l m)^herm (zv) pv), wide
   Gamma_l^"TM" = xi_l' (k R) \/ psi_l' (k R)
 $
 - with the Riccati-Bessel functions $psi_l (x) = x j_l (x)$ and $xi_l (x) = x h_l^((1)) (x)$

@@ -42,7 +42,8 @@ A particularly well-understood PDE system is *Maxwell's equations*, which
 govern *electromagnetism (EM)*. Building an EPGP for these equations is the
 topic of the ongoing effort @felix, which constructs EPGP priors for the
 *time-harmonic* Maxwell system from a geometric perspective based on
-*differential forms*, the *de Rham complex*, and *Hertz potentials*. This yields a more geometrically grounded construction than the one by @harkonen.
+*differential forms*, the *de Rham complex*, and *Hertz potentials*. This yields
+a more geometrically grounded construction than the generic one by @harkonen.
 
 The theoretical framework and a proof-of-concept exist but a convincing
 reference benchmark does not. This thesis provides that benchmark.
@@ -68,7 +69,7 @@ is the object of study. We constructed a probabilistic, Maxwell-consistent
 As comparison we will  compute the reaction operator using a second, independent
 way, with a *boundary element method (BEM)* built on an *boundary integral
 formulation* of the same boundary value problem. For this we used the BEM
-library *`BEMBEL`*. The two solvers share only the problem setup and nothing of
+library *`Bembel`*. The two solvers share only the problem setup and nothing of
 their internal discretizations.
 
 == Contributions
