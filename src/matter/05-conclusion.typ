@@ -1,6 +1,6 @@
 #import "../setup-math.typ": *
 
-= Conclusion and Outlook <sec:conclusion>
+= Conclusion and Outlook
 
 == Summary
 

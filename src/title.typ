@@ -24,7 +24,7 @@
   *Ehrenpreis--Palamodov Gaussian Process \
   for Maxwell's Equations: \
   Boundary Element Method Benchmark \
-  for PEC Cavity Reaction Field*
+  for PEC Cavity Reaction Operator*
 ]
 
 #v(1cm)

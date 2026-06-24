@@ -36,9 +36,11 @@
 
 #let rv = $avec(r)$
 #let rn = $nvec(r)$
+#let en = $nvec(e)$
 
 #let kv = $avec(k)$
 #let kn = $nvec(k)$
+#let av = $avec(a)$
 
 #let dv = $avec(d)$
 #let dn = $nvec(d)$
@@ -49,7 +51,10 @@
 
 #let pv = $avec(p)$
 #let Ev = $avec(E)$
+#let Dv = $avec(D)$
 #let Bv = $avec(B)$
+#let Hv = $avec(H)$
+#let Jv = $avec(J)$
 
 
 #let ii = $dotless.i$
@@ -86,7 +91,6 @@
 #let div = $"div"$
 
 
-#let Hvec = $avec(H)$
 #let H0 = $limits(H)^circle.stroked.small$
 
 

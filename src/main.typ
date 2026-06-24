@@ -8,7 +8,7 @@
 
 #body-style[
   #include "matter/01-intro.typ"
-  #include "matter/02-problem.typ"
+  #include "matter/02-scattering.typ"
   #include "matter/03-methods.typ"
   #include "matter/04-results.typ"
   #include "matter/05-conclusion.typ"

@@ -17,8 +17,10 @@
   set text(font: "New Computer Modern Sans")
   set text(size: 10pt)
 
-  set par(justify: true)
- 
+  set par(justify: true, leading: 0.65em)
+  set list(spacing: 0.65em)
+  set enum(spacing: 0.65em)
+
   doc
 }
 
@@ -50,7 +52,7 @@
       text(size: 25pt)[#it.body]
       v(20pt)
     } else {
-      let size = 20pt - 4pt * (it.level - 1)
+      let size = 20pt - 2pt * (it.level - 1)
       block(sticky: true, above: size, below: size, {
         set text(size, weight: "bold")
         if it.numbering != none {

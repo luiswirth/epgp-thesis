@@ -17,7 +17,7 @@
   key: r => int(r.at(0))
 )
 
-= Results and Discussion <sec:results>
+= Results and Discussion
 
 There are two relative error measures used throughout.
 Both are Frobenius-norm operator differences normalized by the reference.
@@ -28,12 +28,12 @@ Both are Frobenius-norm operator differences normalized by the reference.
 $
   rho := norm(amat(T) - amat(T)^transp) / norm(amat(T)) quad quad
   epsilon := norm(amat(T) - amat(T)_"ref") / norm(amat(T)_"ref")
-$ <eq:errors>
+$
 
 Because the operator norm is bounded above by the Frobenius norm,
 $
   norm(amat(A))_"op" <= norm(amat(A))_"F"
-$ <eq:opnorm>
+$
 convergence in $epsilon$ implies convergence in the operator norm, so the
 Frobenius-based metric is a conservative measure of operator agreement.
 
@@ -43,12 +43,12 @@ $sigma_i = sqrt(amat(Sigma)_(i i))$, which depends on the receiver only, not on
 the transmitter. The total relative uncertainty aggregates these over the operator
 $
   eta := sqrt(M sum_i sigma_i^2) / norm(amat(T)_"ref")
-$ <eq:uncertainty>
+$
 where $M$ is the operator dimension; $eta$ is the expected relative Frobenius
 deviation of the operator from its posterior mean.
 
 #pagebreak(weak: true)
-== Spherical Cavity <sec:res-sphere>
+== Spherical Cavity
 
 PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$.
 The spherical case admits a closed-form reaction operator $amat(T)_star$ of
@@ -61,45 +61,21 @@ coincide and decays with their separation. The $M = 64$ configurations come from
 $32$ surface points each carrying two tangential polarizations, so consecutive
 index pairs share a $Lambda$ point.
 
-=== Analytic Solution <sec:res-sphere-analytic>
+=== BEM
 
-The scattered field expands in the regular Hansen multipoles
-$avec(M)_(l m), avec(N)_(l m)$, the divergence-free solutions of the curl-curl
-equation regular at the origin @tai,
-$
-  Ev^s (xv) = sum_(l m) [ alpha_(l m) avec(M)_(l m) (xv) + beta_(l m) avec(N)_(l m) (xv) ]
-$ <eq:sphere-scattered>
-The conducting wall at $r = R$ enforces $rn times (Ev^i + Ev^s) = 0$, which
-decouples by polarization into the interior PEC reflection coefficients
-$
-  alpha_(l m) &= k^2 Gamma_l^"TE" (conj(avec(M)_(l m) (zv)) dot pv), wide
-  Gamma_l^"TE" = h_l^((1)) (k R) \/ j_l (k R) \
-  beta_(l m) &= k^2 Gamma_l^"TM" (conj(avec(N)_(l m) (zv)) dot pv), wide
-  Gamma_l^"TM" = xi_l' (k R) \/ psi_l' (k R)
-$ <eq:sphere-gamma>
-with the Riccati-Bessel functions $psi_l (x) = x j_l (x)$ and
-$xi_l (x) = x h_l^((1)) (x)$. The reference operator $amat(T)_star$ follows by
-inserting $Ev^s$ into the same tangential measurement on $Lambda$ used by the
-numerical solvers. The reflection coefficients are singular at the zeros of
-$j_l (k R)$ and $psi_l' (k R)$, the resonant wavenumbers of the empty PEC sphere
-seen numerically in @sec:res-sphere-bem-res. That two methodologically unrelated
-solvers both reproduce $amat(T)_star$ to $approx 10^(-10)$ confirms the formula.
-
-=== BEM <sec:res-sphere-bem>
-
-==== Convergence <sec:res-sphere-bem-conv>
+==== Convergence
 
 #figure(
   image("../../res/bem_sphere_convergence.svg"),
   caption: [BEM convergence on the spherical cavity versus analytic reference.],
-) <fig:sphere-bem-convergence>
+)
 
-==== Resonances <sec:res-sphere-bem-res>
+==== Resonances
 
 #figure(
   image("../../res/sphere_bem_ksweep.svg", width: 68%),
   caption: [BEM system condition number versus wavenumber, spherical cavity.],
-) <fig:sphere-bem-ksweep>
+)
 
 // notes (rewrite into prose):
 - cond spikes at interior cavity resonances, where the EFIE operator is near-singular and the interior problem loses uniqueness
@@ -107,9 +83,9 @@ solvers both reproduce $amat(T)_star$ to $approx 10^(-10)$ confirms the formula.
 - the overlaid analytic resonances (zeros of $j_l (k R)$ and $psi_l' (k R)$) coincide with the numerical spikes to $approx 2 times 10^(-4)$, validating the detector
 - benchmark $k = 2$ sits on the flat baseline, clear of any resonance
 
-=== EPGP <sec:res-sphere-epgp>
+=== EPGP
 
-==== Field <sec:res-sphere-field>
+==== Field
 
 #figure(
   grid(
@@ -129,40 +105,40 @@ field over the same slice.
   caption: [EPGP scattered-field uncertainty on the spherical cavity slice.],
 ) <fig:sphere-field-std>
 
-==== Operator <sec:res-sphere-operator>
+==== Operator
 
 #figure(
   image("../../res/sphere_uq_operator.png"),
   caption: [Reaction operator $|amat(T)|$ and posterior uncertainty $sigma$, spherical cavity.],
-) <fig:sphere-operator>
+)
 
 // notes (rewrite into prose):
 - $sigma$ depends only on the receiver, not the transmitter (uniform along the transmitter axis), since the posterior covariance is shared across excitations
 - spherical symmetry makes all receivers equivalent, so $sigma$ is uniform
 
-==== Convergence <sec:res-sphere-epgp-conv>
+==== Convergence
 
 #figure(
   image("../../res/epgp_sphere_convergence.svg", width: 68%),
   caption: [EPGP convergence on the spherical cavity versus analytic reference.],
-) <fig:sphere-epgp-convergence>
+)
 
-==== Noise Influence <sec:res-sphere-noise>
+==== Noise Influence
 
 #figure(
   image("../../res/sphere_noise.svg", width: 68%),
   caption: [Reconstruction error and predicted uncertainty vs assumed noise, spherical cavity.],
-) <fig:sphere-noise>
+)
 
 // notes (rewrite into prose):
 - more assumed noise, stronger regularization: error and uncertainty both grow
 
-==== Conditioning <sec:res-sphere-cond>
+==== Conditioning
 
 #figure(
   image("../../res/sphere_epgp_ksweep.svg", width: 68%),
   caption: [EPGP conditioning number versus wavenumber, spherical cavity.],
-) <fig:sphere-epgp-ksweep>
+)
 
 // notes (rewrite into prose):
 - cond decreases monotonically with $k$, spanning $approx 10^(10)$ at low $k$ down to $approx 10^2$
@@ -170,20 +146,21 @@ field over the same slice.
 - larger $k$ decorrelates the features and conditions the system
 - no resonance signature: unlike the BEM operator, the EPGP fit is regularized and basis-driven, so its conditioning tracks basis collinearity, not cavity resonances
 
-=== Comparison <sec:res-sphere-cmp>
+=== Comparison
 
-==== Cross-Validation <sec:res-sphere-xval>
+- both solvers reproduce the analytic operator $amat(T)_star$ to high accuracy
+
+==== Cross-Validation
 
 // notes (rewrite into prose):
-- both solvers reproduce the analytic operator $amat(T)_star$ to high accuracy
 - EPGP and BEM agree with each other to $approx 10^(-10)$ on the sphere
 
-==== Accuracy--Runtime Trade-off <sec:res-sphere-pareto>
+==== Accuracy--Runtime Trade-off
 
 #figure(
   image("../../res/pareto_sphere.svg"),
   caption: [Accuracy vs wall time for BEM and EPGP on the spherical cavity.],
-) <fig:pareto-sphere>
+)
 
 #page(flipped: true, margin: 1.3cm)[
   #set table(inset: (x: 6pt, y: 5pt))
@@ -209,7 +186,7 @@ field over the same slice.
       [$epsilon$],      ..sphere-runs.map(r => sci(r.at(8))),
     )],
     caption: [EPGP convergence on the spherical cavity ($N_b = #_sphere-nb-max$).],
-  ) <tab:sphere>
+  )
 
   #v(2em)
 
@@ -229,20 +206,20 @@ field over the same slice.
       [$epsilon$],      ..bem-sphere-runs.map(r => sci(r.at(8))),
     )],
     caption: [BEM convergence on the spherical cavity.],
-  ) <tab:sphere-bem>
+  )
 ]
 
 #pagebreak(weak: true)
-== Ellipsoidal Cavity <sec:res-ellipse>
+== Ellipsoidal Cavity
 
 Ellipsoidal cavity with semi-axes $(4, 4, 6)$, same interior surface $Lambda$,
 wavenumber $k = 2$. No analytic operator is available, so the high-fidelity BEM
 solution serves as the reference. The operator shares the same structure as the
 spherical case: symmetric and diagonal-dominant.
 
-=== BEM <sec:res-ellipse-bem>
+=== BEM
 
-==== Convergence <sec:res-ellipse-bem-conv>
+==== Convergence
 
 Runs over a $p times m$ grid.
 Analytic boundary, so $h$ converges algebraically and $p$ geometrically.
@@ -253,14 +230,14 @@ The BEM reference $amat(T)_"BEM"$ is a dedicated off-grid run at p6/m4 ($5292$ D
 #figure(
   image("../../res/bem_ellipse_convergence.svg"),
   caption: [BEM reciprocity error on the ellipsoidal cavity.],
-) <fig:bem-convergence>
+)
 
-==== Resonances <sec:res-ellipse-bem-res>
+==== Resonances
 
 #figure(
   image("../../res/ellipse_bem_ksweep.svg", width: 68%),
   caption: [BEM system condition number versus wavenumber, ellipsoidal cavity.],
-) <fig:ellipse-bem-ksweep>
+)
 
 // notes (rewrite into prose):
 - the lower symmetry lifts the degeneracy, so the window holds many distinct resonances; the strongly conditioning ones are spaced roughly $0.02$ to $0.03$
@@ -268,9 +245,9 @@ The BEM reference $amat(T)_"BEM"$ is a dedicated off-grid run at p6/m4 ($5292$ D
 - the effect is mild: the high-fidelity operator condition number at $k = 2$ ($approx 4 times 10^7$) is only modestly above the resonance-free spherical case at equal resolution ($approx 3 times 10^7$), the bulk being EFIE conditioning that grows with the discretization
 - both solvers converge cleanly at $k = 2$, so it is operationally non-resonant despite the proximity
 
-=== EPGP <sec:res-ellipse-epgp>
+=== EPGP
 
-==== Field <sec:res-ellipse-field>
+==== Field
 
 #figure(
   grid(
@@ -293,18 +270,18 @@ field over the same slice.
   caption: [EPGP scattered-field uncertainty on the ellipsoidal cavity slice.],
 ) <fig:ellipse-field-std>
 
-==== Operator <sec:res-ellipse-operator>
+==== Operator
 
 #figure(
   image("../../res/ellipse_uq_operator.png"),
   caption: [Reaction operator $|amat(T)|$ and posterior uncertainty $sigma$, ellipsoidal cavity.],
-) <fig:ellipse-operator>
+)
 
 // notes (rewrite into prose):
 - $sigma$ no longer uniform: it grows for receivers deeper inside the cavity, away from the boundary (toward the elongated $z$-axis)
 - intuition: boundary data constrains near-wall receivers more tightly than deep-interior ones
 
-==== Convergence <sec:res-ellipse-epgp-conv>
+==== Convergence
 
 $rho$ decreases with $N_s$ and floors at $approx 3 times 10^(-11)$, below the
 BEM reference floor.
@@ -312,32 +289,32 @@ BEM reference floor.
 #figure(
   image("../../res/epgp_ellipse_convergence.svg", width: 68%),
   caption: [EPGP reciprocity error on the ellipsoidal cavity versus $N_s$.],
-) <fig:ellipse-conv>
+)
 
-==== Noise Influence <sec:res-ellipse-noise>
+==== Noise Influence
 
 #figure(
   image("../../res/ellipse_noise.svg", width: 68%),
   caption: [Reconstruction error and predicted uncertainty vs assumed noise, ellipsoidal cavity.],
-) <fig:ellipse-noise>
+)
 
 // notes (rewrite into prose):
 - same trend as the sphere; error measured against the BEM reference
 
-==== Conditioning <sec:res-ellipse-cond>
+==== Conditioning
 
 #figure(
   image("../../res/ellipse_epgp_ksweep.svg", width: 68%),
   caption: [EPGP conditioning number versus wavenumber, ellipsoidal cavity.],
-) <fig:ellipse-epgp-ksweep>
+)
 
 // notes (rewrite into prose):
 - same monotone trend as the sphere: low-$k$ basis collinearity dominates the conditioning
 - benchmark wavenumber $k = 2$ still sits on the steep descent, at $approx 10^9$, before the system conditions out at larger $k$
 
-=== Comparison <sec:res-ellipse-cmp>
+=== Comparison
 
-==== Cross-Validation <sec:res-comparison>
+==== Cross-Validation
 
 We use a high-fidelity BEM solution as reference to benchmark the EPGP.
 The reference is off the convergence grid, produced by a dedicated finer run.
@@ -351,12 +328,12 @@ $epsilon$ decreases monotonically, reaching $approx 1.3 times 10^(-8)$ at $N_s =
 - The EPGP operator is itself accurate to $10^(-9)$, so the ellipsoidal residual
   is set by the finite BEM mesh; the cross-validation understates the EPGP accuracy.
 
-==== Accuracy--Runtime Trade-off <sec:res-ellipse-pareto>
+==== Accuracy--Runtime Trade-off
 
 #figure(
   image("../../res/pareto_ellipse.svg"),
   caption: [Reciprocity error vs wall time for BEM and EPGP on the ellipsoidal cavity.],
-) <fig:pareto-ellipse>
+)
 
 #page(flipped: true, margin: 1.3cm)[
   #set table(inset: (x: 6pt, y: 5pt))
@@ -382,7 +359,7 @@ $epsilon$ decreases monotonically, reaching $approx 1.3 times 10^(-8)$ at $N_s =
       [$rho$],          ..bem-runs.map(r => sci(r.at(7))),
     )],
     caption: [BEM convergence on the ellipsoidal cavity.],
-  ) <tab:bem>
+  )
 
   #v(2em)
 
@@ -401,5 +378,5 @@ $epsilon$ decreases monotonically, reaching $approx 1.3 times 10^(-8)$ at $N_s =
       [$epsilon$],      ..epgp-runs.map(r => sci(r.at(8))),
     )],
     caption: [EPGP convergence on the ellipsoidal cavity ($N_b = #_epgp-nb-max$).],
-  ) <tab:epgp>
+  )
 ]
