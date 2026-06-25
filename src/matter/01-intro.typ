@@ -20,7 +20,9 @@ PDE residual as a penalty in the training objective, so the constraint is only
 satisfied approximately and is traded off against the data; the physics-informed
 neural network is the canonical example. *Strong enforcement* instead restricts
 the model to functions that satisfy the equation identically by construction, so
-the physics holds exactly regardless of the data. Strong enforcement is clearly preferable: the model can then never violate the law it is meant to obey.
+the physics holds exactly regardless of the data. When the governing law is
+known exactly, strong enforcement is preferable: the model can then never
+violate the law it is meant to obey.
 
 Among ML models, the *Gaussian process (GP)* is particularly well suited to
 strong enforcement. A GP is a probabilistic model over functions that returns
@@ -50,27 +52,36 @@ reference benchmark does not. This thesis provides that benchmark.
 
 #pagebreak(weak: true)
 
-== Cavity Benchmark
+== Cavity Scattering Benchmark
 
-A useful benchmark for the Maxwell EPGP method should satisfy three
-requirements. It should be governed by the time-harmonic Maxwell equations,
-it should admit synthetic data generation, and it should be well matched to an
-plane-wave prior, meaning a purely interior problem with no radiation conditions
-at infinity.
+As a benchmark we use an *interior electromagnetic scattering problem* in
+a cavity with *perfectly electrically conducting (PEC)* boundaries. *Dipole
+sources* placed inside the cavity act as transmitters, exciting a field. It
+scatters off the PEC boundary, reflects back into the interior, and is measured
+at receivers. This defines a *reaction operator* that maps the dipole
+excitations to the corresponding field responses. This operator is the object of
+study.
 
-An interior *electromagnetic scattering problem* in a cavity with *perfectly
-electrically conducting (PEC)* boundaries meets all three. *Dipole sources*
-placed inside the cavity excite a field, and the scattered field is measured
-back at interior locations. This defines a *reaction operator* that maps the
-dipole excitations to the corresponding field responses, and this operator
-is the object of study. We constructed a probabilistic, Maxwell-consistent
-*surrogate* of this reaction operator, which is a form of *operator learning*.
+We construct a probabilistic EPGP surrogate of this reaction operator. Unlike a
+purely data-driven surrogate, it satisfies the time-harmonic Maxwell equations
+exactly by construction and reports its own uncertainty. Its plane-wave prior is
+well suited to the interior scattering problem. The surrogate is built with the
+Maxwell EPGP library *`maxwellgp`* from the ongoing work @felix.
 
-As comparison we will  compute the reaction operator using a second, independent
-way, with a *boundary element method (BEM)* built on an *boundary integral
-formulation* of the same boundary value problem. For this we used the BEM
-library *`Bembel`*. The two solvers share only the problem setup and nothing of
-their internal discretizations.
+For comparison, we compute the reaction operator in a second, independent
+way, with a *boundary element method (BEM)* built on a *boundary integral
+formulation* of the same underlying boundary value problem. For this we use the
+BEM library *`Bembel`*. The two solvers share only the problem setup and nothing
+of their internal discretizations.
+
+We benchmark on two cavity geometries. For a *spherical cavity*, the scattered
+field and the reaction operator are available in closed form. This lets us
+validate the EPGP and the BEM solver independently, each against the *analytic
+solution*, and thereby establish that both are correct. For an *ellipsoidal
+cavity* no closed-form solution exists, so we must rely on numerical methods
+alone. Since both solvers were already certified against the analytic solution
+on the sphere, their close agreement here is strong evidence that both are
+correct.
 
 == Contributions
 
@@ -88,11 +99,12 @@ This thesis makes the following contributions.
   reaction operator in C++ using `Bembel`, relying on an indirect single-layer
   formulation.
 - Analytic spherical cavity solution:
-  Derived a closed-form reaction operator for the spherical cavity, serving as
-  exact ground truth.
+  Assembled the closed-form reaction operator for the spherical cavity from the
+  standard vector spherical harmonic expansion, serving as exact ground truth.
 - Benchmarking:
   Built a benchmark harness `cavity-benchmark`. Demonstrated convergence of
   the EPGP and BEM solvers against the analytic solution on the spherical
   cavity. Demonstrated agreement between the two solvers on the ellipsoidal
   cavity, which has no analytic solution. Reported a 2D convergence grid and an
-  accuracy-runtime trade-off.
+  accuracy-runtime trade-off. Performed uncertainty quantification of the EPGP
+  surrogate.

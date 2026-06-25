@@ -46,6 +46,6 @@ Seminar for Applied Mathematics
 #[
   #set align(bottom)
   #set text(15pt)
-  #datetime.today().display("[day]th [month repr:long] [year]")
+  #datetime.today().display("[day]. [month repr:long] [year]")
 ]
 

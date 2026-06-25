@@ -9,10 +9,13 @@
 #show outline.entry.where(
   level: 1,
 ): set block(above: 1.2em)
+#show outline.entry.where(
+  level: 1,
+): set outline.entry(fill: none)
 
 #pagebreak(weak: true)
 #outline(
   title: "Table of Contents",
   indent: auto,
-  depth: 2,
+  depth: 3,
 )

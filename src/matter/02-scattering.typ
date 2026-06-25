@@ -19,13 +19,14 @@ $
   curl Ev = i omega mu Hv, quad
   curl Hv = -i omega epsilon Ev + Jv
 $
-- we fix this $e^(-i omega t)$ convention throughout; it selects the outgoing-wave
-  sign, so radiating fields carry $e^(+i k r)$
+- this corresponds to the spacetime plane wave $e^(i (kv dot xv - omega t))$, whose spatial
+  part carries the outgoing-wave sign $e^(+i k r)$
+- we fix this $e^(+i k r)$ convention throughout and refer to it by its spatial sign
 
 - source-free interior: no free charges or currents, $rho = 0$, $Jv = 0$
 - eliminate $Hv$: Faraday's law recovers it from $Ev$, $Hv = 1/(i omega mu) curl Ev$
 - substitute into the second law, gives the curl--curl equation for $Ev$,
-  a Helmholtz equation, with the Helmholtz operator $cal(L) := curl curl - k^2$
+  with the curl--curl operator $cal(L) := curl curl - k^2$
 $
   curl curl Ev - k^2 Ev = 0, quad k := omega sqrt(epsilon mu) = omega \/ c
 $
@@ -51,8 +52,7 @@ $
 - both fields satisfy the source-free curl--curl equation in the interior (away from the source)
 
 - object of study: the reaction operator mapping dipole excitation to measured response
-- a near-field transmit-to-receive operator; approximating it is a form of operator
-  learning (solution-operator surrogate)
+- a near-field transmit-to-receive operator
 
 #align(center)[
   #block(
@@ -88,9 +88,9 @@ $
         stage("Incident Field", $Ev^i$, "in", $D$),
         step($pi_t$, "trace"),
         stage("Boundary Data", $avec(h)$, "on", $partial D$),
-        step($cal(L)^(-1)$, "solve"),
+        step($cal(S)$, "solve"),
         stage("Scattered Field", $Ev^s$, "in", $D$),
-        step($pi_t$, "measure"),
+        step($pi_t^(Lambda)$, "measure"),
         stage("Receiver", $delta_r$, "on", $Lambda$),
       )
     ]
@@ -99,9 +99,12 @@ $
 
 === Incident Field and Dipole Sources
 
-- free-space response to a point source: the fundamental solution of the Helmholtz operator
+- write the source-to-field separation as $rv := xv - zv$, with distance $r := norm(rv)$
+  and unit vector $rn := rv \/ r$
+- free-space response to a point source: the fundamental solution of the scalar Helmholtz operator
+- it depends only on the distance $r$
 $
-  Phi(xv, zv) = 1/(4 pi) exp(i k norm(xv - zv))/norm(xv - zv)
+  Phi(xv, zv) = 1/(4 pi) exp(i k r)/r
 $
 - satisfying
 $
@@ -111,7 +114,7 @@ $
 - a dipole is a position--polarization pair $delta = (zv, pv)$, position $zv$, real polarization $pv in RR^3$
 - field radiated by a dipole $delta = (zv, pv)$: apply the curl--curl operator
 $
-  Ev^i (xv; delta) = Ev^i (xv; zv, pv) = i/k curl_xv curl_xv (Phi(xv, zv) pv)
+  Ev^i (xv; delta) = i/k curl_xv curl_xv (Phi(xv, zv) pv)
 $
 
 - factor out the constant polarization $pv$ by linearity
@@ -122,9 +125,14 @@ $
   - it is the free-space fundamental solution of the curl--curl operator, carrying no
     boundary data
   - name "Green's function" is the standard electromagnetics convention
-- explicit expression, with separation $r := norm(xv - zv)$ and unit vector $rn := (xv - zv) \/ r$
+- it depends only on the separation vector $rv$
+- explicit expression
 $
-  amat(G)(xv,zv) = i/k Phi [(k^2 + (i k)/r - 2/r^2) amat(I) + (-k^2 - (3 i k)/r + 3/r^2) rn rn^transp]
+  amat(G)(xv, zv) = i k Phi(xv, zv) [(1 + i/(k r) - 1/(k r)^2) amat(I) - (1 + (3 i)/(k r) - 3/(k r)^2) rn rn^transp]
+$
+- the incident field is then the dyadic applied to the polarization
+$
+  Ev^i (xv; delta) = amat(G)(xv, zv) pv
 $
 
 === Scattered Field and curl--curl BVP
@@ -138,7 +146,8 @@ $
 $
   pi_t Ev = 0 quad "on" partial D
 $
-- via the tangential projection trace $pi_t := (Ev |-> Ev - (Ev dot nv) nv)$
+- via the tangential projection trace onto $partial D$, with outward normal $nv_(partial D)$,
+  $pi_t := (Ev |-> Ev - (Ev dot nv_(partial D)) nv_(partial D))$
 - full field is the superposition $Ev = Ev^i + Ev^s$
 - gives the boundary forcing for the unknown scattered field
 $
@@ -148,15 +157,16 @@ $
 ==== Interior BVP
 
 - scattered field $Ev^s: D -> CC^3$ restores the conducting-wall condition
-- satisfies the interior curl--curl boundary value problem, with the Helmholtz operator $cal(L)$
+- satisfies the interior curl--curl boundary value problem, with the curl--curl operator $cal(L)$
 $
   curl curl Ev^s - k^2 Ev^s &= 0 quad "in" D \
   pi_t Ev^s &= avec(h) quad "on" partial D
 $
-- solving the BVP is the inverse $cal(L)^(-1)$ mapping boundary data $avec(h)$ to $Ev^s$
-- the inverse exists only when $k^2$ avoids the interior Maxwell eigenvalues; at those
-  cavity resonances the homogeneous problem has nontrivial solutions and the operator
-  is singular
+- solving the BVP defines the BVP solution operator $cal(S): avec(h) |-> Ev^s$ mapping
+  boundary data to the scattered field
+- the BVP solution operator $cal(S)$ is well-defined only when $k^2$ avoids the interior
+  Maxwell eigenvalues; at those cavity resonances the homogeneous problem has nontrivial
+  solutions and $cal(S)$ becomes singular
 
 === Measurement
 
@@ -164,14 +174,15 @@ $
 - like a transmitter dipole $delta_t = (zv_t, pv_t)$, but it measures instead of emits
 - two distinct dipoles, kept apart so that exchanging their roles is a non-trivial operation
 
-- measured data: the same tangential projection trace $pi_t$ used for the boundary condition,
-  now applied to the scattered field
+- the measured data is the tangential projection trace of the scattered field onto $Lambda$,
+  with outward normal $nv_Lambda$
 $
-  pi_t Ev^s (xv) = Ev^s (xv) - (Ev^s (xv) dot nv(xv)) nv(xv)
+  pi_t^Lambda := (Ev |-> Ev - (Ev dot nv_Lambda) nv_Lambda)
 $
-- receiver reads it out along its polarization, a scalar reaction
+- the receiver reads this tangential trace out along its polarization $pv_r in T_(zv_r) Lambda$,
+  a scalar reaction
 $
-  r(delta_t, delta_r) = pv_r dot pi_t Ev^s (zv_r)
+  r(delta_t, delta_r) = pv_r dot pi_t^Lambda Ev^s (zv_r; delta_t)
 $
 
 ==== Reciprocity
@@ -198,6 +209,7 @@ $
 $
   delta_(n a) = (zv_n, e_a (zv_n)), quad n = 1, ..., N_Lambda, quad a in {1, 2}
 $
+- flatten the pair index $(n, a)$ into a single index $i = 2(n - 1) + a$, so $i = 1, ..., M$
 - transmitter and receiver dipoles share this set, so each $delta_i$ is both a possible
   transmitter and a possible receiver
 - each transmitter $delta_j$ has its own incident field, BVP, and scattered field;
@@ -213,12 +225,12 @@ $
   + transmitter dipole $delta_t = (zv_t, pv_t)$
   + dyadic Green's function maps the dipole to its free-space field
   + incident field $Ev^i$
-  + incident boundary value: tangential projection trace $pi_t Ev^i$ on the wall
+  + incident boundary value: tangential trace $pi_t Ev^i$ on the wall
   + PEC condition forces incident and scattered traces to cancel
   + scattered boundary value: negative of the incident boundary value
   + interior boundary value problem for the scattered field
   + scattered field $Ev^s$
-  + measurement: tangential projection trace $pi_t Ev^s$ read out by the receiver dipole $delta_r$
+  + measurement: receiver dipole $delta_r$ reads out $pv_r dot pi_t^Lambda Ev^s$
 
 == Geometry
 
@@ -271,24 +283,30 @@ $
 ==== Analytic Solution
 
 - spherical symmetry makes the interior BVP separable, so the scattered field has a
-  closed form; this is what the sphere case buys over the ellipsoid
-- it serves as exact ground truth, against which the numerical operators are measured
-- the construction: expand the scattered field in multipoles, impose the PEC wall, read
-  off the coefficients, then evaluate the same measurement as in the general problem
+  classical closed form; this is what the sphere case buys over the ellipsoid
+- the closed-form operator serves as exact ground truth, against which the numerical
+  operators are measured
+- we use the standard construction @tai without reproducing its derivation: expand the
+  scattered field in vector spherical multipoles, impose the PEC wall, solve for the
+  coefficients, then evaluate the same measurement as in the general problem
+- we record only the formulas as implemented in the code; correctness is established not
+  by re-deriving them but empirically: both numerical solvers agree with these formulas
+  to $approx 10^(-10)$ independently, and two methodologically unrelated solvers
+  agreeing with the same closed-form expressions is strong evidence the formulas are correct
 
-- scattered field expands in the regular Hansen multipoles $avec(M)_(l m), avec(N)_(l m)$,
-  the divergence-free solutions of the curl--curl equation regular at the origin @tai
+- expand the incident tangential trace on the wall ($r = R$) in tangential vector spherical
+  harmonics: $avec(Psi)_(l m)$ (TM-type) and $avec(Phi)_(l m)$ (TE-type)
 $
-  Ev^s (xv) = sum_(l = 1)^infinity sum_(m = -l)^l [ alpha_(l m) avec(M)_(l m) (xv) + beta_(l m) avec(N)_(l m) (xv) ]
+  p_(l m) = inner(pi_t Ev^i, avec(Psi)_(l m))_(r = R), wide
+  q_(l m) = inner(pi_t Ev^i, avec(Phi)_(l m))_(r = R)
 $
-- conducting wall at $r = R$ enforces $pi_t (Ev^i + Ev^s) = 0$
-- decouples by polarization into the interior PEC reflection coefficients
+- the PEC wall fixes the scattered field; its tangential trace measured on $Lambda$ ($r = r_0$) is,
+  per harmonic,
 $
-  alpha_(l m) &= k^2 Gamma_l^"TE" (avec(M)_(l m)^herm (zv) pv), wide
-  Gamma_l^"TE" = h_l^((1)) (k R) \/ j_l (k R) \
-  beta_(l m) &= k^2 Gamma_l^"TM" (avec(N)_(l m)^herm (zv) pv), wide
-  Gamma_l^"TM" = xi_l' (k R) \/ psi_l' (k R)
+  avec(y)_(l m) = - R/r_0 (psi_l'(k r_0))/(psi_l'(k R)) p_(l m) avec(Psi)_(l m)
+  - (j_l (k r_0))/(j_l (k R)) q_(l m) avec(Phi)_(l m)
 $
-- with the Riccati-Bessel functions $psi_l (x) = x j_l (x)$ and $xi_l (x) = x h_l^((1)) (x)$
-- reference operator $amat(T)_star$ follows by inserting $Ev^s$ into the same tangential
-  measurement on $Lambda$
+- with the regular spherical Bessel function $j_l$, the Riccati-Bessel function $psi_l (x) = x j_l (x)$,
+  the wall radius $R$, and the measurement radius $r_0 = 1$ (the radius of $Lambda$)
+- summing over $l, m$ and inserting into the reaction measurement gives the reference operator
+  $amat(T)_star$

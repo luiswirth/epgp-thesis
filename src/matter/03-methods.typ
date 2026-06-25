@@ -2,13 +2,15 @@
 
 = Methods
 
-- compute reaction operator
-- two solvers
-  - methodologically unrelated
-  - same problem setup
-
-- EPGP solver: is a probabilistic, spectral plane-wave method
-- BEM solver: deterministic boundary-integral method
+- we compute the reaction operator $amat(T)$ by two solvers that are methodologically
+  unrelated and share only the problem setup: the same cavity geometry, wavenumber,
+  dipole surface, and dipole configurations
+- the EPGP solver is a probabilistic, spectral plane-wave method: it places a
+  Maxwell-constrained Gaussian prior over the scattered field and conditions it on
+  the PEC boundary data
+- the BEM solver is a deterministic boundary-integral method: it discretizes the
+  single-layer EFIE on the cavity wall and solves for a surface density whose
+  potential gives the scattered field
 
 == Ehrenpreis--Palamodov Gaussian Process
 
@@ -64,42 +66,56 @@ $
 $
   amat(P)_(kv_j) = sum_(a = 1)^2 av_(j a) av_(j a)^herm
 $
-- each direction and polarization contributes a discrete feature, the sampled plane wave
+- each direction and polarization contributes a base plane-wave feature, the field of the
+  sampled plane wave
 $
   avec(phi)_(j a) (xv) = av_(j a) exp(i kv_j dot xv)
 $
-- weights gathered in $avec(w)$, with a circularly-symmetric complex Gaussian prior
-  $avec(w) tilde cal(C N)(0, amat(W))$
-- the prior covariance is the quasi-Monte Carlo truncation of the continuous kernel
+- weights gathered in $avec(w) in CC^F$, with $F = 2 N_s$ features (two polarizations per direction),
+  and a circularly-symmetric complex Gaussian prior $avec(w) tilde cal(C N)(0, amat(W))$, with diagonal
+  $amat(W) in CC^(F times F)$
+- the prior covariance is the quasi-Monte Carlo truncation of the continuous kernel, the
+  quadrature weights $W_j$ (the diagonal of $amat(W)$) carrying the variety measure
 $
-  amat(K)(xv, yv) = sum_(j = 1)^(N_s) amat(P)_(kv_j) exp(i kv_j dot (xv - yv))
-  = sum_(j = 1)^(N_s) sum_(a = 1)^2 av_(j a) av_(j a)^herm exp(i kv_j dot (xv - yv))
+  amat(K)(xv, yv) = sum_(j = 1)^(N_s) W_j amat(P)_(kv_j) exp(i kv_j dot (xv - yv))
+  = sum_(j = 1)^(N_s) sum_(a = 1)^2 W_j av_(j a) av_(j a)^herm exp(i kv_j dot (xv - yv))
 $
 - this finite-dimensional weight-space prior still enforces Maxwell in the interior by construction
 
 === Posterior
 
-- conditioning on data $avec(h)$ at $N_b$ points selects the posterior, the prior samples
-  consistent with those values
-- collect the plane-wave features at the conditioning points in $amat(Phi)$; the posterior
-  mean weights, with noise variance $sigma^2$ and the diagonal prior precision $amat(W)^(-1)$
+- the prior conditions like any Gaussian process: given observations of the field at $N_b$ points,
+  the posterior is the prior restricted to the weights consistent with them
+- an observation is a linear functional $cal(R)$ of the field, for instance a field value at a point;
+  applying it to the base plane-wave features gives the observation features $cal(R) avec(phi)_(j a)$,
+  stacked over the conditioning points into the feature matrix $amat(Phi) in CC^(F times D_b)$, where
+  $D_b$ is the total data dimension ($3 N_b$ for a tangential trace, $6 N_b$ for the full field)
+- conditioning on the data vector $avec(d) in CC^(D_b)$ then yields a Gaussian posterior over the
+  weights $avec(w)$
+- its mean $avec(w)_star$ is the regularized best-fit: the least-squares fit to the data, regularized
+  by the prior and the assumed noise $sigma_"n"^2$
+- its covariance $amat(A)^(-1)$ measures how underdetermined the weights remain after conditioning,
+  the solver's uncertainty
+- the mean weights, with noise variance $sigma_"n"^2$ and the diagonal prior precision $amat(W)^(-1)$, solve
 $
-  avec(w)_star = amat(A)^(-1) amat(Phi) avec(h) \/ sigma^2,
-  quad amat(A) = amat(W)^(-1) + amat(Phi) amat(Phi)^herm \/ sigma^2
+  avec(w)_star = amat(A)^(-1) amat(Phi) avec(d) \/ sigma_"n"^2,
+  quad amat(A) = amat(W)^(-1) + amat(Phi) amat(Phi)^herm \/ sigma_"n"^2 in CC^(F times F)
 $
 - this is the feature-space (weight-space) view: a Gaussian prior on the weights $avec(w)$
-  of the explicit plane-wave features, inference solving the $N_s times N_s$ system $amat(A)$
+  of the explicit plane-wave features, inference solving the $F times F$ system $amat(A)$
 - the equivalent function-space (kernel) view never names features, conditioning instead
-  through the kernel $amat(K) = amat(Phi)^herm amat(Phi)$ on an $N_b times N_b$ system
+  through the kernel $amat(K) = amat(Phi)^herm amat(W) amat(Phi) in CC^(D_b times D_b)$
 - both give the same posterior; we invert the smaller matrix, and the explicit EP features
-  make weight space natural and cheap here, since $N_s < N_b$
+  make weight space natural and cheap here, since $F < D_b$
 - posterior mean field is the feature evaluation $Ev_star (rv) = avec(phi)^herm (rv) avec(w)_star$,
-  the same plane-wave features stacked into the columns of $amat(Phi)$
-- the posterior covariance is the Schur complement of the conditioning block in the joint prior
-  kernel, quantifying the solver's uncertainty
+  with the evaluation features $avec(phi)(rv) in CC^(F times 3)$, the same plane-wave features stacked
+  into the columns of $amat(Phi)$
+- evaluating the features at the receivers propagates the weight covariance $amat(A)^(-1)$ into the
+  field; equivalently the posterior covariance is the Schur complement of the conditioning block in
+  the joint prior kernel, quantifying the solver's uncertainty
 $
   amat(K)_star (xv, yv) = amat(K)(xv, yv)
-  - amat(K)(xv, X_b) (amat(K)_(b b) + sigma^2 amat(I))^(-1) amat(K)(X_b, yv)
+  - amat(K)(xv, X_b) (amat(K)_(b b) + sigma_"n"^2 amat(I))^(-1) amat(K)(X_b, yv)
 $
 - specializing to a BVP: the prior already solves the PDE in the interior, so conditioning on
   the prescribed boundary traces enforces the boundary condition, turning the prior into a
@@ -109,19 +125,27 @@ $
 
 - the prior and posterior above are implemented in the `maxwellgp` library (Python/JAX),
   general and cavity-independent
-- plane-wave feature maps, the GP regression core, and the tangential-trace conditioning
+- the observation functional $cal(R)$ is realized by the feature map: either the full
+  electromagnetic field $cal(R) = "id"$ (the six $(Ev, Bv)$ components per point) or the tangential
+  trace $cal(R) = pi_t$ (the projection $pi_t Ev$, with a boundary normal supplied per conditioning point)
+- only $cal(R)$ changes between the two; the base plane-wave features, the prior weights, the
+  directions, and the posterior solve are identical
 - refer to @felix for the full theory
 
 === EPGP for Cavity Scattering
 
 - `cavity-epgp` specializes the general `maxwellgp` prior to the cavity scattering problem
 - the cavity enters only through the boundary data; the prior is unchanged
-- condition on the scattered-field boundary trace $avec(h) = -pi_t Ev^i$ at $N_b$ points on $partial D$,
-  which enforces the PEC condition and yields the posterior scattered field $Ev^s_star$
+- here the observation functional is the tangential trace $cal(R) = pi_t$ and the data is the
+  prescribed boundary values: condition on the scattered-field trace $avec(d) = avec(h) = -pi_t Ev^i$
+  at $N_b$ points on $partial D$, which enforces the PEC condition and yields the posterior scattered
+  field $Ev^s_star$
+- the conditioning points are the $N_b$ boundary points on $partial D$, each carrying its outward
+  normal $nv_(partial D)$ so that the tangential feature $pi_t$ is defined there
 - the tangential trace of the posterior mean at the receivers gives the operator column; entry
   $i j$ is the receiver dipole $delta_i$ reading the field of transmitter $delta_j$
 $
-  amat(T)_(i j) = pv_i dot pi_t Ev^s_star (zv_i; delta_j)
+  amat(T)_(i j) = pv_i dot pi_t^Lambda Ev^s_star (zv_i; delta_j)
 $
 - convergence in two parameters: number of spectral directions $N_s$, number of boundary
   conditioning points $N_b$
@@ -131,8 +155,8 @@ $
 #let bigO(x) = $cal(O)(#x)$
 
 - factor once, reuse factorization for each RHS / column of reaction operator
-- $N_s$ spectral directions, $N_b$ boundary points, $D = 2 N_Lambda$ dipole configurations
-- dominant cost holds for $D < N_s$
+- $N_s$ spectral directions, $N_b$ boundary points, $M = 2 N_Lambda$ dipole configurations
+- dominant cost holds for $M < N_s$
 
 #figure(
   table(
@@ -142,8 +166,8 @@ $
     inset: (x: 8pt, y: 5pt),
     table.header([], [cost]),
     [factorization],     bigO($N_s^2 N_b + N_s^3$),
-    [multi-RHS / mean],  bigO($N_s N_b D + N_s^2 D$),
-    [operator assembly], bigO($N_s D^2 + N_s^2 D$),
+    [multi-RHS / mean],  bigO($N_s N_b M + N_s^2 M$),
+    [operator assembly], bigO($N_s M^2 + N_s^2 M$),
     [memory],            bigO($N_s N_b$),
     table.hline(stroke: 1pt),
     [*dominant*],        bigO($N_s^2 N_b$),
@@ -167,16 +191,20 @@ $
 $
 - built from the same dyadic Green's function $amat(G)$, so $Ev^s$ solves the interior
   curl--curl equation for any density $avec(j)$
-- impose the PEC condition by taking the rotated tangential trace $gamma_times := nv times (dot)$,
+- impose the PEC condition by taking the rotated tangential trace $gamma_times := nv_(partial D) times (dot)$,
   giving a boundary integral equation for the density, with the Maxwell single-layer operator
-  $cal(S) := gamma_times Psi_"SL"$
+  $cal(V) := gamma_times Psi_"SL"$ mapping the natural tangential trace spaces
+  $cal(V): H^(-1/2)(div_Gamma, partial D) -> H^(-1/2)(curl_Gamma, partial D)$
 $
-  cal(S) avec(j) = -gamma_times Ev^i = -nv times Ev^i quad "on" partial D
+  cal(V) avec(j) = -gamma_times Ev^i = -nv_(partial D) times Ev^i quad "on" partial D
 $
 - the rotated trace, rather than the projection trace $pi_t$ used for the PEC condition,
-  gives the symmetric single-layer operator; the condition $nv times Ev = 0$ is equivalent to $pi_t Ev = 0$
+  gives the symmetric single-layer operator; the condition $nv_(partial D) times Ev = 0$ is equivalent to $pi_t Ev = 0$
+- this is an *electric field integral equation (EFIE)* in indirect single-layer form
+- as a first-kind integral operator $cal(V)$ is inherently ill-conditioned, and the
+  conditioning worsens under mesh refinement
 - solving for $avec(j)$ and evaluating $Ev^s = Psi_"SL" avec(j)$ recovers the scattered field;
-  the inverse $cal(L)^(-1)$ of the interior BVP is realized as $Psi_"SL" cal(S)^(-1)$
+  the BVP solution operator $cal(S)$ of the interior problem is realized as $Psi_"SL" cal(V)^(-1)$
 
 === `Bembel`
 
@@ -192,22 +220,33 @@ $
 ]
 
 - NURBS boundary representation; the sphere mesh is scaled to the semi-axes
+- the density $avec(j)$ is discretized in div-conforming isogeometric B-spline basis functions
+  on the NURBS boundary, the spline analogue of Raviart--Thomas elements, matching the
+  $div_Gamma$-conforming trace space of $cal(V)$
 - convergence governed by the polynomial degree $p$ and the refinement level $m$
 - boundary is smooth -> $h$-refinement converges algebraically, $p$-refinement geometrically
-- `Bembel` offers an embedded fast multipole method, but we assemble the dense matrix
-  (no compression) for high fidelity
+- `Bembel` provides no preconditioner (such as a Calderon projector) for the ill-conditioned
+  first-kind system, so an iterative solve is unattractive
+- we therefore assemble the dense matrix (no fast-multipole compression) and solve it by a
+  direct LU factorization, which also gives high fidelity
+
+- two `Bembel` conventions differ from ours and are reconciled:
+  - it uses the opposite convention (outgoing waves carry $e^(-i k r)$), so its scattered field
+    comes out conjugated; we conjugate the `Bembel` output to restore our $e^(+i k r)$ convention
+  - its symmetric Maxwell single-layer is built on the rotated tangential trace $gamma_times$, the
+    trace used in the formulation above
 
 === BEM for Cavity Scattering
 
 - each transmitter dipole sets a right-hand side $avec(h) = -pi_t Ev^i$ on $partial D$
-- solve $cal(S) avec(j) = avec(h)$ for the density, evaluate $Ev^s = Psi_"SL" avec(j)$,
+- solve $cal(V) avec(j) = avec(h)$ for the density, evaluate $Ev^s = Psi_"SL" avec(j)$,
   measure its tangential trace at the receivers to fill one operator column
-- $D = 2 N_Lambda$ dipoles share the single-layer matrix, so factor once and reuse the
+- $M = 2 N_Lambda$ dipoles share the single-layer matrix, so factor once and reuse the
   LU factorization across all right-hand sides
 
 === Computational Cost
 
-- $N tilde p^2 4^m$ surface DOFs, $D = 2 N_Lambda$ dipole configurations / RHSs
+- $N tilde p^2 4^m$ surface DOFs, $M = 2 N_Lambda$ dipole configurations / RHSs
 
 #figure(
   table(
@@ -217,8 +256,8 @@ $
     inset: (x: 8pt, y: 5pt),
     table.header([], [cost]),
     [factorization],     bigO($N^3$),
-    [multi-RHS / mean],  bigO($N^2 D$),
-    [operator assembly], bigO($N D^2$),
+    [multi-RHS / mean],  bigO($N^2 M$),
+    [operator assembly], bigO($N M^2$),
     [memory],            bigO($N^2$),
     table.hline(stroke: 1pt),
     [*dominant*],        bigO($N^3$),

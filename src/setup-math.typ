@@ -6,20 +6,20 @@
 
   set math.equation(numbering: "(1)")
 
-  //// Make equation referencing only display the number.
-  //show ref: it => {
-  //  let el = it.element
-  //  if el != none and el.func() == math.equation {
-  //    // Override equation references.
-  //    link(el.location(),numbering(
-  //      el.numbering,
-  //      ..counter(math.equation).at(el.location())
-  //    ))
-  //  } else {
-  //    // Other references as usual.
-  //    it
-  //  }
-  //}
+  // Make equation referencing only display the number, e.g. (3).
+  show ref: it => {
+    let el = it.element
+    if el != none and el.func() == math.equation {
+      // Override equation references.
+      link(el.location(), numbering(
+        el.numbering,
+        ..counter(math.equation).at(el.location())
+      ))
+    } else {
+      // Other references as usual.
+      it
+    }
+  }
 
   doc
 }
