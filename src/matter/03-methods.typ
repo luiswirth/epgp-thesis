@@ -146,7 +146,7 @@ $
   at $N_b$ points on $partial D$, which enforces the PEC condition and yields the posterior scattered
   field $Ev^s_star$
 - the conditioning points are the $N_b$ boundary points on $partial D$, each carrying its outward
-  normal $nv_(partial D)$ so that the tangential feature $pi_t$ is defined there
+  normal $nv$ so that the tangential feature $pi_t$ is defined there
 - the tangential trace of the posterior mean at the receivers gives the operator column; entry
   $i j$ is the receiver dipole $delta_i$ reading the field of transmitter $delta_j$
 $
@@ -196,15 +196,15 @@ $
 $
 - built from the same dyadic Green's function $amat(G)$, so $Ev^s$ solves the interior
   curl--curl equation for any density $avec(j)$
-- impose the PEC condition by taking the rotated tangential trace $gamma_times := nv_(partial D) times (dot)$,
+- impose the PEC condition by taking the rotated tangential trace $gamma_times := nv times (dot)$,
   giving a boundary integral equation for the density, with the Maxwell single-layer operator
   $cal(V) := gamma_times Psi_"SL"$ mapping the natural tangential trace spaces
   $cal(V): H^(-1/2)(div_Gamma, partial D) -> H^(-1/2)(curl_Gamma, partial D)$
 $
-  cal(V) avec(j) = -gamma_times Ev^i = -nv_(partial D) times Ev^i quad "on" partial D
+  cal(V) avec(j) = -gamma_times Ev^i = -nv times Ev^i quad "on" partial D
 $
 - the rotated trace, rather than the projection trace $pi_t$ used for the PEC condition,
-  gives the symmetric single-layer operator; the condition $nv_(partial D) times Ev = 0$ is equivalent to $pi_t Ev = 0$
+  gives the symmetric single-layer operator; the condition $nv times Ev = 0$ is equivalent to $pi_t Ev = 0$
 - this is an *electric field integral equation (EFIE)* in indirect single-layer form
 - as a first-kind integral operator $cal(V)$ is inherently ill-conditioned, and the
   conditioning worsens under mesh refinement
@@ -243,7 +243,7 @@ $
 
 === BEM for Cavity Scattering
 
-- each transmitter dipole sets the right-hand side $-gamma_times Ev^i = -nv_(partial D) times Ev^i$ on $partial D$
+- each transmitter dipole sets the right-hand side $-gamma_times Ev^i = -nv times Ev^i$ on $partial D$
 - solve $cal(V) avec(j) = -gamma_times Ev^i$ for the density, evaluate $Ev^s = Psi_"SL" avec(j)$,
   measure its tangential trace at the receivers to fill one operator column
 - $M = 2 N_Lambda$ dipoles share the single-layer matrix, so factor once and reuse the
