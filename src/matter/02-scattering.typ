@@ -260,6 +260,7 @@ $
   D := { (x_1, x_2, x_3) in RR^3 mid(:) (x_1/a_1)^2 + (x_2/a_2)^2 + (x_3/a_3)^2 < 1 }
 $
 - no analytic solution available
+- $Lambda$ (radius $1$) is well-separated from $partial D$ (shortest semi-axis $a_1 = 4$)
 
 #figure(
   cavity-canvas(6, 4),

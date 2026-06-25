@@ -19,10 +19,11 @@ there are two ways to make a model respect such a law. Weak enforcement adds the
 PDE residual as a penalty in the training objective, so the constraint is only
 satisfied approximately and is traded off against the data; the physics-informed
 neural network is the canonical example. *Strong enforcement* instead restricts
-the model to functions that satisfy the equation identically by construction, so
-the physics holds exactly regardless of the data. When the governing law is
-known exactly, strong enforcement is preferable: the model can then never
-violate the law it is meant to obey.
+the model to functions that satisfy the equation identically by construction.
+*Structure preservation* is the key advantage: unphysical phenomena, such as
+spurious modes or phantom charges are impossible to obtain. The model can
+then never violate the law it is meant to obey, regardless of the data. When
+the governing law is known exactly, strong enforcement is therefore preferable.
 
 Among ML models, the *Gaussian process (GP)* is particularly well suited to
 strong enforcement. A GP is a probabilistic model over functions that returns
