@@ -3,21 +3,21 @@
 #let bem-runs = csv("../../res/ellipse_bem_results.csv").slice(1).sorted(
   key: r => (int(r.at(0)), int(r.at(1)))
 )
-#let bem-sphere-runs = csv("../../res/sphere_bem_results.csv").slice(1).sorted(
-  key: r => (int(r.at(0)), int(r.at(1)))
-)
 #let _epgp-all = csv("../../res/ellipse_epgp_results.csv").slice(1)
 #let _epgp-nb-max = calc.max(.._epgp-all.map(r => int(r.at(1))))
 #let epgp-runs = _epgp-all.filter(r => int(r.at(1)) == _epgp-nb-max).sorted(
   key: r => int(r.at(0))
 )
-#let _sphere-all = csv("../../res/sphere_epgp_results.csv").slice(1)
-#let _sphere-nb-max = calc.max(.._sphere-all.map(r => int(r.at(1))))
-#let sphere-runs = _sphere-all.filter(r => int(r.at(1)) == _sphere-nb-max).sorted(
-  key: r => int(r.at(0))
-)
 
 = Results and Discussion
+
+- we present results for two cavity geometries
+- on the spherical cavity, the analytic operator $amat(T)_star$ is available; each solver
+  is validated independently against it, establishing that both are correct
+- on the ellipsoidal cavity, no analytic solution exists; the two solvers are cross-validated
+  against each other, with the sphere results as prior evidence of their reliability
+- each geometry section covers the BEM solver, the EPGP solver, and (for the ellipsoid)
+  a direct comparison between the two
 
 - two relative error measures used throughout, both Frobenius-norm operator differences
   normalized by the reference
@@ -120,89 +120,13 @@ $
 
 - more assumed noise, stronger regularization: error and uncertainty both grow
 
-=== Comparison
-
-- both solvers reproduce the analytic operator $amat(T)_star$ to high accuracy
-
-==== Cross-Validation
-
-- EPGP and BEM agree with each other to $approx 10^(-10)$ on the sphere
-- since both were just certified against the analytic $amat(T)_star$, this agreement validates
-  solver-vs-solver comparison itself as a correctness check, the check the ellipsoidal cavity must
-  rely on for lack of an analytic reference
-
-==== Accuracy--Runtime Trade-off
-
-#figure(
-  image("../../res/pareto_sphere.svg"),
-  caption: [Accuracy vs wall time for BEM and EPGP on the spherical cavity.],
-)
-
-- faint points are all grid runs; the solid line is each solver's Pareto front, the non-dominated
-  (wall time, error) points
-- EPGP forms a near-vertical front: accuracy improves by many orders of magnitude at nearly fixed
-  wall time ($approx 5$ to $20$ s), since the cost is dominated by the fixed factorization and raising
-  $N_s$ adds little time in this range
-- BEM is a staircase: each decade of accuracy costs roughly an order of magnitude more wall time,
-  reflecting the dense $cal(O)(N^3)$ factorization
-- the fronts cross: at loose accuracy ($epsilon gt.tilde 10^(-5)$) BEM is cheaper, but for any
-  demanding accuracy EPGP dominates, reaching $epsilon approx 10^(-9)$ in $approx 10$ s where BEM
-  needs tens to hundreds of seconds
-- BEM ultimately reaches the lowest reference error ($epsilon approx 10^(-11)$) only at $approx 500$ s,
-  whereas EPGP drives reciprocity to $rho approx 10^(-12)$ already at $approx 17$ s
-
-#page(flipped: true, margin: 1.3cm)[
-  #set table(inset: (x: 6pt, y: 5pt))
-
-  #let labelbox(n) = (
-    table.vline(x: 0, stroke: 1.5pt),
-    table.vline(x: 1, stroke: 1.5pt),
-    ..range(n + 1).map(y => table.hline(y: y, end: 1, stroke: 1.5pt)),
-  )
-
-  #figure(
-    text(size: 8pt)[#table(
-      columns: (auto,) + (1fr,) * sphere-runs.len(),
-      align: right,
-      stroke: 0.5pt,
-      ..labelbox(7),
-      [$N_s$],          ..sphere-runs.map(r => [#r.at(0)]),
-      [features],       ..sphere-runs.map(r => [#r.at(2)]),
-      [mem [GiB]],      ..sphere-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
-      [$t$ [s]],        ..sphere-runs.map(r => [#r.at(3)]),
-      [cond $amat(A)$], ..sphere-runs.map(r => sci(r.at(5))),
-      [$rho$],          ..sphere-runs.map(r => sci(r.at(7))),
-      [$epsilon$],      ..sphere-runs.map(r => sci(r.at(8))),
-    )],
-    caption: [EPGP convergence on the spherical cavity ($N_b = #_sphere-nb-max$).],
-  )
-
-  #v(2em)
-
-  #figure(
-    text(size: 8pt)[#table(
-      columns: (auto,) + (1fr,) * bem-sphere-runs.len(),
-      align: right,
-      stroke: 0.5pt,
-      ..labelbox(8),
-      [$p$],            ..bem-sphere-runs.map(r => [#r.at(0)]),
-      [$m$],            ..bem-sphere-runs.map(r => [#r.at(1)]),
-      [DOFs],           ..bem-sphere-runs.map(r => [#r.at(2)]),
-      [mem [GiB]],      ..bem-sphere-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
-      [$t$ [s]],        ..bem-sphere-runs.map(r => [#r.at(3)]),
-      [cond $amat(A)$], ..bem-sphere-runs.map(r => sci(r.at(5))),
-      [$rho$],          ..bem-sphere-runs.map(r => sci(r.at(7))),
-      [$epsilon$],      ..bem-sphere-runs.map(r => sci(r.at(8))),
-    )],
-    caption: [BEM convergence on the spherical cavity.],
-  )
-]
-
 #pagebreak(weak: true)
 == Ellipsoidal Cavity
 
 - ellipsoidal cavity with semi-axes $(4, 4, 6)$, same interior surface $Lambda$, wavenumber $k = 2$
-- no analytic operator is available, so the high-fidelity BEM solution serves as the reference
+- no analytic operator is available: the ellipsoid does not separate the vector Helmholtz
+  equation in any standard coordinate system, so no closed-form eigenfunction expansion exists;
+  the high-fidelity BEM solution serves as the reference
 - the operator shares the same structure as the spherical case: symmetric and diagonal-dominant
 
 === BEM
