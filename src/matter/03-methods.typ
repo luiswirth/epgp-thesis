@@ -11,6 +11,11 @@
 - the BEM solver is a deterministic boundary-integral method: it discretizes the
   single-layer EFIE on the cavity wall and solves for a surface density whose
   potential gives the scattered field
+- in both cases the scattered field is represented by an ansatz that already satisfies the
+  interior Maxwell system, leaving only the PEC boundary condition to enforce; the solvers
+  differ in the ansatz, a volume plane-wave superposition versus a boundary single-layer
+  potential, and in how the condition is imposed, by probabilistic conditioning versus a
+  deterministic integral-equation solve
 
 == Ehrenpreis--Palamodov Gaussian Process
 
@@ -238,8 +243,8 @@ $
 
 === BEM for Cavity Scattering
 
-- each transmitter dipole sets a right-hand side $avec(h) = -pi_t Ev^i$ on $partial D$
-- solve $cal(V) avec(j) = avec(h)$ for the density, evaluate $Ev^s = Psi_"SL" avec(j)$,
+- each transmitter dipole sets the right-hand side $-gamma_times Ev^i = -nv_(partial D) times Ev^i$ on $partial D$
+- solve $cal(V) avec(j) = -gamma_times Ev^i$ for the density, evaluate $Ev^s = Psi_"SL" avec(j)$,
   measure its tangential trace at the receivers to fill one operator column
 - $M = 2 N_Lambda$ dipoles share the single-layer matrix, so factor once and reuse the
   LU factorization across all right-hand sides

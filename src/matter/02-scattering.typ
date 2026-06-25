@@ -221,17 +221,6 @@ $
 - per-pair reciprocity lifts to operator symmetry, $amat(T) = amat(T)^transp$ (complex-symmetric, not Hermitian)
 - $amat(T)$ is the object both methods compute; the benchmark compares the two operators they produce
 
-- full chain from transmitter to receiver, in its computational steps:
-  + transmitter dipole $delta_t = (zv_t, pv_t)$
-  + dyadic Green's function maps the dipole to its free-space field
-  + incident field $Ev^i$
-  + incident boundary value: tangential trace $pi_t Ev^i$ on the wall
-  + PEC condition forces incident and scattered traces to cancel
-  + scattered boundary value: negative of the incident boundary value
-  + interior boundary value problem for the scattered field
-  + scattered field $Ev^s$
-  + measurement: receiver dipole $delta_r$ reads out $pv_r dot pi_t^Lambda Ev^s$
-
 == Geometry
 
 - dipole surface $Lambda$ and wavenumber $k = 2$ are taken from @cavity

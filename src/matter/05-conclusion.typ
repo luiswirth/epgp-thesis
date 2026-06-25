@@ -17,6 +17,8 @@
   machinery, is strong evidence that both are correct
 - beyond matching the reference, the EPGP satisfies the time-harmonic Maxwell equations exactly by
   construction, needs no surface mesh, and returns a calibrated posterior uncertainty at no extra cost
+- it is also the cheaper solver at any demanding accuracy, reaching $rho approx 10^(-9)$ to $10^(-10)$
+  two to three orders of magnitude faster than the BEM
 - the benchmark thus establishes the EPGP as a trustworthy, Maxwell-consistent, uncertainty-aware
   surrogate for the interior cavity reaction operator
 
