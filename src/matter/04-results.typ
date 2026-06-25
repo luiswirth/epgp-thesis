@@ -16,40 +16,29 @@
   is validated independently against it, establishing that both are correct
 - on the ellipsoidal cavity, no analytic solution exists; the two solvers are cross-validated
   against each other, with the sphere results as prior evidence of their reliability
-- each geometry section covers the BEM solver, the EPGP solver, and (for the ellipsoid)
+- each geometry section covers the EPGP solver, the BEM solver, and (for the ellipsoid)
   a direct comparison between the two
 
-- two relative error measures used throughout, both Frobenius-norm operator differences
-  normalized by the reference
-  - the *reciprocity error* $rho$ is reference-free: transmitters and receivers coincide on
-    $Lambda$, so reciprocity forces the true $amat(T)$ to be symmetric; $rho$ measures the
-    violation, a necessary but not sufficient condition for accuracy
+- two relative error measures are used throughout
+  - the *reciprocity error* $rho$ is reference-free: reciprocity forces the true $amat(T)$
+    to be symmetric; $rho$ measures the violation
   - the *reference error* $epsilon$ is the distance to a trusted reference operator
 $
   rho := norm(amat(T) - amat(T)^transp) / norm(amat(T)) quad quad
   epsilon := norm(amat(T) - amat(T)_"ref") / norm(amat(T)_"ref")
 $
-- the reference operator $amat(T)_"ref"$ is the analytic $amat(T)_star$ for the spherical
-  cavity and the high-fidelity BEM operator $amat(T)_"BEM"$ for the ellipsoidal cavity
-- the operator norm is bounded above by the Frobenius norm, for any matrix $amat(B)$,
+- $amat(T)_"ref"$ is the analytic $amat(T)_star$ for the spherical cavity and the
+  high-fidelity BEM operator $amat(T)_"BEM"$ for the ellipsoidal cavity
+- the operator norm is bounded above by the Frobenius norm,
 $
   norm(amat(B))_"op" <= norm(amat(B))_"F"
 $
   so convergence in $epsilon$ implies convergence in the operator norm; the Frobenius-based
   metric is a conservative measure of operator agreement
-- the convergence tables report the condition number of each solver's dense system matrix
-  $amat(A)$: the EPGP weight-space matrix
-  $amat(A) = amat(W)^(-1) + amat(Phi) amat(Phi)^herm \/ sigma_"n"^2$ and the BEM Galerkin
-  single-layer matrix
-- the EPGP operator is the mean of a Gaussian posterior with covariance $amat(Sigma)$
-- the per-receiver posterior standard deviation $sigma_i = sqrt(amat(Sigma)_(i i))$ depends on
-  the receiver only, not on the transmitter
-- the total relative uncertainty aggregates these over the operator
-$
-  eta := sqrt(M sum_i sigma_i^2) / norm(amat(T)_"ref")
-$
-  with $M$ the operator dimension; $eta$ is the expected relative Frobenius deviation of the
-  operator from its posterior mean
+- in both geometries, $amat(T)$ is symmetric ($amat(T) = amat(T)^transp$) and diagonal-dominant:
+  the reaction is largest when transmitter and receiver coincide and decays with their separation
+- the $M = 64$ configurations come from $32$ surface points each carrying two tangential
+  polarizations, so consecutive index pairs share a $Lambda$ point
 
 #pagebreak(weak: true)
 == Spherical Cavity
@@ -57,20 +46,6 @@ $
 - PEC sphere of radius $R = 4$, same interior surface $Lambda$, wavenumber $k = 2$
 - the spherical case admits a closed-form reaction operator $amat(T)_star$ of unlimited
   accuracy, which serves as ground truth for both solvers
-- the reaction operator $amat(T)$ shares the same structure for both solvers
-- reciprocity makes it symmetric, $amat(T) = amat(T)^transp$, and it is diagonal-dominant: the
-  reaction is largest when transmitter and receiver coincide and decays with their separation
-- the $M = 64$ configurations come from $32$ surface points each carrying two tangential
-  polarizations, so consecutive index pairs share a $Lambda$ point
-
-=== BEM
-
-==== Convergence
-
-#figure(
-  image("../../res/bem_sphere_convergence.svg"),
-  caption: [BEM convergence on the spherical cavity versus analytic reference.],
-)
 
 === EPGP
 
@@ -85,6 +60,10 @@ $
   ),
   caption: [EPGP scattered field on a 2D spherical cavity slice.],
 )
+
+- the spherical symmetry is clearly visible: the field is rotationally symmetric about the
+  dipole axis, with concentric wavefronts and uniform LIC streamlines; this simple structure
+  is absent in the ellipsoidal case, where the broken symmetry produces a richer, less regular field
 
 - @fig:sphere-field-std maps the posterior standard deviation of the scattered field over the
   same slice
@@ -101,8 +80,11 @@ $
   caption: [Reaction operator $|amat(T)|$ and posterior uncertainty $sigma$, spherical cavity.],
 )
 
-- $sigma$ depends only on the receiver, not the transmitter (uniform along the transmitter axis), since the posterior covariance is shared across excitations
-- spherical symmetry makes all receivers equivalent, so $sigma$ is uniform
+- the per-receiver posterior standard deviation $sigma_i = sqrt(amat(Sigma)_(i i))$ depends
+  on the receiver only, not on the transmitter, since the posterior covariance is shared
+  across all excitations
+- spherical symmetry makes all receivers equivalent, so $sigma$ is uniform; this uniformity
+  is absent on the ellipsoid, where the elongated geometry breaks the receiver equivalence
 
 ==== Convergence
 
@@ -120,6 +102,15 @@ $
 
 - more assumed noise, stronger regularization: error and uncertainty both grow
 
+=== BEM
+
+==== Convergence
+
+#figure(
+  image("../../res/bem_sphere_convergence.svg"),
+  caption: [BEM convergence on the spherical cavity versus analytic reference.],
+)
+
 #pagebreak(weak: true)
 == Ellipsoidal Cavity
 
@@ -127,24 +118,6 @@ $
 - no analytic operator is available: the ellipsoid does not separate the vector Helmholtz
   equation in any standard coordinate system, so no closed-form eigenfunction expansion exists;
   the high-fidelity BEM solution serves as the reference
-- the operator shares the same structure as the spherical case: symmetric and diagonal-dominant
-
-=== BEM
-
-==== Convergence
-
-- runs over a $p times m$ grid
-- analytic boundary, so $h$ converges algebraically and $p$ geometrically
-- best grid run p5/m4 ($4800$ DOFs) reaches $rho approx 1.4 times 10^(-10)$
-- the BEM reference $amat(T)_"BEM"$ is a dedicated off-grid run at p6/m4 ($5292$ DOFs,
-  $rho approx 2.5 times 10^(-10)$)
-- $k = 2$ lies $approx 0.0015$ above an interior resonance near $1.9985$; the effect on
-  conditioning is mild and both solvers converge cleanly, so $k = 2$ is operationally non-resonant
-
-#figure(
-  image("../../res/bem_ellipse_convergence.svg"),
-  caption: [BEM reciprocity error on the ellipsoidal cavity.],
-)
 
 === EPGP
 
@@ -159,6 +132,9 @@ $
   ),
   caption: [EPGP scattered field on a 2D ellipsoidal cavity slice.],
 )
+
+- the broken symmetry of the ellipsoid is clearly visible: the field is no longer rotationally
+  symmetric, and the LIC streamlines reflect the more complex interior geometry
 
 - @fig:ellipse-field-std maps the posterior standard deviation of the scattered field over the
   same slice
@@ -187,22 +163,27 @@ $
   caption: [EPGP reciprocity error on the ellipsoidal cavity versus $N_s$.],
 )
 
-==== Noise Influence
+=== BEM
+
+==== Convergence
+
+- runs over a $p times m$ grid
+- analytic boundary, so $h$ converges algebraically and $p$ geometrically
+- best grid run p5/m4 ($4800$ DOFs) reaches $rho approx 1.4 times 10^(-10)$
+- the BEM reference $amat(T)_"BEM"$ is a dedicated off-grid run at p6/m4 ($5292$ DOFs,
+  $rho approx 2.5 times 10^(-10)$)
+- $k = 2$ lies $approx 0.0015$ above an interior resonance near $1.9985$; the effect on
+  conditioning is mild and both solvers converge cleanly, so $k = 2$ is operationally non-resonant
 
 #figure(
-  image("../../res/ellipse_noise.svg", width: 68%),
-  caption: [Reconstruction error and predicted uncertainty vs assumed noise, ellipsoidal cavity.],
+  image("../../res/bem_ellipse_convergence.svg"),
+  caption: [BEM reciprocity error on the ellipsoidal cavity.],
 )
-
-- same trend as the sphere; error measured against the BEM reference
 
 === Comparison
 
-- with no analytic ground truth, the two solvers are validated against each other
-
 ==== Cross-Validation
 
-- a high-fidelity BEM solution is the reference, off the convergence grid, from a dedicated finer run
 - reference error $epsilon$ against the BEM reference operator decreases monotonically, reaching
   $approx 1.3 times 10^(-8)$ at $N_s = 1024$
 - $epsilon$ is still decreasing at $N_s = 1024$, so it is an upper bound, not converged
@@ -218,14 +199,14 @@ $
   caption: [Reciprocity error vs wall time for BEM and EPGP on the ellipsoidal cavity.],
 )
 
-- same qualitative picture as the sphere: EPGP a near-vertical front at $approx 6$ to $18$ s, BEM a
-  staircase descending only with large wall-time increases
-- BEM's deep end is even more expensive here, reaching $rho approx 10^(-10)$ only at $approx 1700$ s
-  (the p6/m4 reference run)
-- EPGP reaches $rho approx 10^(-9)$ to $10^(-10)$ at $approx 10$ s, two to three orders of magnitude
-  faster than BEM at equal accuracy
-- BEM is cheaper only at loose tolerance; for any demanding accuracy EPGP is the cheaper solver, and
-  on the more realistic geometry the gap is wider than on the sphere
+- faint points are all grid runs; the solid line is each solver's Pareto front
+- EPGP forms a near-vertical front at $approx 6$ to $18$ s: accuracy improves by orders of
+  magnitude at nearly fixed wall time, since the cost is dominated by the fixed factorization
+- BEM is a staircase descending only with large wall-time increases, reaching
+  $rho approx 10^(-10)$ only at $approx 1700$ s (the p6/m4 reference run)
+- EPGP reaches $rho approx 10^(-9)$ to $10^(-10)$ at $approx 10$ s, two to three orders of
+  magnitude faster than BEM at equal accuracy
+- BEM is cheaper only at loose tolerance; for any demanding accuracy EPGP is the cheaper solver
 
 #page(flipped: true, margin: 1.3cm)[
   #set table(inset: (x: 6pt, y: 5pt))
