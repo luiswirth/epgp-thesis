@@ -204,11 +204,11 @@ This BVP is well-defined only when $k^2$ is not a cavity resonance, i.e. not an 
 
 === Receiver Dipole and Measurement
 
-The receiver dipole $delta_r = (zv_r, pv_r)$ measures the scattered field $Ev^s$ by evaluating the field at its location $zv_r$ and projecting it onto its polarization $pv_r$, yielding a single complex scalar.
+The receiver dipole $delta_r = (zv_r, pv_r)$ measures the scattered field $Ev^s$ at its location $zv_r$. Since its polarization $pv_r$ is tangential to $Lambda$, this reads out the tangential trace $pi_t^Lambda Ev^s$ along $pv_r$, yielding a single complex scalar.
 
-Mathematically this is a simple linear functional $cal(R): C^oo (D; CC^3) -> CC$ defined as
+Mathematically this is a linear functional $cal(R): C^oo (D; CC^3) -> CC$ defined as
 $
-  cal(R)(Ev^s) := pv_r dot Ev^s (zv_r; delta_t)
+  cal(R)(Ev^s) := pv_r dot pi_t^Lambda Ev^s (zv_r; delta_t) = pv_r dot Ev^s (zv_r; delta_t)
 $
 
 
@@ -230,6 +230,11 @@ $
 
 === Reaction Operator
 
+#text(size: 20pt)[
+TODO: REWRITE THIS SECTION!
+first introduce the operator in the continuous setting, then discretize it to a matrix!!!
+]
+
 So far we have considered a single transmit-receive dipole pair. We now extend to an ensemble of $N_Lambda$ dipoles.
 
 By reciprocity there is no need to distinguish between transmitters and receivers, so the same set of dipoles serves both roles. Every dipole acts as both transmitter and receiver.
@@ -248,12 +253,22 @@ $
   amat(T) = amat(T)^transp
 $
 
-The setup is particularly natural when the dipoles share a common surface $Lambda subset.eq D$, with locations $zv in Lambda$. Furthermore the polarization of each dipole is restricted to the tangent plane $T_zv Lambda$ of the surface.
+The construction is cleanest stated without a basis first. We restrict the dipoles to a common surface $Lambda subset.eq D$, with locations $zv in Lambda$ and polarizations $pv in T_zv Lambda$ tangent to it. A continuous excitation is then a tangential dipole density on $Lambda$, a tangential vector field $avec(g): Lambda -> T Lambda$. It excites a scattered field whose tangential trace $pi_t^Lambda Ev^s$ on $Lambda$ is again a tangential vector field. The continuous reaction operator
+$
+  cal(T): avec(g) |-> pi_t^Lambda Ev^s [avec(g)]|_Lambda
+$
+thus maps the space of tangential vector fields on $Lambda$ to itself, and is symmetric by reciprocity.
 
-Instead of fixing a single polarization per point, we use a full orthonormal polarization basis $e_1(zv), e_2(zv) in T_zv Lambda$ for the 2D tangent space at each point $zv$. The basis is chosen to be smooth (TODO: compare to code) over the surface, so that the polarization varies continuously with the location.
-
-$N_Lambda$ dipole points, each with two basis polarizations, give $M = 2 N_Lambda$ dipole configurations.
-Therefore the reaction operator is a square matrix $amat(T) in CC^(M times M)$.
+Our matrix $amat(T)$ is a discretization of $cal(T)$. We sample $N_Lambda$ points $zv_n in Lambda$ and equip each with an orthonormal tangent basis $e_1(zv_n), e_2(zv_n)$ spanning $T_(zv_n) Lambda$, chosen smooth over the surface. The measurement at a point is the tangent vector $pi_t^Lambda Ev^s (zv_n; delta) in T_(zv_n) Lambda$, whose two components in the basis are the two reactions,
+$
+  r(delta, delta_(n a)) = e_a (zv_n) dot pi_t^Lambda Ev^s (zv_n; delta)
+  quad a in {1, 2}
+$
+so the basis resolves the full tangent vector,
+$
+  pi_t^Lambda Ev^s (zv_n; delta) = sum_(a = 1,2) r(delta, delta_(n a)) e_a (zv_n)
+$
+The point measurement is therefore the tangential trace itself in the polarization frame, $T_(zv_n) Lambda tilde.equiv CC^2$. Sampling all points and both polarizations gives $M = 2 N_Lambda$ degrees of freedom and the square matrix $amat(T) in CC^(M times M)$.
 
 This reaction operator $amat(T)$ is the object of interest for the benchmark. Both methods compute it, and the resulting operators are compared.
 
@@ -318,30 +333,50 @@ $
 
 ==== Analytic Solution
 
-The spherical symmetry makes the interior BVP separable, so the scattered field has a closed form solution. This allows us to compute the reaction operator $amat(T)_star$ analytically, which serves as an exact reference solution for the both numerical solvers.
+Thanks to the spherical symmetry, the interior BVP is separable and hence has a closed form solution.
+Therefore both scattered field $Ev^s$ and the reaction operator $amat(T)$ have analytic formulas,
+which serve as exact reference solutions to validate both numerical solvers.
 
+We do not re-derive the analytic solution here. We refer to @tai for the full derivation and only record the resulting formulas as used in the code.
+Correctness is established empirically: both numerical solvers agree with these formulas to $approx 10^(-10)$ independently, which is strong evidence that the formulas are correct.
 
-- we use the standard construction @tai without reproducing its derivation: expand the
-  scattered field in vector spherical multipoles, impose the PEC wall, solve for the
-  coefficients, then evaluate the same measurement as in the general problem
-- we record only the formulas as implemented in the code; correctness is established not
-  by re-deriving them but empirically: both numerical solvers agree with these formulas
-  to $approx 10^(-10)$ independently, and two methodologically unrelated solvers
-  agreeing with the same closed-form expressions is strong evidence the formulas are correct
-
-- expand the incident tangential trace on the wall ($r = R$) in tangential vector spherical
-  harmonics: $avec(Psi)_(l m)$ (TM-type) and $avec(Phi)_(l m)$ (TE-type)
+The interior fields expand in the regular Hansen multipoles, the TM-type $avec(N)_(l m)$ and the TE-type $avec(M)_(l m)$. On a sphere of radius $r$ their tangential traces reduce to the tangential vector spherical harmonics $avec(Psi)_(l m)$ and $avec(Phi)_(l m)$,
 $
-  p_(l m) = inner(pi_t Ev^i, avec(Psi)_(l m))_(r = R), wide
+  pi_t avec(N)_(l m) = (psi_l'(k r))/(k r) avec(Psi)_(l m)
+  wide
+  pi_t avec(M)_(l m) = j_l (k r) avec(Phi)_(l m)
+$
+with the spherical Bessel function $j_l$ and the Riccati--Bessel function $psi_l (x) = x j_l (x)$.
+
+We expand the incident tangential trace on the cavity wall ($r = R$) in these harmonics,
+$
+  p_(l m) = inner(pi_t Ev^i, avec(Psi)_(l m))_(r = R)
+  wide
   q_(l m) = inner(pi_t Ev^i, avec(Phi)_(l m))_(r = R)
 $
-- the PEC wall fixes the scattered field; its tangential trace measured on $Lambda$ ($r = r_0$) is,
-  per harmonic,
+
+The scattered field expands in the same multipoles,
 $
-  avec(y)_(l m) = - R/r_0 (psi_l'(k r_0))/(psi_l'(k R)) p_(l m) avec(Psi)_(l m)
-  - (j_l (k r_0))/(j_l (k R)) q_(l m) avec(Phi)_(l m)
+  Ev^s = sum_(l m) (a_(l m) avec(N)_(l m) + b_(l m) avec(M)_(l m))
 $
-- with the regular spherical Bessel function $j_l$, the Riccati-Bessel function $psi_l (x) = x j_l (x)$,
-  the wall radius $R$, and the measurement radius $r_0 = 1$ (the radius of $Lambda$)
-- summing over $l, m$ and inserting into the reaction measurement gives the reference operator
-  $amat(T)_star$
+
+The PEC condition $pi_t Ev^s = -pi_t Ev^i$ on the cavity wall $partial D$ ($r = R$) fixes the coefficients,
+$
+  a_(l m) = -(k R)/(psi_l'(k R)) p_(l m)
+  wide
+  b_(l m) = -1/(j_l (k R)) q_(l m)
+$
+
+Evaluating the scattered field on the dipole surface $Lambda$ ($r = r_0$) and taking its tangential trace gives the measured response,
+$
+  pi_t^Lambda Ev^s|_Lambda
+  = -sum_(l m) (
+    R/r_0 (psi_l'(k r_0))/(psi_l'(k R)) p_(l m) avec(Psi)_(l m)
+    + (j_l (k r_0))/(j_l (k R)) q_(l m) avec(Phi)_(l m)
+  )
+$
+
+Projecting onto the receiver polarization gives the reference reaction operator,
+$
+  amat(T)_(i j) = en_(a_i) (zv_(n_i)) dot pi_t^Lambda Ev^s (zv_(n_i); delta_j)
+$

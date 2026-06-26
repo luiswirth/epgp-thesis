@@ -41,6 +41,7 @@
 #let kv = $avec(k)$
 #let kn = $nvec(k)$
 #let av = $avec(a)$
+#let uv = $avec(u)$
 
 #let dv = $avec(d)$
 #let dn = $nvec(d)$
@@ -59,6 +60,7 @@
 
 #let ii = $dotless.i$
 
+#let span = math.op("span", limits: true)
 
 #let angled(a) = math.lr($chevron.l #a chevron.r$)
 

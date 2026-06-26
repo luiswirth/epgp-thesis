@@ -5,45 +5,43 @@
 *Machine learning (ML)* is increasingly used as a tool in the sciences and
 engineering, where the systems of interest obey well-established physical laws.
 This has given rise to the field of *scientific machine learning (SciML)*, also
-known as *AI4Science*. A purely data-driven model ignores the known physical
+known as *AI4Science*. Purely data-driven models ignore this known physical
 structure and must rediscover the laws from data alone, which is wasteful and
 typically inaccurate outside the regime it was trained on. The more principled
 approach embeds established physical knowledge into the model from the outset.
 This idea appears under several names, such as *first-principles AI (FPAI)*,
 *physics-informed ML* or *hybrid modeling*, which all refer to essentially
-the same goal: letting the governing equations constrain the model rather than
+the same idea: letting the governing equations constrain the model rather than
 learning them from data.
 
 Many physical laws take the form of *partial differential equations (PDEs)*, and
 there are two ways to make a model respect such a law. Weak enforcement adds the
 PDE residual as a penalty in the training objective, so the constraint is only
 satisfied approximately and is traded off against the data; the physics-informed
-neural network is the canonical example. *Strong enforcement* instead restricts
+neural network (PINN) is the canonical example. *Strong enforcement* instead restricts
 the model to functions that satisfy the equation identically by construction.
 *Structure preservation* is the key advantage: unphysical phenomena, such as
 spurious modes or phantom charges are impossible to obtain. The model can
-then never violate the law it is meant to obey, regardless of the data. When
+never violate the law it is meant to obey, regardless of the data. When
 the governing law is known exactly, strong enforcement is therefore preferable.
 
 Among ML models, the *Gaussian process (GP)* is particularly well suited to
 strong enforcement. A GP is a probabilistic model over functions that returns
-a full posterior distribution rather than a point estimate. As an added
-benefit, *uncertainty quantification* then comes for free: every prediction
-carries a calibrated estimate of its own reliability at no extra cost. If
-the GP prior is built so that its samples satisfy a PDE exactly, the model is
+a full posterior distribution instead of just a point estimate. This enables
+*uncertainty quantification*: every prediction carries an estimate of its own reliability.
+If the GP prior is built so that its samples satisfy a PDE exactly, the model is
 strongly physics-informed and probabilistic at the same time.
 
 The *Ehrenpreis--Palamodov (EP)* principle provides a constructive route to such
 priors for *linear PDEs with constant coefficients* inspired by the *inverse
 Fourier transform*. It represents solutions as superpositions of *plane waves*
 supported on the *characteristic variety* of the operator. Its GP realization,
-the *Ehrenpreis--Palamodov Gaussian Process (EPGP)* @harkonen, builds the
-governing equations directly into the prior, so that every sample and every
-posterior estimate lies in the solution space of the operator exactly.
+the *Ehrenpreis--Palamodov Gaussian Process (EPGP)* @harkonen, uses a Gaussian prior,
+based on this principle. The prior and the posterior both lie exactly in the solution space of the operator.
 
 A particularly well-understood PDE system is *Maxwell's equations*, which
-govern *electromagnetism (EM)*. Building an EPGP for these equations is the
-topic of the ongoing effort @felix, which constructs EPGP priors for the
+govern *electromagnetism (EM)*. Building a principled EPGP for these equations
+is part of ongoing effort @felix, which constructs EPGP priors for the
 *time-harmonic* Maxwell system from a geometric perspective based on
 *differential forms*, the *de Rham complex*, and *Hertz potentials*. This yields
 a more geometrically grounded construction than the generic one by @harkonen.

@@ -2,218 +2,315 @@
 
 = Methods
 
-- we compute the reaction operator $amat(T)$ by two solvers that are methodologically
-  unrelated and share only the problem setup: the same cavity geometry, wavenumber,
-  dipole surface, and dipole configurations
-- the EPGP solver is a probabilistic, spectral plane-wave method: it places a
-  Maxwell-constrained Gaussian prior over the scattered field and conditions it on
-  the PEC boundary data
-- the BEM solver is a deterministic boundary-integral method: it discretizes the
-  single-layer EFIE on the cavity wall and solves for a surface density whose
-  potential gives the scattered field
-- in both cases the scattered field is represented by an ansatz that already satisfies the
-  interior Maxwell system, leaving only the PEC boundary condition to enforce; the solvers
-  differ in the ansatz, a volume plane-wave superposition versus a boundary single-layer
-  potential, and in how the condition is imposed, by probabilistic conditioning versus a
-  deterministic integral-equation solve
+This chapter describes the two solvers used to compute the cavity reaction operator $amat(T)$.
+They are methodologically unrelated and share only the problem setup: cavity geometry, wavenumber, and dipole configurations.
+
+Both rest on the same idea.
+The scattered field is represented by an ansatz built from a superposition of exact solutions of the interior curl--curl equation.
+Thus Maxwell's equations hold by construction and only the PEC boundary condition remains to be enforced.
+
+The solvers differ in multiple ways.
+The EPGP solver is probabilistic, returning a posterior distribution over the solution space, while the BEM solver is deterministic, returning a single solution.
+The EPGP solver uses a volume plane-wave superposition ansatz, while the BEM solver uses a boundary single-layer potential ansatz.
+The EPGP solver enforces the boundary condition by conditioning on the boundary data, while the BEM solver enforces it by solving an integral equation.
 
 == Ehrenpreis--Palamodov Gaussian Process
 
-- probabilistic solver: a Gaussian process whose every sample satisfies the
-  source-free time-harmonic Maxwell's equations exactly
+The Ehrenpreis--Palamodov Gaussian Process (EPGP) is a probabilistic, spectral method. Its ansatz is a superposition of transverse plane waves, which satisfy Maxwell's equations exactly. It places a Gaussian prior on the plane-wave amplitude density and enforces the boundary condition by conditioning on the boundary data, yielding a posterior distribution over the solution space.
 
 === Fundamental Principle
 
-- characteristic variety of the time-harmonic curl--curl operator: the wavevectors
-  carried by its plane-wave solutions
+A linear PDE with constant coefficients is governed by a differential operator $D$, a matrix-valued polynomial in the partial derivatives,
+$
+  D = D[partial_1, dots, partial_n]
+$
+The plane waves $exp(i kv dot xv)$ are the modes of the Fourier transform, under which differentiation becomes multiplication, $partial_j |-> i k_j$, so $D$ turns into multiplication by its symbol $P$,
+$
+  D e^(i kv dot xv) = P[i kv] e^(i kv dot xv)
+$
+We abbreviate $P(kv) := P[i k_1, dots, i k_n]$. A plane wave $av exp(i kv dot xv)$ is therefore a solution exactly when its amplitude lies in the kernel of the symbol, $P(kv) av = 0$.
+
+The Ehrenpreis--Palamodov fundamental principle inverts this. It states that _all_ solutions $uv$ of linear PDEs with constant coefficients
+can be recovered by an inverse Fourier transform, as a continuous superposition of such plane-wave solutions
+$
+  uv(xv) = integral_(V) av(kv) exp(i kv dot xv) dif kv
+$
+with wavevectors $kv$ on the characteristic variety $V$ of the symbol $P$
+$
+  V = { kv in RR^d mid(:) det P(kv) = 0 }
+$
+and amplitude densities $av$ in its kernel,
+$
+  av(kv) in ker P(kv)
+$
+
+The variety collects the wavevectors at which the symbol is singular,
+and the kernel condition restricts each amplitude to the directions the symbol annihilates.
+
+Rather than carry the kernel constraint, we remove it by projection. Writing $amat(Pi)_kv$ for the orthogonal projector onto $ker P(kv)$, any unconstrained weight $avec(w)(kv)$ yields an admissible amplitude $av(kv) = amat(Pi)_kv avec(w)(kv)$. Folding the projector into a matrix-valued feature map,
+$
+  amat(Phi)_kv (xv) = amat(Pi)_kv exp(i kv dot xv)
+$
+every solution becomes a superposition of features with a free weight,
+$
+  uv(xv) = integral_V amat(Phi)_kv (xv) avec(w)(kv) dif kv
+$
+
+==== Time-Harmonic Maxwell's Equation
+
+We now consider the time-harmonic Maxwell's equations, equivalently the curl--curl Helmholtz equation. Its symbol, with the wavenumber $k$, is
+$
+  P(kv) = (norm(kv)^2 - k^2) amat(I) - kv kv^transp
+$
+whose determinant vanishes on a $k$-scaled 2-sphere, the characteristic variety
 $
   V_k = { kv in RR^3 mid(:) norm(kv) = k } = k SS^2
 $
-- Ehrenpreis--Palamodov fundamental principle: every solution is an infinite
-  superposition of transverse plane waves $av exp(i kv dot rv)$, wavevector $kv in V_k$,
-  amplitude $av perp kv$
+On the variety the symbol is singular and reduces to a scaled rank-one projector onto the wavevector,
 $
-  Ev (rv) = integral_(V_k) av (kv) exp(i kv dot rv) dif kv,
-  quad
-  av (kv) perp kv
+  P(kv) = -kv kv^transp
+  quad kv in V_k
 $
-- the transversality $av perp kv$ is what encodes Maxwell: any such superposition
-  solves the curl--curl equation regardless of the amplitude density $av$
+whose kernel is the plane perpendicular to the wavevector,
+$
+  ker P(kv) = { av in CC^3 mid(:) kv dot av = 0 }
+$
 
+ Enforcing Maxwell's equations therefore amounts to a transversality constraint on the amplitude,
+$
+  av(kv) perp kv
+$
+
+Here the kernel is the transverse plane, and its orthogonal projector is the complement of that rank-one projector,
+$
+  amat(Pi)_kv = amat(I) - (kv kv^transp)/norm(kv)^2
+$
+The general feature map and EP representation thus specialize to a superposition of transverse plane waves with a free weight,
+$
+  amat(Phi)_kv (xv) = amat(Pi)_kv exp(i kv dot xv)
+  quad
+  Ev (rv) = integral_(V_k) amat(Phi)_kv (rv) avec(w)(kv) dif kv
+$
+
+#pagebreak()
 === Gaussian Maxwell Prior
 
-- place a zero-mean circularly-symmetric complex Gaussian measure on the amplitude density
-  $av(kv)$ over the variety $V_k$
-- transverse plane waves give the matrix-valued feature map, with the transverse projector
-  $amat(P)_kv = amat(I) - kn kn^transp$ enforcing $av perp kv$
+Since the field is linear in the weight, a Gaussian measure on $avec(w)$ makes it a Gaussian process,
 $
-  amat(Phi)_kv (xv) = amat(P)_kv exp(i kv dot xv)
+  Ev tilde cal(G P)(0, amat(K))
 $
-- by the integral representation the field is then a Gaussian process $Ev tilde cal(G P)(0, amat(K))$
-  on $D$, whose covariance kernel is the EP integral of the feature map
+with matrix covariance kernel
 $
   amat(K)(xv, yv) = integral_(V_k) amat(Phi)_kv (xv) amat(Phi)_kv^herm (yv) dif kv
 $
-- every sample is an EP superposition, so it satisfies Maxwell exactly; the prior lives
-  entirely on the solution space, not on arbitrary vector fields
+Because the projector sits inside every feature, the prior is supported entirely on the solution space: every sample satisfies Maxwell exactly.
 
-=== Finite Plane-Wave Prior
+=== Conditioning and Posterior
 
-- approximate the EP integral by quadrature over a finite set of $N_s$ spectral directions
-  $kv_j$, drawn from a Fibonacci sphere (quasi-uniform low-discrepancy point set)
-- the EP integral becomes a quasi-Monte Carlo sum, with two transverse polarizations per direction
-$
-  Ev (rv) = sum_(j = 1)^(N_s) sum_(a = 1)^2 w_(j a) av_(j a) exp(i kv_j dot rv),
-  quad av_(j a) perp kv_j
-$
-- the two amplitudes $av_(j 1), av_(j 2)$ are an orthonormal basis of the transverse plane,
-  recovering the projector of the continuous feature map
-$
-  amat(P)_(kv_j) = sum_(a = 1)^2 av_(j a) av_(j a)^herm
-$
-- each direction and polarization contributes a base plane-wave feature, the field of the
-  sampled plane wave
-$
-  avec(phi)_(j a) (xv) = av_(j a) exp(i kv_j dot xv)
-$
-- weights gathered in $avec(w) in CC^F$, with $F = 2 N_s$ features (two polarizations per direction),
-  and a circularly-symmetric complex Gaussian prior $avec(w) tilde cal(C N)(0, amat(W))$, with diagonal
-  $amat(W) in CC^(F times F)$
-- the prior covariance is the quasi-Monte Carlo truncation of the continuous kernel, the
-  quadrature weights $W_j$ (the diagonal of $amat(W)$) carrying the variety measure
-$
-  amat(K)(xv, yv) = sum_(j = 1)^(N_s) W_j amat(P)_(kv_j) exp(i kv_j dot (xv - yv))
-  = sum_(j = 1)^(N_s) sum_(a = 1)^2 W_j av_(j a) av_(j a)^herm exp(i kv_j dot (xv - yv))
-$
-- this finite-dimensional weight-space prior still enforces Maxwell in the interior by construction
+We turn the prior into a solver by conditioning on observations of the field.
+An observation is a linear functional $cal(R)$ of the field, for instance its value or its tangential trace at a point.
+We condition on $N_b$ observations at points $X_b$, collected with their measured values in a data vector $avec(d)$.
 
-=== Posterior
-
-- the prior conditions like any Gaussian process: given observations of the field at $N_b$ points,
-  the posterior is the prior restricted to the weights consistent with them
-- an observation is a linear functional $cal(R)$ of the field, for instance a field value at a point;
-  applying it to the base plane-wave features gives the observation features $cal(R) avec(phi)_(j a)$,
-  stacked over the conditioning points into the feature matrix $amat(Phi) in CC^(F times D_b)$, where
-  $D_b$ is the total data dimension ($3 N_b$ for a tangential trace, $6 N_b$ for the full field)
-- conditioning on the data vector $avec(d) in CC^(D_b)$ then yields a Gaussian posterior over the
-  weights $avec(w)$
-- its mean $avec(w)_star$ is the regularized best-fit: the least-squares fit to the data, regularized
-  by the prior and the assumed noise $sigma_"n"^2$
-- its covariance $amat(A)^(-1)$ measures how underdetermined the weights remain after conditioning,
-  the solver's uncertainty
-- the mean weights, with noise variance $sigma_"n"^2$ and the diagonal prior precision $amat(W)^(-1)$, solve
+Since the prior is a Gaussian process, conditioning is exact and the posterior is again a Gaussian process.
+Writing $amat(K)(dot.c, X_b)$ for the kernel evaluated against the observation functionals and $amat(K)_(b b)$ for the observation--observation block, and allowing a Gaussian observation noise of variance $sigma_"n"^2$, the posterior mean field is
 $
-  avec(w)_star = amat(A)^(-1) amat(Phi) avec(d) \/ sigma_"n"^2,
-  quad amat(A) = amat(W)^(-1) + amat(Phi) amat(Phi)^herm \/ sigma_"n"^2 in CC^(F times F)
+  Ev_star (xv) = amat(K)(xv, X_b) (amat(K)_(b b) + sigma_"n"^2 amat(I))^(-1) avec(d)
 $
-- this is the feature-space (weight-space) view: a Gaussian prior on the weights $avec(w)$
-  of the explicit plane-wave features, inference solving the $F times F$ system $amat(A)$
-- the equivalent function-space (kernel) view never names features, conditioning instead
-  through the kernel $amat(K) = amat(Phi)^herm amat(W) amat(Phi) in CC^(D_b times D_b)$
-- both give the same posterior; we invert the smaller matrix, and the explicit EP features
-  make weight space natural and cheap here, since $F < D_b$
-- posterior mean field is the feature evaluation $Ev_star (rv) = avec(phi)^herm (rv) avec(w)_star$,
-  with the evaluation features $avec(phi)(rv) in CC^(F times 3)$, the same plane-wave features stacked
-  into the columns of $amat(Phi)$
-- evaluating the features at the receivers propagates the weight covariance $amat(A)^(-1)$ into the
-  field; equivalently the posterior covariance is the Schur complement of the conditioning block in
-  the joint prior kernel, quantifying the solver's uncertainty
+and the posterior covariance is the Schur complement of the conditioning block,
 $
   amat(K)_star (xv, yv) = amat(K)(xv, yv)
   - amat(K)(xv, X_b) (amat(K)_(b b) + sigma_"n"^2 amat(I))^(-1) amat(K)(X_b, yv)
 $
-- specializing to a BVP: the prior already solves the PDE in the interior, so conditioning on
-  the prescribed boundary traces enforces the boundary condition, turning the prior into a
-  BVP solver
+Together they specify the posterior, again a Gaussian process,
+$
+  Ev | avec(d) tilde cal(G P)(Ev_star, amat(K)_star)
+$
+The mean is the regularized best fit to the data, tempered by the prior and the noise; the covariance measures how underdetermined the field remains after conditioning, and is the solver's uncertainty.
+The noise variance $sigma_"n"^2$ trades off fitting the data against trusting the prior: as $sigma_"n"^2 -> 0$ the posterior mean interpolates the observations exactly, while $sigma_"n"^2 > 0$ relaxes this to a regression that smooths the fit.
 
-=== `maxwellgp`
+This is exact, infinite-dimensional GP regression: prior and posterior both live on the solution space.
 
-- the prior and posterior above are implemented in the `maxwellgp` library (Python/JAX),
-  general and cavity-independent
-- the observation functional $cal(R)$ is realized by the feature map: either the full
-  electromagnetic field $cal(R) = "id"$ (the six $(Ev, Bv)$ components per point) or the tangential
-  trace $cal(R) = pi_t$ (the projection $pi_t Ev$, with a boundary normal supplied per conditioning point)
-- only $cal(R)$ changes between the two; the base plane-wave features, the prior weights, the
-  directions, and the posterior solve are identical
-- refer to @felix for the full theory
+=== Discretization
 
-=== EPGP for Cavity Scattering
+The posterior of the previous section is exact but not yet computable: the kernel entries are integrals over $V_k$ with no closed form. We discretize the EP integral by quadrature, which both makes the kernel computable and expresses the field through explicit finite features.
 
-- `cavity-epgp` specializes the general `maxwellgp` prior to the cavity scattering problem
-- the cavity enters only through the boundary data; the prior is unchanged
-- here the observation functional is the tangential trace $cal(R) = pi_t$ and the data is the
-  prescribed boundary values: condition on the scattered-field trace $avec(d) = avec(h) = -pi_t Ev^i$
-  at $N_b$ points on $partial D$, which enforces the PEC condition and yields the posterior scattered
-  field $Ev^s_star$
-- the conditioning points are the $N_b$ boundary points on $partial D$, each carrying its outward
-  normal $nv$ so that the tangential feature $pi_t$ is defined there
-- the tangential trace of the posterior mean at the receivers gives the operator column; entry
-  $i j$ is the receiver dipole $delta_i$ reading the field of transmitter $delta_j$
+We approximate the integral over $V_k$ by a finite sum over $N_s$ spectral directions $kv_j in V_k$, drawn from a Fibonacci sphere, a quasi-uniform low-discrepancy point set with quadrature weights $q_j$.
+The discretization collapses the matrix-valued feature into its two transverse columns: for each direction we pick an orthonormal basis $av_(j 1), av_(j 2)$ of the transverse plane, recovering the projector as an outer-product sum,
+$
+  amat(Pi)_(kv_j) = sum_(a = 1)^2 av_(j a) av_(j a)^herm
+$
+so each direction contributes two scalar plane-wave features $avec(phi)_(j a) (xv) = av_(j a) exp(i kv_j dot xv)$, giving $F = 2 N_s$ features in total. The field becomes a finite superposition with one scalar coefficient per feature,
+$
+  Ev (rv) = sum_(j = 1)^(N_s) sum_(a = 1)^2 w_(j a) avec(phi)_(j a) (rv)
+$
+
+These coefficients carry the prior. Gathering them in $avec(w) in CC^F$, the Gaussian measure becomes a finite circularly-symmetric complex Gaussian,
+$
+  avec(w) tilde cal(C N)(0, amat(W))
+  quad
+  amat(W) = "diag"(q_j)
+$
+with covariance set by the quadrature weights, so directions that carry more of the integral contribute more to the field. Every feature is a transverse plane wave, so this finite prior is still supported entirely on the solution space.
+
+Conditioning is now a finite linear-algebra problem. Evaluating the features at the observation points against $cal(R)$ gives the design matrix $amat(Phi) = amat(Phi)(X_b) in CC^(F times D_b)$, through which the data act on the coefficients, and the weight-space posterior is
+$
+  avec(w)_star = amat(A)^(-1) amat(Phi) avec(d) \/ sigma_"n"^2,
+  quad
+  amat(A) = amat(W)^(-1) + amat(Phi) amat(Phi)^herm \/ sigma_"n"^2 in CC^(F times F)
+$
+with the posterior mean field recovered as $Ev_star (rv) = amat(Phi)(rv)^herm avec(w)_star$.
+
+In the same features the kernel factors as
+$
+  amat(K)(xv, yv) = amat(Phi)(xv)^herm amat(W) amat(Phi)(yv)
+$
+so this $F times F$ weight-space solve and the $D_b times D_b$ function-space solve of the previous section are the same posterior, related by the matrix-inversion lemma. We are free to invert whichever is smaller; the explicit EP features make the weight-space solve the cheaper choice whenever $F < D_b$.
+
+=== Implementation `maxwellgp`
+
+The prior and posterior above are implemented in the `maxwellgp` library @felix (Python/JAX), general and problem-independent.
+The observation functional $cal(R)$ is supplied to the library and realized through the feature map; only $cal(R)$ changes between applications, while the plane-wave features, the prior weights, the directions, and the posterior solve are identical.
+We refer to @felix for the full theory.
+
+=== Boundary Value Problems
+
+The prior already solves the PDE in the interior, so conditioning turns it into a boundary value problem solver: observing the prescribed boundary trace yields the posterior field consistent with it.
+The relevant functional is the boundary trace; for the PEC Maxwell problem it is the tangential trace $cal(R) = pi_t$, evaluated at $N_b$ points on the boundary $partial D$, each carrying its outward normal $nv$.
+
+Although the prescribed boundary data is exact, we keep $sigma_"n"^2 > 0$. The finite feature space cannot represent the trace exactly, and the plane-wave Gram matrix is ill-conditioned, so a small noise acts as a Tikhonov regularizer that stabilizes the conditioning solve.
+
+=== Cavity Scattering
+
+The `cavity-epgp` layer specializes the BVP solver to the cavity scattering problem; the cavity enters only through the boundary data, and the prior is unchanged.
+The transmitter dipole sets the boundary trace: conditioning on the prescribed scattered-field trace $avec(d) = -pi_t Ev^i$ at the $N_b$ boundary points enforces the PEC condition and yields the posterior scattered field $Ev^s_star$.
+
+The tangential trace of the posterior mean at the receivers fills the operator column by column: entry $i j$ is the receiver dipole $delta_i$ reading the field of transmitter $delta_j$,
 $
   amat(T)_(i j) = pv_i dot pi_t^Lambda Ev^s_star (zv_i; delta_j)
 $
-- convergence in two parameters: number of spectral directions $N_s$, number of boundary
-  conditioning points $N_b$
+Convergence is governed by two parameters, the number of spectral directions $N_s$ and the number of boundary conditioning points $N_b$.
 
-=== Computational Cost
 
-#let bigO(x) = $cal(O)(#x)$
-
-- factor once, reuse factorization for each RHS / column of reaction operator
-- $N_s$ spectral directions, $N_b$ boundary points, $M = 2 N_Lambda$ dipole configurations
-- dominant cost holds for $M < N_s$
-
-#figure(
-  table(
-    columns: (auto, auto),
-    align: (left, center),
-    stroke: 0.5pt,
-    inset: (x: 8pt, y: 5pt),
-    table.header([], [cost]),
-    [factorization],     bigO($N_s^2 N_b + N_s^3$),
-    [multi-RHS / mean],  bigO($N_s N_b M + N_s^2 M$),
-    [operator assembly], bigO($N_s M^2 + N_s^2 M$),
-    [memory],            bigO($N_s N_b$),
-    table.hline(stroke: 1pt),
-    [*dominant*],        bigO($N_s^2 N_b$),
-  ),
-  caption: [Asymptotic cost of assembling the reaction operator with the EPGP solver.],
-)
-
+#pagebreak()
 == Boundary Element Method
 
-- deterministic baseline for the same interior curl--curl problem
-- boundary-integral method for three-dimensional electromagnetic problems on smooth geometries
+The boundary element method (BEM) is a deterministic, boundary-integral method. Its ansatz is a single-layer potential, which satisfies Maxwell's equations exactly. It leaves the surface density unknown and enforces the boundary condition by solving the resulting electric field integral equation, yielding a single solution.
 
 === Formulation
 
-- indirect formulation: represent the scattered field by a Maxwell single-layer potential
-  $Psi_"SL"$ with an unknown tangential density $avec(j)$ on the boundary $partial D$
+==== Maxwell Single-Layer Potential
+
+The Maxwell single-layer potential $Psi_"SL"$ is defined as
 $
-  Ev^s = Psi_"SL" avec(j),
-  quad
+  Psi_"SL": Hv^(-1/2)(div_Gamma, partial D) -> Hv(curl, D)
+  \
   (Psi_"SL" avec(j))(xv) = i k integral_(partial D) amat(G)(xv, yv) avec(j)(yv) dif s(yv)
 $
-- built from the same dyadic Green's function $amat(G)$, so $Ev^s$ solves the interior
-  curl--curl equation for any density $avec(j)$
-- impose the PEC condition by taking the rotated tangential trace $gamma_times := nv times (dot)$,
-  giving a boundary integral equation for the density, with the Maxwell single-layer operator
-  $cal(V) := gamma_times Psi_"SL"$ mapping the natural tangential trace spaces
-  $cal(V): H^(-1/2)(div_Gamma, partial D) -> H^(-1/2)(curl_Gamma, partial D)$
-$
-  cal(V) avec(j) = -gamma_times Ev^i = -nv times Ev^i quad "on" partial D
-$
-- the rotated trace, rather than the projection trace $pi_t$ used for the PEC condition,
-  gives the symmetric single-layer operator; the condition $nv times Ev = 0$ is equivalent to $pi_t Ev = 0$
-- this is an *electric field integral equation (EFIE)* in indirect single-layer form
-- as a first-kind integral operator $cal(V)$ is inherently ill-conditioned, and the
-  conditioning worsens under mesh refinement
-- solving for $avec(j)$ and evaluating $Ev^s = Psi_"SL" avec(j)$ recovers the scattered field;
-  the BVP solution operator $cal(S)$ of the interior problem is realized as $Psi_"SL" cal(V)^(-1)$
+where $amat(G)$ is the free-space electric dyadic Green's function of the Helmholtz curl--curl equation and $avec(j): partial D -> T (partial D)$ is a tangential boundary density.
 
-=== `Bembel`
+The single-layer potential is a solution of the interior curl--curl equation for any density.
+$
+  curl curl (Psi_"SL" avec(j)) - k^2 (Psi_"SL" avec(j)) = 0 quad "in" D
+$
 
-- the formulation above is discretized with `Bembel` @bembel, described by its authors as:
+==== Rotated Tangential Trace
+
+There is a more natural trace for BEM, the rotated tangential trace $gamma_times$.
+$
+  gamma_times avec(u) := nv times avec(u)
+$
+
+It differs from the projection tangential trace $pi_t$ by a quarter turn in the tangent plane, $
+  gamma_times = nv times pi_t
+$
+
+==== Maxwell Single-Layer Operator
+
+The Maxwell single-layer operator $cal(V)$ is obtained by applying the rotated tangential trace $gamma_times$ to the single-layer potential.
+$
+  cal(V): Hv^(-1/2)(div_Gamma, partial D) -> Hv^(-1/2)(curl_Gamma, partial D)
+  \
+  cal(V) := gamma_times Psi_"SL"
+$
+
+
+==== Electric Field Integral Equation
+
+In the indirect formulation, the electric field is represented by a Maxwell single-layer potential $Psi_"SL"$  with an unknown density $avec(j)$.
+$
+  Ev = Psi_"SL" avec(j),  
+$
+
+By taking the rotated tangential trace of both sides,
+$
+  gamma_times Ev = gamma_times Psi_"SL" avec(j) 
+$
+we obtain the boundary integral equation for the density.
+$
+  cal(V) avec(j) = avec(h)_times quad "on" partial D
+$
+where $avec(h)_times = gamma_times Ev$ is the boundary forcing.
+
+
+This is an electric field integral equation (EFIE) in indirect single-layer form.
+As a first-kind Fredholm integral equation, it is inherently ill-conditioned.
+
+
+The electric field solution is obtained by applying the single-layer potential to the density, and the BVP solution operator is then
+$
+  cal(S) = Psi_"SL" cal(V)^(-1)
+$
+
+=== Cavity Scattering
+
+==== PEC Boundary Condition
+
+In the rotated trace the PEC condition reads
+$
+  gamma_times Ev = gamma_times (Ev^i + Ev^s) = 0
+  \
+  gamma_times Ev^s = -gamma_times Ev^i
+$
+
+
+==== Scattered Field
+
+The boundary data is
+$
+  avec(h)_times = -gamma_times Ev^i
+$
+
+This gives us the boundary integral equation
+$
+  cal(V) avec(j) = -gamma_times Ev^i quad "on" partial D
+$
+
+The scattered field is then recovered by applying the single-layer potential to the density,
+$
+  Ev^s = Psi_"SL" avec(j) = cal(S) (-gamma_times Ev^i)
+$
+
+==== Measurement
+
+The receiver measurement is obtained by projecting the scattered field onto the polarization of the receiver dipole $delta = (zv, pv)$
+$
+  r = pv dot (pi_t^Lambda Ev^s) (zv) = pv dot (pi_t^Lambda cal(S) (-gamma_times Ev^i)) (zv)
+$
+
+Notice the trace asymmetry: the density is solved against the rotated trace $gamma_times$ on the cavity boundary $partial D$, but the measurement reads the tangential projection trace $pi_t^Lambda$ on the dipole surface $Lambda$.
+
+==== Reaction Operator
+
+Each of the $M = 2 N_Lambda$ transmitter dipoles, two polarizations per point on $Lambda$, generates a different incident field and hence a different right-hand side $avec(h)_times = -gamma_times Ev^i$ of the EFIE.
+
+By using a LU decomposition of the single-layer matrix, we can reuse the expensive factorization for each right hand side.
+
+Evaluating the resulting scattered field at the receivers and projecting onto the polarization frame fills one column of the reaction operator.
+
+
+=== Implementation `Bembel`
+
+The formulation is discretized with the `Bembel` library @bembel, described by its authors as:
 
 #quote(block: true, attribution: [@bembel])[
   \[Bembel is\] the C++ library featuring higher order isogeometric Galerkin boundary element
@@ -224,48 +321,29 @@ $
   assembly based on OpenMP.
 ]
 
-- NURBS boundary representation; the sphere mesh is scaled to the semi-axes
-- the density $avec(j)$ is discretized in div-conforming isogeometric B-spline basis functions
-  on the NURBS boundary, the spline analogue of Raviart--Thomas elements, matching the
-  $div_Gamma$-conforming trace space of $cal(V)$
-- convergence governed by the polynomial degree $p$ and the refinement level $m$
-- boundary is smooth -> $h$-refinement converges algebraically, $p$-refinement geometrically
-- `Bembel` provides no preconditioner (such as a Calderon projector) for the ill-conditioned
-  first-kind system, so an iterative solve is unattractive
-- we therefore assemble the dense matrix (no fast-multipole compression) and solve it by a
-  direct LU factorization, which also gives high fidelity
+==== Geometry
 
-- two `Bembel` conventions differ from ours and are reconciled:
-  - it uses the opposite convention (outgoing waves carry $e^(-i k r)$), so its scattered field
-    comes out conjugated; we conjugate the `Bembel` output to restore our $e^(+i k r)$ convention
-  - its symmetric Maxwell single-layer is built on the rotated tangential trace $gamma_times$, the
-    trace used in the formulation above
+Bembel uses a NURBS boundary representation, where our cavity geometries can be represented exactly. We use a NURBS representation of a sphere and scale it to the cavity semi-axes for both our geometries.
 
-=== BEM for Cavity Scattering
+==== Basis Functions
 
-- each transmitter dipole sets the right-hand side $-gamma_times Ev^i = -nv times Ev^i$ on $partial D$
-- solve $cal(V) avec(j) = -gamma_times Ev^i$ for the density, evaluate $Ev^s = Psi_"SL" avec(j)$,
-  measure its tangential trace at the receivers to fill one operator column
-- $M = 2 N_Lambda$ dipoles share the single-layer matrix, so factor once and reuse the
-  LU factorization across all right-hand sides
+The density $avec(j)$ is discretized in div-conforming isogeometric B-spline basis functions, the spline analogue of Raviart--Thomas elements, matching the $div_Gamma$-conforming trace space of $cal(V)$.
 
-=== Computational Cost
+==== Linear Solver
 
-- $N tilde p^2 4^m$ surface DOFs, $M = 2 N_Lambda$ dipole configurations / RHSs
+Bembel provides no preconditioner, such as a Calderon projector, this is why we didn't use an iterative solver. We instead rely on direct solves.
 
-#figure(
-  table(
-    columns: (auto, auto),
-    align: (left, center),
-    stroke: 0.5pt,
-    inset: (x: 8pt, y: 5pt),
-    table.header([], [cost]),
-    [factorization],     bigO($N^3$),
-    [multi-RHS / mean],  bigO($N^2 M$),
-    [operator assembly], bigO($N M^2$),
-    [memory],            bigO($N^2$),
-    table.hline(stroke: 1pt),
-    [*dominant*],        bigO($N^3$),
-  ),
-  caption: [Asymptotic cost of assembling the reaction operator with the BEM solver.],
-)
+Furthermore we don't use any matrix compression techniques like fast-multipole or hierarchical matrices, because we need high fidelity reference solutions to compare to the EPGP solutions.
+Hence we assemble the dense matrix and solve it by a direct LU factorization.
+
+==== Time-Harmonic Convention
+
+Bembel uses the opposite time-harmonic convention as us, $e^(-i k r)$ instead of $e^(+i k r)$.
+To reconcilate this, we conjugate the Bembel output to restore the $e^(+i k r)$ convention.
+
+==== Refinement and Convergence
+
+Convergence is governed by the polynomial degree $p$ and the refinement level $m$ (mesh width $h$).
+For a smooth boundary and smooth solution, $h$-refinement converges algebraically and $p$-refinement geometrically.
+The ill-conditioning of the first-kind operator worsens under mesh refinement.
+

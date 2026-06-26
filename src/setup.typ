@@ -12,7 +12,7 @@
   set text(fill: fgcolor)
 
   set page(paper: "a4")
-  set page(margin: 1.5cm)
+  //set page(margin: 2.5cm)
 
   set text(font: "New Computer Modern Sans")
   set text(size: 10pt)
@@ -40,6 +40,7 @@
 
   show heading.where(level: 2): set heading(outlined: outline-subheadings)
   show heading.where(level: 3): set heading(outlined: outline-subheadings)
+  show heading.where(level: 4): set heading(numbering: none)
 
   show heading: it => {
     if it.level == 1 {
@@ -52,7 +53,7 @@
       text(size: 25pt)[#it.body]
       v(20pt)
     } else {
-      let size = 20pt - 2pt * (it.level - 1)
+      let size = 22pt - 3pt * (it.level - 1)
       block(sticky: true, above: size, below: size, {
         set text(size, weight: "bold")
         if it.numbering != none {
