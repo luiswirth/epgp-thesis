@@ -13,6 +13,7 @@ The solvers differ in multiple ways.
 The EPGP solver is probabilistic, returning a posterior distribution over the solution space, while the BEM solver is deterministic, returning a single solution.
 The EPGP solver uses a volume plane-wave superposition ansatz, while the BEM solver uses a boundary single-layer potential ansatz.
 The EPGP solver enforces the boundary condition by conditioning on the boundary data, while the BEM solver enforces it by solving an integral equation.
+The EPGP solver needs no mesh and conditions at scattered points on the boundary, while the BEM solver discretizes the boundary into a surface mesh of elements.
 
 == Ehrenpreis--Palamodov Gaussian Process
 
@@ -125,7 +126,7 @@ Together they specify the posterior, again a Gaussian process,
 $
   Ev | avec(d) tilde cal(G P)(Ev_star, amat(K)_star)
 $
-The mean is the regularized best fit to the data, tempered by the prior and the noise; the covariance measures how underdetermined the field remains after conditioning, and is the solver's uncertainty.
+The mean is the regularized best fit to the data, tempered by the prior and the noise. The covariance measures how underdetermined the field remains after conditioning, and is the solver's uncertainty.
 The noise variance $sigma_"n"^2$ trades off fitting the data against trusting the prior: as $sigma_"n"^2 -> 0$ the posterior mean interpolates the observations exactly, while $sigma_"n"^2 > 0$ relaxes this to a regression that smooths the fit.
 
 This is exact, infinite-dimensional GP regression: prior and posterior both live on the solution space.
@@ -164,30 +165,29 @@ In the same features the kernel factors as
 $
   amat(K)(xv, yv) = amat(Phi)(xv)^herm amat(W) amat(Phi)(yv)
 $
-so this $F times F$ weight-space solve and the $D_b times D_b$ function-space solve of the previous section are the same posterior, related by the matrix-inversion lemma. We are free to invert whichever is smaller; the explicit EP features make the weight-space solve the cheaper choice whenever $F < D_b$.
+so this $F times F$ weight-space solve and the $D_b times D_b$ function-space solve of the previous section are the same posterior, related by the matrix-inversion lemma. We are free to invert whichever is smaller, and the explicit EP features make the weight-space solve the cheaper choice whenever $F < D_b$.
+
+The model has a small set of hyperparameters: the spectral directions $kv_j$, the prior weights $amat(W)$, and the assumed noise $sigma_"n"$. In a Gaussian process these can be tuned by maximizing the marginal likelihood of the data, usually by gradient descent on its negative logarithm. We instead fix them on principled grounds. The directions come from the Fibonacci sphere, a quasi-uniform quadrature whose even coverage we prefer to keep, and the weights are fixed by that same quadrature. The noise is held fixed too, since its marginal-likelihood optimum is governed by the conditioning of the system rather than by the data.
 
 === Implementation `maxwellgp`
 
 The prior and posterior above are implemented in the `maxwellgp` library @felix (Python/JAX), general and problem-independent.
-The observation functional $cal(R)$ is supplied to the library and realized through the feature map; only $cal(R)$ changes between applications, while the plane-wave features, the prior weights, the directions, and the posterior solve are identical.
+The observation functional $cal(R)$ is supplied to the library and realized through the feature map. Only $cal(R)$ changes between applications, while the plane-wave features, the prior weights, the directions, and the posterior solve are identical.
 We refer to @felix for the full theory.
 
 === Boundary Value Problems
 
 The prior already solves the PDE in the interior, so conditioning turns it into a boundary value problem solver: observing the prescribed boundary trace yields the posterior field consistent with it.
-The relevant functional is the boundary trace; for the PEC Maxwell problem it is the tangential trace $cal(R) = pi_t$, evaluated at $N_b$ points on the boundary $partial D$, each carrying its outward normal $nv$.
+The relevant functional is the boundary trace. For the PEC Maxwell problem it is the tangential trace $cal(R) = pi_t$, evaluated at $N_b$ points on the boundary $partial D$, each carrying its outward normal $nv$.
 
 Although the prescribed boundary data is exact, we keep $sigma_"n"^2 > 0$. The finite feature space cannot represent the trace exactly, and the plane-wave Gram matrix is ill-conditioned, so a small noise acts as a Tikhonov regularizer that stabilizes the conditioning solve.
 
 === Cavity Scattering
 
-The `cavity-epgp` layer specializes the BVP solver to the cavity scattering problem; the cavity enters only through the boundary data, and the prior is unchanged.
+The `cavity-epgp` layer specializes the BVP solver to the cavity scattering problem. The cavity enters only through the boundary data, and the prior is unchanged.
 The transmitter dipole sets the boundary trace: conditioning on the prescribed scattered-field trace $avec(d) = -pi_t Ev^i$ at the $N_b$ boundary points enforces the PEC condition and yields the posterior scattered field $Ev^s_star$.
 
-The tangential trace of the posterior mean at the receivers fills the operator column by column: entry $i j$ is the receiver dipole $delta_i$ reading the field of transmitter $delta_j$,
-$
-  amat(T)_(i j) = pv_i dot pi_t^Lambda Ev^s_star (zv_i; delta_j)
-$
+The tangential trace of the posterior mean field at the receivers fills the reaction operator column by column.
 Convergence is governed by two parameters, the number of spectral directions $N_s$ and the number of boundary conditioning points $N_b$.
 
 
@@ -236,9 +236,9 @@ $
 
 ==== Electric Field Integral Equation
 
-In the indirect formulation, the electric field is represented by a Maxwell single-layer potential $Psi_"SL"$  with an unknown density $avec(j)$.
+In the indirect formulation, the electric field is represented by a Maxwell single-layer potential $Psi_"SL"$ with an unknown density $avec(j)$.
 $
-  Ev = Psi_"SL" avec(j),  
+  Ev = Psi_"SL" avec(j)
 $
 
 By taking the rotated tangential trace of both sides,
@@ -303,7 +303,7 @@ Notice the trace asymmetry: the density is solved against the rotated trace $gam
 
 Each of the $M = 2 N_Lambda$ transmitter dipoles, two polarizations per point on $Lambda$, generates a different incident field and hence a different right-hand side $avec(h)_times = -gamma_times Ev^i$ of the EFIE.
 
-By using a LU decomposition of the single-layer matrix, we can reuse the expensive factorization for each right hand side.
+By using an LU decomposition of the single-layer matrix, we can reuse the expensive factorization for each right-hand side.
 
 Evaluating the resulting scattered field at the receivers and projecting onto the polarization frame fills one column of the reaction operator.
 
@@ -325,21 +325,36 @@ The formulation is discretized with the `Bembel` library @bembel, described by i
 
 Bembel uses a NURBS boundary representation, where our cavity geometries can be represented exactly. We use a NURBS representation of a sphere and scale it to the cavity semi-axes for both our geometries.
 
-==== Basis Functions
+==== Galerkin Discretization
 
-The density $avec(j)$ is discretized in div-conforming isogeometric B-spline basis functions, the spline analogue of Raviart--Thomas elements, matching the $div_Gamma$-conforming trace space of $cal(V)$.
+We discretize the EFIE by a Galerkin method, which discretizes the operator equation, not merely the unknown. The density is expanded in a finite basis $avec(phi)_1, dots, avec(phi)_N$,
+$
+  avec(j) approx sum_(b = 1)^N j_b avec(phi)_b
+$
+and the EFIE is tested against the same basis. The continuous equation $cal(V) avec(j) = avec(h)_times$ becomes a linear system for the coefficients,
+$
+  amat(V) jv = bv,
+  quad
+  bv_a = integral_(partial D) avec(phi)_a dot avec(h)_times dif s
+$
+in which the single-layer operator $cal(V)$ is replaced by its Galerkin matrix $amat(V)$. Its entries are the single-layer bilinear form on pairs of basis functions. Integrating the gradients of the dyadic Green's function by parts onto the basis functions reduces it to a double surface integral over the scalar fundamental solution $Phi$,
+$
+  amat(V)_(a b) = i k integral_(partial D) integral_(partial D) Phi(xv, yv) (avec(phi)_a (xv) dot avec(phi)_b (yv) - 1/k^2 div_Gamma avec(phi)_a (xv) div_Gamma avec(phi)_b (yv)) dif s(yv) dif s(xv)
+$
+
+The surface divergence $div_Gamma avec(phi)$ appears in the bilinear form, so the basis must keep it square-integrable. This requires div-conforming elements, whose normal component is continuous across element edges. Bembel uses div-conforming isogeometric B-splines, the higher-order spline analogue of Raviart--Thomas elements, matching the $Hv^(-1/2)(div_Gamma, partial D)$ trace space of $cal(V)$.
 
 ==== Linear Solver
 
-Bembel provides no preconditioner, such as a Calderon projector, this is why we didn't use an iterative solver. We instead rely on direct solves.
+Bembel provides no preconditioner, such as a Calderon projector, so an iterative solver is unattractive. We rely on direct solves instead.
 
 Furthermore we don't use any matrix compression techniques like fast-multipole or hierarchical matrices, because we need high fidelity reference solutions to compare to the EPGP solutions.
 Hence we assemble the dense matrix and solve it by a direct LU factorization.
 
 ==== Time-Harmonic Convention
 
-Bembel uses the opposite time-harmonic convention as us, $e^(-i k r)$ instead of $e^(+i k r)$.
-To reconcilate this, we conjugate the Bembel output to restore the $e^(+i k r)$ convention.
+Bembel uses the opposite time-harmonic convention to ours, $e^(-i k r)$ instead of $e^(+i k r)$.
+To reconcile this, we conjugate the Bembel output to restore the $e^(+i k r)$ convention.
 
 ==== Refinement and Convergence
 

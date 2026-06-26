@@ -22,10 +22,10 @@
 #postface-style[
   #bibliography("bibliography.bib", style: "chicago-author-date")
 
-  //#{
-  //  set page(margin: 0cm)
-  //  show heading: none
-  //  heading(numbering: none)[Declaration of Originality]
-  //  image("../res/declaration-originality.svg")
-  //}
+  #{
+    set page(margin: 0cm)
+    show heading: none
+    heading(numbering: none)[Declaration of Originality]
+    image("../res/declaration-originality.pdf")
+  }
 ]

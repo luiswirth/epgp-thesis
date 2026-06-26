@@ -7,7 +7,7 @@ engineering, where the systems of interest obey well-established physical laws.
 This has given rise to the field of *scientific machine learning (SciML)*, also
 known as *AI4Science*. Purely data-driven models ignore this known physical
 structure and must rediscover the laws from data alone, which is wasteful and
-typically inaccurate outside the regime it was trained on. The more principled
+typically inaccurate outside the regime they were trained on. The more principled
 approach embeds established physical knowledge into the model from the outset.
 This idea appears under several names, such as *first-principles AI (FPAI)*,
 *physics-informed ML* or *hybrid modeling*, which all refer to essentially

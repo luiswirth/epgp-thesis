@@ -173,8 +173,8 @@ The transmitter dipole thus determines both the incident field $Ev^i (xv; delta_
 ==== PEC Boundary Condition
 
 The boundary conditions of the BVP are the perfectly electrically conducting (PEC) boundary conditions.
-They enforce that the scattered field is the exact reflection of the incident field, such
-that the two fields cancel each other exactly on the cavity wall.
+They enforce that the scattered field reflects the incident field such
+that their tangential components cancel on the cavity wall.
 Hence the total field $Ev = Ev^i + Ev^s$ satisfies the PEC condition
 $
   pi_t Ev = 0 quad "on" partial D
@@ -230,47 +230,63 @@ $
 
 === Reaction Operator
 
-#text(size: 20pt)[
-TODO: REWRITE THIS SECTION!
-first introduce the operator in the continuous setting, then discretize it to a matrix!!!
-]
+A single transmit-receive pair yields one number, the reaction $r(delta_t, delta_r)$. The object of study for the benchmark is the full map from excitation to response, which we now assemble from this pair.
 
-So far we have considered a single transmit-receive dipole pair. We now extend to an ensemble of $N_Lambda$ dipoles.
+Transmitter and receiver are the same kind of object. Both are tangential dipoles on $Lambda$, and reciprocity makes their roles interchangeable, so there is no reason to keep two separate families. A single set of dipoles on $Lambda$ serves as transmitters and receivers at once, each dipole both radiating and reading.
 
-By reciprocity there is no need to distinguish between transmitters and receivers, so the same set of dipoles serves both roles. Every dipole acts as both transmitter and receiver.
+A single dipole, though, is a point excitation. The object that naturally contains it is a continuous density of dipoles spread over $Lambda$, each still doing both jobs. We develop this continuous picture first, and discretize afterwards.
 
-Each dipole $delta_i$ acts as a transmitter and generates an incident field $Ev^i (xv; delta_i)$, which gives rise to a scattered field $Ev^s (xv; delta_i)$. This scattered field is measured by every dipole $delta_j$, giving a response $r(delta_j, delta_i)$.
+==== Continuous Operator
 
-Each such pair $(delta_i, delta_j)$ gives one measured number; these are collected into the reaction operator $T$ with entries
+A tangential dipole density on $Lambda$ is a tangential vector field
 $
-  amat(T)_(i j) = r(delta_j, delta_i)
+  avec(g): Lambda -> T Lambda,
+  quad
+  avec(g)(zv) in T_zv Lambda,
 $
+assigning a dipole polarization $avec(g)(zv)$ to each point of $Lambda$. A single dipole $delta = (zv_0, pv)$ is the singular special case $avec(g) = pv delta_(zv_0)$.
 
-Reciprocity implies that the operator is complex-symmetric, not Hermitian,
+By linearity of the problem, the density excites a scattered field that superposes the fields of its constituent dipoles,
 $
-  amat(T)_(i j) = amat(T)_(j i)
-  quad ==> quad
-  amat(T) = amat(T)^transp
+  Ev^s [avec(g)] (xv) = integral_Lambda Ev^s (xv; (zv, avec(g)(zv))) dif s(zv).
 $
+Reading this field back on $Lambda$, the tangential trace a receiver density would measure, defines the continuous reaction operator
+$
+  cal(T): avec(g) |-> pi_t^Lambda Ev^s [avec(g)] |_Lambda.
+$
+Excitation and response are tangential vector fields of the same kind, so $cal(T)$ maps the space of tangential vector fields on $Lambda$ to itself.
 
-The construction is cleanest stated without a basis first. We restrict the dipoles to a common surface $Lambda subset.eq D$, with locations $zv in Lambda$ and polarizations $pv in T_zv Lambda$ tangent to it. A continuous excitation is then a tangential dipole density on $Lambda$, a tangential vector field $avec(g): Lambda -> T Lambda$. It excites a scattered field whose tangential trace $pi_t^Lambda Ev^s$ on $Lambda$ is again a tangential vector field. The continuous reaction operator
+Being linear, $cal(T)$ is an integral operator. Its kernel is the point-to-point reaction, the tangential response at $zv'$ to a unit dipole $pv$ at $zv$,
 $
-  cal(T): avec(g) |-> pi_t^Lambda Ev^s [avec(g)]|_Lambda
+  (cal(T) avec(g))(zv') = integral_Lambda amat(T)(zv', zv) avec(g)(zv) dif s(zv),
+  quad
+  amat(T)(zv', zv) pv := pi_t^Lambda Ev^s (zv'; (zv, pv)).
 $
-thus maps the space of tangential vector fields on $Lambda$ to itself, and is symmetric by reciprocity.
+The kernel $amat(T)(zv', zv): T_zv Lambda -> T_(zv') Lambda$ is a tangential dyadic, and reciprocity makes it symmetric under exchanging the two points and transposing,
+$
+  amat(T)(zv', zv) = amat(T)(zv, zv')^transp,
+$
+so $cal(T)$ is complex-symmetric, not Hermitian.
 
-Our matrix $amat(T)$ is a discretization of $cal(T)$. We sample $N_Lambda$ points $zv_n in Lambda$ and equip each with an orthonormal tangent basis $e_1(zv_n), e_2(zv_n)$ spanning $T_(zv_n) Lambda$, chosen smooth over the surface. The measurement at a point is the tangent vector $pi_t^Lambda Ev^s (zv_n; delta) in T_(zv_n) Lambda$, whose two components in the basis are the two reactions,
-$
-  r(delta, delta_(n a)) = e_a (zv_n) dot pi_t^Lambda Ev^s (zv_n; delta)
-  quad a in {1, 2}
-$
-so the basis resolves the full tangent vector,
-$
-  pi_t^Lambda Ev^s (zv_n; delta) = sum_(a = 1,2) r(delta, delta_(n a)) e_a (zv_n)
-$
-The point measurement is therefore the tangential trace itself in the polarization frame, $T_(zv_n) Lambda tilde.equiv CC^2$. Sampling all points and both polarizations gives $M = 2 N_Lambda$ degrees of freedom and the square matrix $amat(T) in CC^(M times M)$.
+==== Discretization
 
-This reaction operator $amat(T)$ is the object of interest for the benchmark. Both methods compute it, and the resulting operators are compared.
+To compute with $cal(T)$ we discretize it on a finite set of dipoles. We sample $N_Lambda$ points $zv_n in Lambda$ and equip each with an orthonormal tangent basis $en_1(zv_n), en_2(zv_n)$ of $T_(zv_n) Lambda$, chosen to vary smoothly over the surface. Each point-and-polarization pair is one dipole $delta_(n a) = (zv_n, en_a(zv_n))$.
+
+Evaluating the kernel between two such dipoles gives the entries of the reaction matrix, each one a reaction between a pair of dipoles,
+$
+  amat(T)_(n' a', n a) = en_(a')(zv_(n')) dot amat(T)(zv_(n'), zv_n) en_a(zv_n) = r(delta_(n a), delta_(n' a')).
+$
+Collecting the $M = 2 N_Lambda$ dipoles under a single index gives the square reaction matrix
+$
+  amat(T) in CC^(M times M),
+  quad
+  M = 2 N_Lambda,
+$
+which inherits the symmetry of the kernel,
+$
+  amat(T) = amat(T)^transp.
+$
+This matrix is the object of interest for the benchmark. Both solvers compute it, and the resulting operators are compared.
 
 == Geometry
 

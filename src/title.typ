@@ -18,10 +18,9 @@
 #[
   #set text(25pt)
   *
-  Cavity Scattering Benchmark: \
+  BEM Benchmark of the \
   Ehrenpreis--Palamodov Gaussian Process \
-  for Maxwell's Equations \
-  versus Boundary Element Method
+  for Maxwell Cavity Scattering
   *
 ]
 
@@ -46,6 +45,6 @@ Seminar for Applied Mathematics
 #[
   #set align(bottom)
   #set text(15pt)
-  #datetime.today().display("[day]. [month repr:long] [year]")
+  1st July 2026
 ]
 
