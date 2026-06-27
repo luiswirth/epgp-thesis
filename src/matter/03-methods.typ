@@ -113,7 +113,7 @@ An observation is a linear functional $cal(R)$ of the field, for instance its va
 We condition on $N_b$ observations at points $X_b$, collected with their measured values in a data vector $avec(d)$.
 
 Since the prior is a Gaussian process, conditioning is exact and the posterior is again a Gaussian process.
-Writing $amat(K)(dot.c, X_b)$ for the kernel evaluated against the observation functionals and $amat(K)_(b b)$ for the observation--observation block, and allowing a Gaussian observation noise of variance $sigma_n^2$, the posterior mean field is
+Writing $amat(K)(dot.c, X_b)$ for the kernel evaluated against the observation functionals and $amat(K)_(b b)$ for the observation--observation block, and introducing a Tikhonov regularization parameter $sigma_n^2 > 0$ (which in the GP framework corresponds to a Gaussian observation noise of variance $sigma_n^2$), the posterior mean field is
 $
   Ev_star (xv) = amat(K)(xv, X_b) (amat(K)_(b b) + sigma_n^2 amat(I))^(-1) avec(d)
 $
@@ -126,8 +126,8 @@ Together they specify the posterior, again a Gaussian process,
 $
   Ev | avec(d) tilde cal(G P)(Ev_star, amat(K)_star)
 $
-The mean is the regularized best fit to the data, tempered by the prior and the noise. The covariance measures how underdetermined the field remains after conditioning, and is the solver's uncertainty.
-The noise variance $sigma_n^2$ trades off fitting the data against trusting the prior: as $sigma_n^2 -> 0$ the posterior mean interpolates the observations exactly, while $sigma_n^2 > 0$ relaxes this to a regression that smooths the fit.
+The mean is the regularized best fit to the data, tempered by the prior and the regularization. The covariance measures how underdetermined the field remains after conditioning, and is the solver's uncertainty.
+The parameter $sigma_n^2$ trades off fitting the data against trusting the prior: as $sigma_n^2 -> 0$ the posterior mean interpolates the observations exactly, while $sigma_n^2 > 0$ relaxes this to a regression that smooths the fit.
 
 This is exact, infinite-dimensional GP regression: prior and posterior both live on the solution space.
 
@@ -167,7 +167,7 @@ $
 $
 so this $F times F$ weight-space solve and the $D_b times D_b$ function-space solve of the previous section are the same posterior, related by the matrix-inversion lemma. We are free to invert whichever is smaller, and the explicit EP features make the weight-space solve the cheaper choice whenever $F < D_b$.
 
-The model has a small set of hyperparameters: the spectral directions $kv_j$, the prior weights $amat(W)$, and the assumed noise $sigma_n$. In a Gaussian process these can be tuned by maximizing the marginal likelihood of the data, usually by gradient descent on its negative logarithm. We instead fix them on principled grounds. The directions come from the Fibonacci sphere, a quasi-uniform quadrature whose even coverage we prefer to keep, and the weights are fixed by that same quadrature. The noise is held fixed too, since its marginal-likelihood optimum is governed by the conditioning of the system rather than by the data.
+The model has a small set of hyperparameters: the spectral directions $kv_j$, the prior weights $amat(W)$, and the regularization parameter $sigma_n$. In a Gaussian process these can be tuned by maximizing the marginal likelihood of the data, usually by gradient descent on its negative logarithm. We instead fix them on principled grounds. The directions come from the Fibonacci sphere, a quasi-uniform quadrature whose even coverage we prefer to keep, and the weights are fixed by that same quadrature. The regularization parameter is held fixed too, since its marginal-likelihood optimum is governed by the conditioning of the system rather than by the data.
 
 === Implementation `maxwellgp`
 

@@ -378,8 +378,7 @@ Thanks to the spherical symmetry, the interior BVP is separable and hence has a 
 Therefore both scattered field $Ev^s$ and the reaction operator $amat(T)$ have analytic formulas,
 which serve as exact reference solutions to validate both numerical solvers.
 
-We do not re-derive the analytic solution here. We refer to @tai for the full derivation and only record the resulting formulas as used in the code.
-Correctness is established empirically: both numerical solvers agree with these formulas to $approx 10^(-10)$ independently, which is strong evidence that the formulas are correct.
+We do not re-derive the analytic solution here. We refer to @tai for the full derivation and record the resulting formulas below.
 
 The interior fields expand in the regular Hansen multipoles, the TM-type $avec(N)_(l m)$ and the TE-type $avec(M)_(l m)$. On a sphere of radius $r$ their tangential traces reduce to the tangential vector spherical harmonics $avec(Psi)_(l m)$ and $avec(Phi)_(l m)$,
 $

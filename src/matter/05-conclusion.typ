@@ -6,13 +6,13 @@
 
 We established a high-fidelity benchmark for the Maxwell EPGP method. The cavity reaction operator was computed by two methodologically unrelated solvers, a spectral plane-wave EPGP and a boundary-element BEM, and the two were compared.
 
-On the spherical cavity, where the analytic operator is available, both solvers match the ground truth to about $10^(-10)$, which certifies each one independently. On the ellipsoidal cavity, where no analytic solution exists, the two solvers agree to about $10^(-8)$. Since both were already certified on the sphere, this agreement validates them on a geometry with no ground truth. The agreement of a boundary-integral and a spectral plane-wave method, which share no numerical machinery, is strong evidence that both are correct.
+On the spherical cavity, where the analytic operator is available, BEM matches the ground truth to $approx 3 times 10^(-12)$ and EPGP to $approx 2 times 10^(-13)$, certifying each independently. On the ellipsoidal cavity, where no analytic solution exists, the two solvers agree to about $10^(-8)$. Since both were already certified on the sphere, this agreement validates them on a geometry with no ground truth. The agreement of a boundary-integral and a spectral plane-wave method, which share no numerical machinery, is strong evidence that both are correct.
 
 Beyond matching the reference, the EPGP satisfies the time-harmonic Maxwell equations exactly by construction, needs no surface mesh, and provides a posterior uncertainty estimate as a byproduct. It is also the cheaper solver at any demanding tolerance, reaching a given reciprocity error two to three orders of magnitude faster than the BEM. The benchmark thus establishes the EPGP as a Maxwell-consistent, uncertainty-aware surrogate for the interior cavity reaction operator, and the cheaper solver at any demanding tolerance.
 
 == Limitations
 
-=== Validation Scope
+==== Validation Scope
 
 The validation rests most firmly on the spherical cavity. There an analytic operator is available, both solvers converge to it, and the correctness of each is established directly. On the ellipsoidal cavity there is no ground truth, so the evidence is the agreement between the two unrelated solvers. This agreement is strong, but it is mutual consistency rather than a direct measure of accuracy. The reciprocity error cannot close this gap, since it constrains only the antisymmetric part of the error.
 
@@ -20,13 +20,13 @@ Both test geometries, and the dipole surface $Lambda$, are fairly symmetric. A d
 
 The benchmark is also confined to a single wavenumber and geometry pair. A sweep of the conditioning around $k = 2$ confirms that it is operationally non-resonant, but the accuracy itself is validated only at $k = 2$.
 
-=== Cost Comparison
+==== Cost Comparison
 
 The cost comparison should be read with care. Both solvers ran on identical hardware, but the absolute wall times reflect two particular implementations, a compiled C++ solver and a Python/JAX one, so the runtime factor mixes implementation quality with algorithmic cost. The implementation-independent statement is the asymptotic scaling.
 
 Several factors could shift the comparison in either direction. The EPGP wall time includes the JAX compilation and Python startup, which likely make up its near-constant offset, so timing only the numerical solve would isolate the algorithmic cost. The EPGP also ran on CPU, while JAX can target GPUs, which we did not test and which could lower its cost further. On the other side, the BEM is deliberately unoptimized: it uses a dense direct solve with no iterative solver, preconditioner, or matrix compression, all chosen for fidelity, so a tuned BEM could be considerably faster. The two solvers also parallelize differently, and we did not study how the comparison scales with core count. A fairer comparison, controlling for these factors and counting operations or memory rather than wall time, is left to future work.
 
-=== Uncertainty Quantification
+==== Uncertainty Quantification
 
 The uncertainty quantification is descriptive and correctly ranks where the field is well or poorly determined by the boundary data, growing in the regions the data constrains least. However what it does not represent is the true reconstruction error. This is because the dominant error comes from truncating the plane-wave expansion at a finite number of spectral features, which is a systematic bias, and a Gaussian variance cannot represent a bias.
 

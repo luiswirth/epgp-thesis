@@ -14,11 +14,11 @@ This idea appears under several names, such as *first-principles AI (FPAI)*,
 the same idea: letting the governing equations constrain the model rather than
 learning them from data.
 
-Many physical laws take the form of *partial differential equations (PDEs)*, and
-there are two ways to make a model respect such a law. Weak enforcement adds the
+Many physical laws take the form of *partial differential equations (PDEs)*.
+There are two main ways to make a model respect such a law. Weak enforcement adds the
 PDE residual as a penalty in the training objective, so the constraint is only
-satisfied approximately and is traded off against the data. The physics-informed
-neural network (PINN) is the canonical example @raissi. *Strong enforcement* instead restricts
+satisfied approximately and is traded off against the data.
+*Strong enforcement* instead restricts
 the model to functions that satisfy the equation identically by construction.
 *Structure preservation* is the key advantage: unphysical phenomena, such as
 spurious modes or phantom charges, cannot arise. The model can
@@ -34,8 +34,9 @@ strongly physics-informed and probabilistic at the same time.
 
 The *Ehrenpreis--Palamodov (EP)* principle @ehrenpreis provides a constructive route to such
 priors for *linear PDEs with constant coefficients* inspired by the *inverse
-Fourier transform*. It represents solutions as superpositions of *plane waves*
-supported on the *characteristic variety* of the operator. Its GP realization,
+Fourier transform*. It represents every solution as a superposition of *plane waves*
+with wavevectors on the *characteristic variety* of the operator and amplitudes
+in the kernel of the symbol. Its GP realization,
 the *Ehrenpreis--Palamodov Gaussian Process (EPGP)* @harkonen, uses a Gaussian prior based on this principle. The prior and the posterior both lie exactly in the solution space of the operator.
 
 A particularly well-understood PDE system is *Maxwell's equations*, which
@@ -86,7 +87,7 @@ correct.
 This thesis makes the following contributions.
 
 - Maxwell EPGP library:
-  Improved existing JAX implementation `maxwellgp`: fixed bugs, added support
+  Improved existing JAX implementation `maxwellgp`, fixing bugs, adding support
   for tangential traces, posterior covariance computation, and sampling.
 - Cavity EPGP solver:
   Built a probabilistic EPGP solver `cavity-epgp` for the cavity reaction

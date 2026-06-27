@@ -38,7 +38,7 @@ It admits a closed-form reaction operator $amat(T)_"anal"$ of unlimited accuracy
 
 === EPGP Field
 
-We begin with a qualitative look at the EPGP solution for a single transmitter dipole at $zv = (0, 0, 1)$ on $Lambda$, polarized along $x$. Being a probabilistic solver, the EPGP returns a full posterior over the scattered field, a Gaussian summarized by its mean and its covariance: the mean is the point estimate of the field, and the covariance is its uncertainty. We visualize both on the $x z$-plane ($y = 0$) through the cavity, the dipole location marked in green.
+We begin with a qualitative look at the EPGP solution for a single transmitter dipole at $zv = (0, 0, 1)$ on $Lambda$, polarized along $x$. Being a probabilistic solver, the EPGP returns a full posterior over the scattered field, a Gaussian summarized by its mean and its covariance: the mean is the point estimate of the field, and the covariance is its uncertainty. We visualize both on the $x z$-plane ($y = 0$) through the cavity, the dipole location marked in green. The field was computed at the reference resolution $N_s = 2048$, $N_b = 16384$.
 
 ==== Mean
 
@@ -53,7 +53,7 @@ The result matches physical expectations. Both the incident and scattered fields
     image("../../res/epgp_sphere_field_real.png"),
     image("../../res/epgp_sphere_field_lic.png"),
   ),
-  caption: [EPGP scattered field on a 2D spherical cavity slice.],
+  caption: [EPGP field on the spherical cavity slice.],
 ) <fig:sphere-field>
 
 ==== Uncertainty
@@ -80,7 +80,7 @@ This is because the posterior covariance is fixed only by where we condition and
 
 ==== Convergence
 
-We now quantify the operator's accuracy as the resolution grows. @fig:sphere-epgp-conv plots the reference error $epsilon$ against the number of spectral features $N_s$, one curve per boundary-point count $N_b$. For small $N_s$ all curves coincide, so spectral resolution alone limits accuracy. Past $N_s approx 200$ each curve flattens to a floor set by its $N_b$, with the finest curve reaching $epsilon approx 2 times 10^(-10)$ at $N_b = 8192$.
+We now quantify the operator's accuracy as the resolution grows. @fig:sphere-epgp-conv plots the reference error $epsilon$ against the number of spectral features $N_s$, one curve per boundary-point count $N_b$. For small $N_s$ all curves coincide, so spectral resolution alone limits accuracy. Past $N_s approx 200$ each curve flattens to a floor set by its $N_b$, with the finest curve reaching $epsilon approx 2 times 10^(-13)$ at $N_b = 8192$.
 
 #figure(
   image("../../res/epgp_sphere_convergence.svg", width: 68%),
@@ -133,7 +133,7 @@ We repeat the qualitative inspection of the previous section, visualizing the EP
     image("../../res/epgp_ellipse_field_real.png"),
     image("../../res/epgp_ellipse_field_lic.png"),
   ),
-  caption: [EPGP scattered field on a 2D ellipsoidal cavity slice.],
+  caption: [EPGP field on the ellipsoidal cavity slice.],
 ) <fig:ellipse-field>
 
 ==== Uncertainty
@@ -190,7 +190,7 @@ Together with the independent certification of each solver on the analytic spher
 
 All runs were carried out on the Euler cluster, each on a single exclusive AMD EPYC 7742 node with 128 cores, and wall time was recorded per run. For the EPGP the recorded time includes the JAX just-in-time compilation and the Python startup, so it is a conservative measure.
 
-@fig:ellipse-pareto plots reciprocity error against wall time for both solvers. The faint points are all grid runs and the solid line is each solver's Pareto front. The two fronts have very different shapes. The EPGP front is nearly vertical, between $approx 6$ and $18$ s: its reciprocity error improves by orders of magnitude at almost fixed wall time, because the cost is dominated by the one-off factorization. The BEM front is a staircase that descends only with large increases in wall time, reaching $rho approx 10^(-10)$ only at $approx 1700$ s, the $p = 6$, $m = 4$ reference run.
+@fig:ellipse-pareto plots reciprocity error against wall time for both solvers. The faint points are all grid runs and the solid line is each solver's Pareto front. The two fronts have very different shapes. The EPGP front is nearly vertical, between $approx 6$ and $18$ s: its reciprocity error improves by orders of magnitude at almost fixed wall time, because the cost is dominated by the one-off factorization. The BEM front is a staircase that descends only with large increases in wall time, reaching $rho approx 1.4 times 10^(-10)$ at $approx 1600$ s at the finest grid run ($p = 5$, $m = 4$).
 
 At the same reciprocity error the EPGP is two to three orders of magnitude faster, reaching $rho approx 10^(-9)$ to $10^(-10)$ in about $10$ s. The BEM is cheaper only at loose tolerance. For any demanding accuracy the EPGP is the cheaper solver.
 
