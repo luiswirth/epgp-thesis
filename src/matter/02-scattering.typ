@@ -72,9 +72,9 @@ The total field is the superposition of the incident and scattered part,
 $
   Ev = Ev^i + Ev^s
 $
-where both parts individually and the sum satisfy the source-free curl--curl equation in the interior away from the source.
+where each part, and their sum, satisfy the source-free curl--curl equation in the interior away from the source.
 
-The object of study is the mapping from transmitter dipole to the measured response at a receiver dipole.
+The object of study is the mapping from a transmitter dipole to the measured response at a receiver dipole.
 
 #align(center)[
   #block(
@@ -245,9 +245,9 @@ Acting together, this set of dipoles excites the field and reads it back. We are
 
 A tangential dipole density on $Lambda$ is a tangential vector field
 $
-  avec(g): Lambda -> T Lambda,
+  avec(g): Lambda -> T Lambda
   quad
-  avec(g)(zv) in T_zv Lambda,
+  avec(g)(zv) in T_zv Lambda
 $
 assigning a dipole polarization $avec(g)(zv)$ to each point of $Lambda$.
 A single dipole $delta = (zv_0, pv)$ is the singular special case
@@ -257,21 +257,21 @@ $
 
 By linearity of the problem, the density excites a single incident field that superposes the fields of its constituent dipoles,
 $
-  Ev^i [avec(g)] (xv) = integral_Lambda Ev^i (xv; (zv, avec(g)(zv))) dif s(zv),
+  Ev^i [avec(g)] (xv) = integral_Lambda Ev^i (xv; (zv, avec(g)(zv))) dif s(zv)
 $
 which is reflected into a single scattered field,
 $
-  Ev^s [avec(g)] (xv) = integral_Lambda Ev^s (xv; (zv, avec(g)(zv))) dif s(zv).
+  Ev^s [avec(g)] (xv) = integral_Lambda Ev^s (xv; (zv, avec(g)(zv))) dif s(zv)
 $
 
 Reading the scattered field back on $Lambda$ gives the response density $avec(m): Lambda -> T Lambda$, the tangential projection trace of the scattered field.
 $
-  avec(m) := pi_t^Lambda Ev^s [avec(g)].
+  avec(m) := pi_t^Lambda Ev^s [avec(g)]
 $
 
 The reaction operator is defined as the map from the excitation density to the response density,
 $
-  cal(T): avec(g) |-> avec(m).
+  cal(T): avec(g) |-> avec(m)
 $
 
 
@@ -284,7 +284,7 @@ Its integral kernel $amat(T)$ is the point-to-point reaction, the response at $x
 $
   amat(T)(xv, zv): T_zv Lambda -> T_(xv) Lambda
   \
-  amat(T)(xv, zv) pv := pi_t^Lambda Ev^s (xv; (zv, pv)).
+  amat(T)(xv, zv) pv := pi_t^Lambda Ev^s (xv; (zv, pv))
 $
 
 Reciprocity makes the kernel and the operator complex-symmetric (not Hermitian): exchanging the two points and transposing leaves the kernel unchanged,
@@ -294,7 +294,7 @@ $
 
 The scalar reaction is this kernel as a bilinear form in the two polarizations, one slot per dipole,
 $
-  r(delta_t, delta_r) = pv_r^transp amat(T)(zv_r, zv_t) pv_t.
+  r(delta_t, delta_r) = pv_r^transp amat(T)(zv_r, zv_t) pv_t
 $
 
 ==== Discretization
@@ -305,12 +305,11 @@ We enumerate the dipoles by a single index $i in {1, ..., M}$, writing $delta_i 
 
 The discretized operator is then a matrix $amat(T) in CC^(M times M)$, whose entries are the kernel evaluated at the two dipoles $delta_i$ and $delta_j$,
 $
-  amat(T)_(i j) = pv_i^transp amat(T)(zv_i, zv_j) pv_j = r(delta_j, delta_i),
+  amat(T)_(i j) = pv_i^transp amat(T)(zv_i, zv_j) pv_j = r(delta_j, delta_i)
 $
-
 inheriting the kernel's symmetry,
 $
-  amat(T) = amat(T)^transp.
+  amat(T) = amat(T)^transp
 $
 This matrix is the object of interest for the benchmark. Both solvers compute it, and the resulting operators are compared.
 
@@ -361,11 +360,11 @@ $Lambda$ is well-separated from $partial D$ with a minimum distance of $d_min = 
 
 The spherical cavity is a new addition that allows for an analytic solution. It is a smooth, convex, and simply connected domain.
 
-Its boundary $partial D$ is a spherical surface with radius $R = 4$. It's obtained from the ellipsoid by shrinking all semi-axes to the shortest, $a_1 = a_2 = 4$.
+Its boundary $partial D$ is a spherical surface with radius $R = 4$. It is obtained from the ellipsoid by shrinking all semi-axes to the shortest, $a_1 = a_2 = 4$.
 
 The interior of the sphere is the domain $D$ in which the interior BVP is solved.
 $
-  D := { xv in RR^3 mid(:) norm(xv) < R }, quad R = 4
+  D := { xv in RR^3 mid(:) norm(xv) < R } quad R = 4
 $
 
 #figure(

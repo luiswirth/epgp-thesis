@@ -31,7 +31,7 @@ $
 $
 We abbreviate $P(kv) := P[i k_1, dots, i k_n]$. A plane wave $av exp(i kv dot xv)$ is therefore a solution exactly when its amplitude lies in the kernel of the symbol, $P(kv) av = 0$.
 
-The Ehrenpreis--Palamodov fundamental principle inverts this. It states that _all_ solutions $uv$ of linear PDEs with constant coefficients
+The Ehrenpreis--Palamodov fundamental principle reverses this reasoning. It states that _all_ solutions $uv$ of linear PDEs with constant coefficients
 can be recovered by an inverse Fourier transform, as a continuous superposition of such plane-wave solutions
 $
   uv(xv) = integral_(V) av(kv) exp(i kv dot xv) dif kv
@@ -96,7 +96,7 @@ $
 #pagebreak()
 === Gaussian Maxwell Prior
 
-Since the field is linear in the weight, a Gaussian measure on $avec(w)$ makes it a Gaussian process,
+Since the field is linear in the weight, a Gaussian measure on $avec(w)$ makes the field a Gaussian process,
 $
   Ev tilde cal(G P)(0, amat(K))
 $
@@ -155,7 +155,7 @@ with covariance set by the quadrature weights, so directions that carry more of 
 
 Conditioning is now a finite linear-algebra problem. Evaluating the features at the observation points against $cal(R)$ gives the design matrix $amat(Phi) = amat(Phi)(X_b) in CC^(F times D_b)$, through which the data act on the coefficients, and the weight-space posterior is
 $
-  avec(w)_star = amat(A)^(-1) amat(Phi) avec(d) \/ sigma_"n"^2,
+  avec(w)_star = amat(A)^(-1) amat(Phi) avec(d) \/ sigma_"n"^2
   quad
   amat(A) = amat(W)^(-1) + amat(Phi) amat(Phi)^herm \/ sigma_"n"^2 in CC^(F times F)
 $
@@ -245,7 +245,7 @@ By taking the rotated tangential trace of both sides,
 $
   gamma_times Ev = gamma_times Psi_"SL" avec(j) 
 $
-we obtain the boundary integral equation for the density.
+we obtain the boundary integral equation for the density,
 $
   cal(V) avec(j) = avec(h)_times quad "on" partial D
 $
@@ -333,7 +333,7 @@ $
 $
 and the EFIE is tested against the same basis. The continuous equation $cal(V) avec(j) = avec(h)_times$ becomes a linear system for the coefficients,
 $
-  amat(V) jv = bv,
+  amat(V) jv = bv
   quad
   bv_a = integral_(partial D) avec(phi)_a dot avec(h)_times dif s
 $
@@ -348,7 +348,7 @@ The surface divergence $div_Gamma avec(phi)$ appears in the bilinear form, so th
 
 Bembel provides no preconditioner, such as a Calderon projector, so an iterative solver is unattractive. We rely on direct solves instead.
 
-Furthermore we don't use any matrix compression techniques like fast-multipole or hierarchical matrices, because we need high fidelity reference solutions to compare to the EPGP solutions.
+Furthermore we don't use any matrix compression techniques like fast-multipole or hierarchical matrices, because we need high-fidelity reference solutions to compare with the EPGP solutions.
 Hence we assemble the dense matrix and solve it by a direct LU factorization.
 
 ==== Time-Harmonic Convention

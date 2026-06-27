@@ -28,9 +28,9 @@ Several factors could shift the comparison in either direction. The EPGP wall ti
 
 === Uncertainty Quantification
 
-The uncertainty quantification is descriptive and correctly ranks where the field is well or poorly determined by the boundary data, growing in the regions the data constrains least. However what it does not represent is the true reconstruction error. This is because the dominant error comes from truncating the plane-wave expansion at finite number of spectral features, which is a systematic bias, and a Gaussian variance cannot represent a bias.
+The uncertainty quantification is descriptive and correctly ranks where the field is well or poorly determined by the boundary data, growing in the regions the data constrains least. However what it does not represent is the true reconstruction error. This is because the dominant error comes from truncating the plane-wave expansion at a finite number of spectral features, which is a systematic bias, and a Gaussian variance cannot represent a bias.
 
-The scale of the uncertainty is set by the assumed noise $sigma_n$, so one might try to calibrate it by tuning $sigma_n$ to the data. This does not help. Optimizing $sigma_n$ by maximizing the marginal likelihood drives it toward a floor rather than toward the true error level. The plane-wave features are overcomplete and strongly correlated, so the system conditioning grows like $1\/sigma_n^2$ as the noise decreases. Below a certain noise the matrix becomes too ill-conditioned to solve and we hit the floating-point limit, instead of the data, setting the smallest usable $sigma_n$.
+The scale of the uncertainty is set by the assumed noise $sigma_n$, so one might try to calibrate it by tuning $sigma_n$ to the data. This does not help. Optimizing $sigma_n$ by maximizing the marginal likelihood drives it toward a floor rather than toward the true error level. The plane-wave features are overcomplete and strongly correlated, so the system conditioning grows like $1\/sigma_n^2$ as the noise decreases. Below a certain noise level the matrix becomes too ill-conditioned to solve stably, and the floating-point floor, rather than the data, determines the smallest usable $sigma_n$.
 A more principled quadrature would relieve this.
 
 == Future Work

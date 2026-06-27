@@ -21,7 +21,7 @@ satisfied approximately and is traded off against the data; the physics-informed
 neural network (PINN) is the canonical example. *Strong enforcement* instead restricts
 the model to functions that satisfy the equation identically by construction.
 *Structure preservation* is the key advantage: unphysical phenomena, such as
-spurious modes or phantom charges are impossible to obtain. The model can
+spurious modes or phantom charges, cannot arise. The model can
 never violate the law it is meant to obey, regardless of the data. When
 the governing law is known exactly, strong enforcement is therefore preferable.
 
@@ -36,12 +36,11 @@ The *Ehrenpreis--Palamodov (EP)* principle provides a constructive route to such
 priors for *linear PDEs with constant coefficients* inspired by the *inverse
 Fourier transform*. It represents solutions as superpositions of *plane waves*
 supported on the *characteristic variety* of the operator. Its GP realization,
-the *Ehrenpreis--Palamodov Gaussian Process (EPGP)* @harkonen, uses a Gaussian prior,
-based on this principle. The prior and the posterior both lie exactly in the solution space of the operator.
+the *Ehrenpreis--Palamodov Gaussian Process (EPGP)* @harkonen, uses a Gaussian prior based on this principle. The prior and the posterior both lie exactly in the solution space of the operator.
 
 A particularly well-understood PDE system is *Maxwell's equations*, which
 govern *electromagnetism (EM)*. Building a principled EPGP for these equations
-is part of ongoing effort @felix, which constructs EPGP priors for the
+is part of an ongoing effort @felix, which constructs EPGP priors for the
 *time-harmonic* Maxwell system from a geometric perspective based on
 *differential forms*, the *de Rham complex*, and *Hertz potentials*. This yields
 a more geometrically grounded construction than the generic one by @harkonen.

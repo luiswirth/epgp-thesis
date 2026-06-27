@@ -48,7 +48,7 @@ The deterministic boundary-element reference solver, built on Bembel.
 
 Performs post-processing on the BEM and EPGP operators.
 Compares to the analytic sphere reference and cross-validates the two solvers on the ellipsoid.
-Gernerates all visualizations, such as plots and animations.
+Generates all visualizations, such as plots and animations.
 
 
 #[

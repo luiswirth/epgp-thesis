@@ -44,7 +44,7 @@ We begin with a qualitative look at the EPGP solution for a single transmitter d
 
 @fig:sphere-field shows the posterior mean field. The top row is the real part of the $x$-component as a heatmap, the bottom row the field lines via line-integral convolution (LIC). The three columns are the incident, scattered, and total field. The incident field is the dipole near field, sharply localized at the source. Scattering off the wall produces the scattered field, and together they form the total field.
 
-The result matches physical expectations. Both the incident and scattered fields are travelling waves carrying energy, but their energy flows cancel, so the total field is a pure standing wave. The spherical symmetry of the cavity is clearly visible: the scattered wavefronts are concentric and the LIC field lines form smooth rings, in contrast to the ellipsoid below.
+The result matches physical expectations. Both the incident and scattered fields are traveling waves carrying energy, but their energy flows cancel, so the total field is a pure standing wave. The spherical symmetry of the cavity is clearly visible: the scattered wavefronts are concentric and the LIC field lines form smooth rings, in contrast to the ellipsoid below.
 
 #figure(
   grid(
@@ -58,9 +58,9 @@ The result matches physical expectations. Both the incident and scattered fields
 
 ==== Uncertainty
 
-The mean is paired with a posterior uncertainty, the standard deviation of the field about that mean. Only the scattered field is inferred and thus carries uncertainty. The incident field is exact, so the total field's uncertainty is identical to the scattered field's. @fig:sphere-field-std maps this standard deviation over the same slice. It is small, of order $10^(-3)$, and forms concentric rings that grow from the centre toward the wall.
+The mean is paired with a posterior uncertainty, the standard deviation of the field about that mean. Only the scattered field is inferred and thus carries uncertainty. The incident field is exact, so the total field's uncertainty is identical to the scattered field's. @fig:sphere-field-std maps this standard deviation over the same slice. It is small, of order $10^(-3)$, and forms concentric rings that grow from the center toward the wall.
 
-That the uncertainty is largest at the wall may look backwards, since the wall is where we condition. The reason is that we condition only on the tangential part of the field. At the wall the tangential part is fixed, while the part pointing straight out of the wall, the normal component, is left free, and that free part stays uncertain. In the interior there is no such free direction: the field equations tie the components together and the plane-wave prior fills in the field from the boundary data, so the uncertainty fades toward the centre. The map thus shows how well the boundary data determines the field, not the size of the true reconstruction error.
+That the uncertainty is largest at the wall may look backwards, since the wall is where we condition. The reason is that we condition only on the tangential part of the field. At the wall the tangential part is fixed, while the part pointing straight out of the wall, the normal component, is left free, and that free part stays uncertain. In the interior there is no such free direction: the field equations tie the components together and the plane-wave prior fills in the field from the boundary data, so the uncertainty fades toward the center. The map thus shows how well the boundary data determines the field, not the size of the true reconstruction error.
 
 #figure(
   image("../../res/epgp_sphere_field_std.png", width: 60%),
