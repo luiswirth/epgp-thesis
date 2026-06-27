@@ -36,7 +36,7 @@ It admits a closed-form reaction operator of unlimited accuracy, which serves as
 
 === EPGP Field
 
-We begin with a qualitative look at the EPGP solution for a single transmitter dipole at $zv = (0, 0, 1)$ on $Lambda$, polarized along $x$. Being a probabilistic solver, the EPGP returns a full posterior over the scattered field, a Gaussian summarized by its mean and its covariance: the mean is the point estimate of the field, and the covariance is its uncertainty. We visualize both on the $x z$-plane ($y = 0$) through the cavity, the dipole location marked in green. The field was computed at the reference resolution $N_s = 2048$, $N_b = 16384$.
+We begin with a qualitative look at the EPGP solution for a single transmitter dipole at $zv = (0, 0, 1)$ on $Lambda$, polarized along $x$. Being a probabilistic solver, the EPGP returns a full posterior over the scattered field, a Gaussian summarized by its mean and its covariance: the mean is the point estimate of the field, and the covariance is its uncertainty. We visualize both on the $x z$-plane ($y = 0$) through the cavity, the dipole location marked in green. The field was computed at the highest grid resolution $N_s = 1024$, $N_b = 8192$.
 
 ==== Mean
 
@@ -78,7 +78,7 @@ This is because the posterior covariance is fixed only by where we condition and
 
 ==== Convergence
 
-We now quantify the operator's accuracy as the resolution grows. @fig:sphere-epgp-conv plots the reference error $epsilon$ against the number of spectral features $N_s$, one curve per boundary-point count $N_b$. For small $N_s$ all curves coincide, so spectral resolution alone limits accuracy. Past $N_s approx 200$ each curve flattens to a floor set by its $N_b$, with the finest curve reaching $epsilon approx 2 times 10^(-13)$ at $N_s = 1024$ and $N_b = 8192$.
+We now quantify the operator's accuracy as the resolution grows. @fig:sphere-epgp-conv plots the reference error $epsilon$ against the number of spectral features $N_s$, one curve per boundary-point count $N_b$. For small $N_s$ all curves coincide, so spectral resolution alone limits accuracy. Past $N_s approx 200$ each curve flattens to a floor set by its $N_b$, with the finest curve reaching $epsilon approx 1.3 times 10^(-10)$ at $N_s = 1024$ and $N_b = 8192$.
 
 #figure(
   image("../../res/epgp_sphere_convergence.svg", width: 68%),
@@ -167,7 +167,7 @@ The BEM operator is the reference for this geometry. As for the EPGP, the absenc
 
 ==== Convergence
 
-@fig:ellipse-bem-conv plots the BEM reciprocity error $rho$ over the $p times m$ grid, and @tab:ellipse-bem lists every run with its degrees of freedom, runtime, memory, and conditioning. Here only $rho$ is available, which sees the antisymmetric part of the error and so cannot certify a convergence order, but its decay is consistent with the algebraic $h$-refinement and geometric $p$-refinement established on the sphere. The best grid run, $p = 5$, $m = 4$ ($4800$ DOFs), reaches $rho approx 1.4 times 10^(-10)$, and the reference operator $amat(T)_"BEM"$ is a dedicated off-grid run at $p = 6$, $m = 4$ ($5292$ DOFs, $rho approx 2.5 times 10^(-10)$). The slight increase in $rho$ from $p = 5$ to $p = 6$ reflects the same floating-point accuracy floor seen on the sphere: at this refinement the solver has reached the limit of attainable precision.
+@fig:ellipse-bem-conv plots the BEM reciprocity error $rho$ over the $p times m$ grid, and @tab:ellipse-bem lists every run with its degrees of freedom, runtime, memory, and conditioning. Here only $rho$ is available, which sees the antisymmetric part of the error and so cannot certify a convergence order, but its decay is consistent with the algebraic $h$-refinement and geometric $p$-refinement established on the sphere. The most refined run, $p = 5$, $m = 4$ ($4800$ DOFs), reaches $rho approx 1.4 times 10^(-10)$ and serves as the reference operator $amat(T)_"BEM"$ for this geometry.
 
 #figure(
   image("../../res/bem_ellipse_convergence.svg"),
@@ -180,7 +180,7 @@ Having validated each solver on its own, we now compare them directly, first in 
 
 ==== Cross-Validation
 
-The two solvers share no numerical machinery, so their agreement is strong evidence for both. We quantify it by the reference error $epsilon$ of the EPGP operator against the BEM reference $amat(T)_"BEM"$. It decreases monotonically with $N_s$, reaching $epsilon approx 1.3 times 10^(-8)$ at $N_s = 1024$, and is still decreasing there, so $1.3 times 10^(-8)$ is an upper bound on the relative difference: the two operators are at least this close.
+The two solvers share no numerical machinery, so their agreement is strong evidence for both. We quantify it by the reference error $epsilon$ of the EPGP operator against the BEM reference $amat(T)_"BEM"$. It decreases monotonically with $N_s$, reaching $epsilon approx 9 times 10^(-9)$ at $N_s = 1024$, and is still decreasing there, so $9 times 10^(-9)$ is an upper bound on the relative difference: the two operators are at least this close.
 
 Together with the independent certification of each solver on the analytic sphere, this is the central result of the benchmark. Two methodologically unrelated solvers, each validated on its own and then shown to agree on a geometry with no ground truth, give strong combined evidence that both compute the correct reaction operator.
 
