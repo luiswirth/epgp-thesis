@@ -1,5 +1,7 @@
 #import "../setup-math.typ": *
 
+#show heading.where(level: 3): set heading(outlined: false)
+
 #let bem-runs = csv("../../res/ellipse_bem_results.csv").slice(1).sorted(
   key: r => (int(r.at(0)), int(r.at(1)))
 )
@@ -60,7 +62,7 @@ The mean is paired with a posterior uncertainty, the standard deviation of the f
 That the uncertainty is largest at the wall may look backwards, since the wall is where we condition. The reason is that we condition only on the tangential part of the field. At the wall the tangential part is fixed, while the part pointing straight out of the wall, the normal component, is left free, and that free part stays uncertain. In the interior there is no such free direction: the field equations tie the components together and the plane-wave prior fills in the field from the boundary data, so the uncertainty fades toward the center. The map thus shows how well the boundary data determines the field, not the size of the true reconstruction error.
 
 #figure(
-  image("../../res/epgp_sphere_field_std.png", width: 60%),
+  image("../../res/epgp_sphere_field_std.png", width: 40%),
   caption: [EPGP scattered-field uncertainty on the spherical cavity slice.],
 ) <fig:sphere-field-std>
 
@@ -80,7 +82,7 @@ This is because the posterior covariance is fixed only by where we condition and
 We now quantify the operator's accuracy as the resolution grows. @fig:sphere-epgp-conv plots the reference error $epsilon$ against the number of spectral features $N_s$, one curve per boundary-point count $N_b$. For small $N_s$ all curves coincide, so spectral resolution alone limits accuracy. Past $N_s approx 200$ each curve flattens to a floor set by its $N_b$, with the finest curve reaching $epsilon approx 1.3 times 10^(-10)$ at $N_s = 1024$ and $N_b = 8192$.
 
 #figure(
-  image("../../res/epgp_sphere_convergence.svg", width: 68%),
+  image("../../res/epgp_sphere_convergence.svg", width: 55%),
   caption: [EPGP convergence on the spherical cavity versus analytic reference.],
 ) <fig:sphere-epgp-conv>
 
@@ -119,6 +121,7 @@ The benchmark fixes $k = 2$. A cavity resonance, where the interior boundary val
   caption: [Wavenumber sweep, spherical cavity.],
 ) <fig:sphere-ksweep>
 
+#pagebreak()
 == Ellipsoidal Cavity
 
 The ellipsoidal cavity has semi-axes $(4, 4, 6)$, keeping the same interior surface $Lambda$ and wavenumber $k = 2$. Unlike the sphere, it admits no analytic operator: the ellipsoid does not separate the vector Helmholtz equation in any standard coordinate system, so no closed-form eigenfunction expansion exists. The high-fidelity BEM solution therefore serves as the reference.
@@ -135,8 +138,8 @@ We repeat the qualitative inspection of the previous section, visualizing the EP
   grid(
     columns: 1,
     row-gutter: 6pt,
-    image("../../res/epgp_ellipse_field_real.png"),
-    image("../../res/epgp_ellipse_field_lic.png"),
+    image("../../res/epgp_ellipse_field_real.png", width: 95%),
+    image("../../res/epgp_ellipse_field_lic.png", width: 95%),
   ),
   caption: [EPGP field on the ellipsoidal cavity slice.],
 ) <fig:ellipse-field>
@@ -146,7 +149,7 @@ We repeat the qualitative inspection of the previous section, visualizing the EP
 @fig:ellipse-field-std maps the posterior uncertainty over the same slice. The same effect is at work, but the broken symmetry makes it richer. The uncertainty is again lowest in the interior and grows toward the wall, where the free normal component carries it, but now it breaks into separate lobes. The lobes sit where the field hits the wall most steeply, so its normal component there is large, while the quiet valleys between them are where the field runs almost along the wall and the tangential conditioning already fixes it. The scale is also an order of magnitude larger than on the sphere, of order $10^(-2)$.
 
 #figure(
-  image("../../res/epgp_ellipse_field_std.png", width: 60%),
+  image("../../res/epgp_ellipse_field_std.png", width: 50%),
   caption: [EPGP scattered-field uncertainty on the ellipsoidal cavity slice.],
 ) <fig:ellipse-field-std>
 
@@ -155,7 +158,7 @@ We repeat the qualitative inspection of the previous section, visualizing the EP
 As on the sphere, @fig:ellipse-operator shows the operator magnitude beside the posterior uncertainty. The magnitude $|amat(T)|$ keeps the same diagonal structure of strong self- and near-coupling. The uncertainty, however, is no longer uniform: the elongated geometry breaks the equivalence of receivers, so $sigma$ now varies from receiver to receiver, visible as the horizontal banding. It grows for receivers deeper inside the cavity, toward the elongated $z$-axis and away from the wall, because the boundary data constrains near-wall receivers more tightly than deep-interior ones.
 
 #figure(
-  image("../../res/ellipse_uq_operator.png"),
+  image("../../res/ellipse_uq_operator.png", width: 90%),
   caption: [Reaction operator $|amat(T)|$ and posterior uncertainty $sigma$, ellipsoidal cavity.],
 ) <fig:ellipse-operator>
 
@@ -177,7 +180,7 @@ The BEM operator is the reference for this geometry. As for the EPGP, the absenc
 @fig:ellipse-bem-conv plots the BEM reciprocity error $rho$ over the $p times m$ grid, and @tab:ellipse-bem lists every run with its degrees of freedom, runtime, memory, and conditioning. Here only $rho$ is available, which sees the antisymmetric part of the error and so cannot certify a convergence order, but its decay is consistent with the algebraic $h$-refinement and geometric $p$-refinement established on the sphere. The most refined run, $p = 5$, $m = 4$ ($4800$ DOFs), reaches $rho approx 1.4 times 10^(-10)$ and serves as the reference operator $amat(T)_"BEM"$ for this geometry.
 
 #figure(
-  image("../../res/bem_ellipse_convergence.svg"),
+  image("../../res/bem_ellipse_convergence.svg", width: 94%),
   caption: [BEM reciprocity error on the ellipsoidal cavity.],
 ) <fig:ellipse-bem-conv>
 

@@ -12,7 +12,7 @@
   set text(fill: fgcolor)
 
   set page(paper: "a4")
-  //set page(margin: 2.5cm)
+  set page(margin: 2cm)
 
   set text(font: "New Computer Modern Sans")
   set text(size: 10pt)

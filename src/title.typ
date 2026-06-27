@@ -29,6 +29,7 @@
     fill: black.lighten(90%),
     inset: 5pt,
   )[
+    #set text(10pt)
     *Abstract*\
     #set align(left)
     This thesis presents a high-fidelity benchmark for the Ehrenpreis--Palamodov

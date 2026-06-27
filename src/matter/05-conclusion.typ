@@ -37,10 +37,10 @@ A more principled quadrature would relieve this.
 
 We see two natural directions to extend this work, one that sharpens the EPGP's spectral discretization and one that changes how the reaction operator is assembled.
 
-=== Spherical Designs and Lebedev Quadrature
+==== Spherical Designs and Lebedev Quadrature
 
 The EPGP draws its wavevector directions from a Fibonacci sphere, a quasi-Monte Carlo rule. A more principled choice is Lebedev quadrature, which integrates spherical harmonics exactly up to a chosen degree. It should reach the same kernel accuracy with fewer directions, giving a smaller and better-conditioned system. As noted in the limitations, the lower condition number would also let the assumed noise drop further, which is the main obstacle to calibrated uncertainty.
 
-=== Operator-Learning Perspective
+==== Operator-Learning Perspective
 
 The reaction operator is currently assembled one column at a time. Each transmitter dipole is a separate conditioning of the same shared prior, solved independently. An operator-learning view would instead treat the reaction operator itself as the object to learn directly, producing the whole operator at once instead of rebuilding each column in isolation.
