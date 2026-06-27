@@ -56,7 +56,7 @@ $
   k = omega sqrt(epsilon mu) = omega / c
 $
 
-This is a Helmholtz-type equation for the electric field, with the curl--curl operator $cal(L) := curl curl - k^2$.
+This is a Helmholtz-type equation for the electric field, with the operator $cal(L) := curl curl - k^2$.
 
 #pagebreak()
 == Scattering Problem
@@ -72,7 +72,7 @@ The total field is the superposition of the incident and scattered part,
 $
   Ev = Ev^i + Ev^s
 $
-where each part, and their sum, satisfy the source-free curl--curl equation in the interior away from the source.
+where the scattered field satisfies the source-free curl--curl equation in the interior, while the incident field and the sum only satisfy it away from the source.
 
 The object of study is the mapping from a transmitter dipole to the measured response at a receiver dipole.
 
@@ -135,7 +135,7 @@ of the scalar Helmholtz equation
 $
   (-Delta - k^2) Phi(dot; zv) = delta_zv
 $
-where the potential depends only on the distance $r := norm(rv)$ of the separation vector $rv := xv - zv$. 
+Here $r := norm(rv)$ is the distance to the source, with separation vector $rv := xv - zv$.
 
 An oscillating Hertzian dipole $delta^2 = (zv, pv)$ is a current source $Jv(xv, t) = pv delta_zv exp(-i omega t)$ at a point $zv in D$, together with a polarization $pv in RR^3$ that gives the dipole's orientation and strength.
 
@@ -184,9 +184,9 @@ $
   avec(h) := pi_t Ev^s = -pi_t Ev^i quad "on" partial D
 $
 
-Here $pi_t$ is the tangential projection trace onto $partial D$ with outward normal $nv$, given by
+Here $pi_t$ is the tangential projection trace onto $partial D$ with outward unit normal $nn$, given by
 $
-  pi_t Ev := nv times (Ev times nv) = Ev - (Ev dot nv) nv
+  pi_t Ev := nn times (Ev times nn) = Ev - (Ev dot nn) nn
 $
 
 ==== Interior BVP
@@ -204,11 +204,11 @@ This BVP is well-defined only when $k^2$ is not a cavity resonance, i.e. not an 
 
 === Receiver Dipole and Measurement
 
-The receiver dipole $delta_r = (zv_r, pv_r)$ measures the scattered field $Ev^s$ at its location $zv_r$. Since its polarization $pv_r$ is tangential to $Lambda$, this reads out the tangential trace $pi_t^Lambda Ev^s$ along $pv_r$, yielding a single complex scalar.
+The receiver dipole $delta_r = (zv_r, pv_r)$ measures the scattered field $Ev^s$ at its location $zv_r$, by projecting it onto its polarization $pv_r$, yielding a single complex scalar.
 
 Mathematically this is a linear functional $cal(R): C^oo (D; CC^3) -> CC$ defined as
 $
-  cal(R)(Ev^s) := pv_r dot pi_t^Lambda Ev^s (zv_r; delta_t) = pv_r dot Ev^s (zv_r; delta_t)
+  cal(R)(Ev^s) := pv_r dot Ev^s (zv_r; delta_t)
 $
 
 
@@ -269,14 +269,10 @@ $
   avec(m) := pi_t^Lambda Ev^s [avec(g)]
 $
 
-The reaction operator is defined as the map from the excitation density to the response density,
+The reaction operator is a linear integral operator, defined as the map from the excitation density to the response density,
 $
   cal(T): avec(g) |-> avec(m)
-$
-
-
-$cal(T)$ is a linear integral operator
-$
+  \
   (cal(T) avec(g))(xv) = integral_Lambda amat(T)(xv, zv) avec(g)(zv) dif s(zv)
 $
 
@@ -299,13 +295,13 @@ $
 
 ==== Discretization
 
-To compute with $cal(T)$ we discretize it on a finite set of dipoles. We sample $N_Lambda$ points on $Lambda$ and give each an orthonormal tangent basis of two vectors, varying smoothly over the surface. Each point thus carries two dipoles, one per basis vector, for $M = 2 N_Lambda$ in total.
+To compute with $cal(T)$ we discretize it on a finite set of dipoles. Since each tangent space $T_zv Lambda$ is two-dimensional, we need a basis to coordinatize it. We sample $N_Lambda$ points on $Lambda$ and assign each an orthonormal tangent frame ${en_1(zv), en_2(zv)}$, computed from the outward normal via a reference-vector construction. Each point thus carries two dipoles, one per frame vector, for $M = 2 N_Lambda$ in total.
 
-We enumerate the dipoles by a single index $i in {1, ..., M}$, writing $delta_i = (zv_i, pv_i)$ for the dipole with location $zv_i$ and unit polarization $pv_i$. Consecutive pairs share a location, the two polarizations at one point.
+We enumerate the dipoles by a single index $i in {1, ..., M}$, writing $delta_i = (zv_i, pn_i)$ for the dipole with location $zv_i$ and unit polarization $pn_i$. Consecutive pairs share a location, the two polarizations at one point.
 
 The discretized operator is then a matrix $amat(T) in CC^(M times M)$, whose entries are the kernel evaluated at the two dipoles $delta_i$ and $delta_j$,
 $
-  amat(T)_(i j) = pv_i^transp amat(T)(zv_i, zv_j) pv_j = r(delta_j, delta_i)
+  amat(T)_(i j) = pn_i^transp amat(T)(zv_i, zv_j) pn_j = r(delta_j, delta_i)
 $
 inheriting the kernel's symmetry,
 $
@@ -317,9 +313,7 @@ This matrix is the object of interest for the benchmark. Both solvers compute it
 
 We now fix the concrete geometry of our benchmark problem. The geometry is mostly taken from @cavity.
 
-First we fix the wavenumber to be $k = 2$.
-
-The dipole surface $Lambda$ is the unit sphere.
+We fix $k = 2$. The dipole surface $Lambda$ is the unit sphere.
 $
   Lambda := { xv in RR^3 mid(:) norm(xv) = 1 } subset.eq D
 $
@@ -418,5 +412,5 @@ $
 
 Projecting onto the receiver polarization gives the reference reaction operator,
 $
-  amat(T)_(i j) = pv_i dot pi_t^Lambda Ev^s (zv_i; delta_j)
+  amat(T)_(i j) = pn_i dot pi_t^Lambda Ev^s (zv_i; delta_j)
 $

@@ -3,17 +3,10 @@
 = Methods
 
 This chapter describes the two solvers used to compute the cavity reaction operator $amat(T)$.
-They are methodologically unrelated and share only the problem setup: cavity geometry, wavenumber, and dipole configurations.
+Both represent the scattered field as a superposition of exact solutions of the interior curl--curl equation, so Maxwell's equations hold by construction and only the PEC boundary condition remains to be enforced.
+Beyond this shared structure, the two solvers are numerically independent: they share only the problem setup (cavity geometry, wavenumber, dipole configurations) and none of their internal discretizations.
 
-Both rest on the same idea.
-The scattered field is represented by an ansatz built from a superposition of exact solutions of the interior curl--curl equation.
-Thus Maxwell's equations hold by construction and only the PEC boundary condition remains to be enforced.
-
-The solvers differ in multiple ways.
-The EPGP solver is probabilistic, returning a posterior distribution over the solution space, while the BEM solver is deterministic, returning a single solution.
-The EPGP solver uses a volume plane-wave superposition ansatz, while the BEM solver uses a boundary single-layer potential ansatz.
-The EPGP solver enforces the boundary condition by conditioning on the boundary data, while the BEM solver enforces it by solving an integral equation.
-The EPGP solver needs no mesh and conditions at scattered points on the boundary, while the BEM solver discretizes the boundary into a surface mesh of elements.
+EPGP is probabilistic, returning a posterior distribution over the solution space. It uses a volume plane-wave superposition ansatz and enforces the boundary condition by conditioning on boundary data at scattered collocation points, with no mesh required. BEM is deterministic, returning a single solution. It discretizes the cavity wall into a surface mesh, represents the field via a boundary single-layer potential, and enforces the boundary condition by solving a boundary integral equation.
 
 == Ehrenpreis--Palamodov Gaussian Process
 
@@ -21,15 +14,12 @@ The Ehrenpreis--Palamodov Gaussian Process (EPGP) is a probabilistic, spectral m
 
 === Fundamental Principle
 
-A linear PDE with constant coefficients is governed by a differential operator $L$, a matrix-valued polynomial in the partial derivatives,
+A linear PDE with constant coefficients takes the form $L uv = 0$, where $L = L[partial_1, dots, partial_n]$ is a matrix-valued polynomial in the partial derivatives. The Fourier transform turns differentiation into multiplication, $partial_j |-> i k_j$, so $L$ acts on plane waves by its symbol,
 $
-  L = L[partial_1, dots, partial_n]
+  L (av exp(i kv dot xv)) = P(kv) av exp(i kv dot xv)
 $
-The plane waves $exp(i kv dot xv)$ are the modes of the Fourier transform, under which differentiation becomes multiplication, $partial_j |-> i k_j$, so $L$ turns into multiplication by its symbol $P$,
-$
-  L e^(i kv dot xv) = P[i kv] e^(i kv dot xv)
-$
-We abbreviate $P(kv) := P[i k_1, dots, i k_n]$. A plane wave $av exp(i kv dot xv)$ is therefore a solution exactly when its amplitude lies in the kernel of the symbol, $P(kv) av = 0$.
+where $P(kv) := L[i k_1, dots, i k_n]$ is an ordinary matrix polynomial in the wavevector $kv$.
+A plane wave is therefore a solution exactly when its amplitude lies in the kernel of the symbol, $P(kv) av = 0$.
 
 The Ehrenpreis--Palamodov fundamental principle reverses this reasoning. It states that _all_ solutions $uv$ of linear PDEs with constant coefficients
 can be recovered by an inverse Fourier transform, as a continuous superposition of such plane-wave solutions
@@ -59,7 +49,7 @@ $
 
 ==== Time-Harmonic Maxwell's Equation
 
-We now consider the time-harmonic Maxwell's equations, equivalently the curl--curl Helmholtz equation. Its symbol, with the wavenumber $k$, is
+We specialize to the time-harmonic Maxwell's equations, equivalently the curl--curl Helmholtz equation. Its symbol, with the wavenumber $k$, is
 $
   P(kv) = (norm(kv)^2 - k^2) amat(I) - kv kv^transp
 $
@@ -82,7 +72,7 @@ $
   av(kv) perp kv
 $
 
-Here the kernel is the transverse plane, and its orthogonal projector is the complement of that rank-one projector,
+The orthogonal projector onto the kernel is the transverse complement of that rank-one projector,
 $
   amat(Pi)_kv = amat(I) - (kv kv^transp)/norm(kv)^2
 $
@@ -110,24 +100,27 @@ Because the projector sits inside every feature, the prior is supported entirely
 
 We turn the prior into a solver by conditioning on observations of the field.
 An observation is a linear functional $cal(R)$ of the field, for instance its value or its tangential trace at a point.
-We condition on $N_b$ observations at points $X_b$, collected with their measured values in a data vector $avec(d)$.
+We condition on $N_b$ observations at points $X_b$, collected with their measured values in a data vector $hv$.
 
-Since the prior is a Gaussian process, conditioning is exact and the posterior is again a Gaussian process.
-Writing $amat(K)(dot.c, X_b)$ for the kernel evaluated against the observation functionals and $amat(K)_(b b)$ for the observation--observation block, and introducing a Tikhonov regularization parameter $sigma_n^2 > 0$ (which in the GP framework corresponds to a Gaussian observation noise of variance $sigma_n^2$), the posterior mean field is
+After conditioning the posterior is again a Gaussian process
 $
-  Ev_star (xv) = amat(K)(xv, X_b) (amat(K)_(b b) + sigma_n^2 amat(I))^(-1) avec(d)
+  Ev | hv tilde cal(G P)(Ev_star, amat(K)_star)
 $
-and the posterior covariance is the Schur complement of the conditioning block,
+with posterior mean $Ev_star$ and posterior covariance $amat(K)_star$.
+
+We introduce a Tikhonov regularization parameter $sigma_n^2 > 0$.
+It trades off fitting the data against trusting the prior: as $sigma_n^2 -> 0$ the posterior mean interpolates the observations exactly, while $sigma_n^2 > 0$ relaxes this to a regression that smooths the fit.
+
+The posterior mean field is the regularized best fit to the data, tempered by the prior and the regularization.
+$
+  Ev_star (xv) = amat(K)(xv, X_b) (amat(K)_(b b) + sigma_n^2 amat(I))^(-1) hv
+$
+
+The posterior covariance is the Schur complement of the conditioning block, measuring how underdetermined the field remains after conditioning.
 $
   amat(K)_star (xv, yv) = amat(K)(xv, yv)
   - amat(K)(xv, X_b) (amat(K)_(b b) + sigma_n^2 amat(I))^(-1) amat(K)(X_b, yv)
 $
-Together they specify the posterior, again a Gaussian process,
-$
-  Ev | avec(d) tilde cal(G P)(Ev_star, amat(K)_star)
-$
-The mean is the regularized best fit to the data, tempered by the prior and the regularization. The covariance measures how underdetermined the field remains after conditioning, and is the solver's uncertainty.
-The parameter $sigma_n^2$ trades off fitting the data against trusting the prior: as $sigma_n^2 -> 0$ the posterior mean interpolates the observations exactly, while $sigma_n^2 > 0$ relaxes this to a regression that smooths the fit.
 
 This is exact, infinite-dimensional GP regression: prior and posterior both live on the solution space.
 
@@ -135,39 +128,45 @@ This is exact, infinite-dimensional GP regression: prior and posterior both live
 
 The posterior of the previous section is exact but not yet computable: the kernel entries are integrals over $V_k$ with no closed form. We discretize the EP integral by quadrature, which both makes the kernel computable and expresses the field through explicit finite features.
 
-We approximate the integral over $V_k$ by a finite sum over $N_s$ spectral directions $kv_j in V_k$, drawn from a Fibonacci sphere, a quasi-uniform low-discrepancy point set with quadrature weights $q_j$.
-The discretization collapses the matrix-valued feature into its two transverse columns: for each direction we pick an orthonormal basis $av_(j 1), av_(j 2)$ of the transverse plane, recovering the projector as an outer-product sum,
+==== Finite Spectral Features
+
+We approximate the integral over $V_k$ by a finite sum over $N_s$ spectral directions $kv_j in V_k$, drawn from a Fibonacci sphere, a quasi-uniform low-discrepancy point set.
+For each direction we pick an orthonormal basis $av_(j 1), av_(j 2)$ of the transverse plane, recovering the projector as an outer-product sum,
 $
   amat(Pi)_(kv_j) = sum_(a = 1)^2 av_(j a) av_(j a)^herm
 $
-so each direction contributes two scalar plane-wave features $avec(phi)_(j a) (xv) = av_(j a) exp(i kv_j dot xv)$, giving $F = 2 N_s$ features in total. The field becomes a finite superposition with one scalar coefficient per feature,
+so each spectral direction contributes two scalar plane-wave features $avec(phi)_(j a) (xv) = av_(j a) exp(i kv_j dot xv)$, giving $F = 2 N_s$ features in total. The field becomes a finite superposition with one scalar coefficient per feature,
 $
   Ev (xv) = sum_(j = 1)^(N_s) sum_(a = 1)^2 w_(j a) avec(phi)_(j a) (xv)
 $
 
-These coefficients carry the prior. Gathering them in $avec(w) in CC^F$, the Gaussian measure becomes a finite circularly-symmetric complex Gaussian,
+These coefficients carry the prior. Gathering them in $avec(w) in CC^F$, the Gaussian measure becomes a finite complex Gaussian,
 $
   avec(w) tilde cal(C N)(0, amat(W))
-  quad
-  amat(W) = "diag"(q_j)
 $
-with covariance set by the quadrature weights, so directions that carry more of the integral contribute more to the field. Every feature is a transverse plane wave, so this finite prior is still supported entirely on the solution space.
+Every feature is a transverse plane wave, so this finite prior is still supported entirely on the solution space.
 
-Conditioning is now a finite linear-algebra problem. Evaluating the features at the observation points against $cal(R)$ gives the design matrix $amat(Phi) = amat(Phi)(X_b) in CC^(F times D_b)$, through which the data act on the coefficients, and the weight-space posterior is
+==== Weight-Space Posterior
+
+The discretized model admits two equivalent posteriors. The function-space view of the previous section conditions through the kernel: it forms the $N_b times N_b$ Gram block $amat(K)_(b b)$ at the observation points and solves against it. The explicit features open a second, weight-space view that solves for the coefficient vector $avec(w)$ directly. The two are the same posterior, and the cheaper one depends on which dimension is smaller.
+
+Evaluating the features at the observation points through $cal(R)$ gives the design matrix $amat(Phi) = amat(Phi)(X_b) in CC^(F times N_b)$, through which the data act on the coefficients. The posterior over the coefficients is again Gaussian, with mean $avec(w)_star$ and precision $amat(A)$,
 $
-  avec(w)_star = amat(A)^(-1) amat(Phi) avec(d) \/ sigma_n^2
+  avec(w)_star = amat(A)^(-1) amat(Phi) hv \/ sigma_n^2
   quad
   amat(A) = amat(W)^(-1) + amat(Phi) amat(Phi)^herm \/ sigma_n^2 in CC^(F times F)
 $
-with the posterior mean field recovered as $Ev_star (xv) = amat(Phi)(xv)^herm avec(w)_star$.
+The matrix $amat(A)$ is the posterior precision in weight space: the prior precision $amat(W)^(-1)$ regularized by the data contribution $amat(Phi) amat(Phi)^herm \/ sigma_n^2$. The posterior mean field follows by mapping the coefficients back through the features, $Ev_star (xv) = amat(Phi)(xv)^herm avec(w)_star$.
 
-In the same features the kernel factors as
+Under the same quadrature, the integral kernel of the prior collapses into a finite feature product carrying the prior weights,
 $
   amat(K)(xv, yv) = amat(Phi)(xv)^herm amat(W) amat(Phi)(yv)
 $
-so this $F times F$ weight-space solve and the $D_b times D_b$ function-space solve of the previous section are the same posterior, related by the matrix-inversion lemma. We are free to invert whichever is smaller, and the explicit EP features make the weight-space solve the cheaper choice whenever $F < D_b$.
+Substituting this discretized kernel into the function-space mean and applying the Woodbury matrix-inversion lemma reproduces the weight-space mean exactly. The lemma trades the $N_b times N_b$ inverse of the function-space solve for the $F times F$ inverse $amat(A)^(-1)$, so we may solve whichever is smaller. The EP construction makes the feature count $F = 2 N_s$ explicit and often modest, while the boundary value problem conditions on many points. Whenever $F < N_b$ the weight-space solve is the cheaper one, with a cost set by the number of features rather than the number of observations.
 
-The model has a small set of hyperparameters: the spectral directions $kv_j$, the prior weights $amat(W)$, and the regularization parameter $sigma_n$. In a Gaussian process these can be tuned by maximizing the marginal likelihood of the data, usually by gradient descent on its negative logarithm. We instead fix them on principled grounds. The directions come from the Fibonacci sphere, a quasi-uniform quadrature whose even coverage we prefer to keep, and the weights are fixed by that same quadrature. The regularization parameter is held fixed too, since its marginal-likelihood optimum is governed by the conditioning of the system rather than by the data.
+==== Hyperparameters
+
+The model has three hyperparameters: the spectral directions $kv_j$, the prior weights $amat(W)$, and the regularization parameter $sigma_n$. In a Gaussian process these can be tuned by maximizing the marginal likelihood of the data, usually by gradient descent on its negative logarithm. We instead fix them on principled grounds. The directions come from the Fibonacci sphere, whose even coverage we prefer to keep. The prior weights are set to $amat(W) = amat(I)$, treating all spectral directions equally. The regularization parameter is held fixed, since its marginal-likelihood optimum is governed by the condition number of the system rather than by the data.
 
 === Implementation `maxwellgp`
 
@@ -178,16 +177,17 @@ We refer to @felix for the full theory.
 === EPGP for Boundary Value Problems
 
 The prior already solves the PDE in the interior, so conditioning turns it into a boundary value problem solver: observing the prescribed boundary trace yields the posterior field consistent with it.
-The relevant functional is the boundary trace. For the PEC Maxwell problem it is the tangential trace $cal(R) = pi_t$, evaluated at $N_b$ points on the boundary $partial D$, each carrying its outward normal $nv$.
+The relevant functional is the tangential trace $cal(R) = pi_t$, evaluated at $N_b$ points on the boundary $partial D$, each carrying its outward unit normal $nn$.
 
-Although the prescribed boundary data is exact, we keep $sigma_n^2 > 0$. The finite feature space cannot represent the trace exactly, and the plane-wave Gram matrix is ill-conditioned, so a small noise acts as a Tikhonov regularizer that stabilizes the conditioning solve.
+Although the prescribed boundary data is exact, we keep $sigma_n^2 > 0$. The finite feature space cannot represent the trace exactly, and the plane-wave Gram matrix is ill-conditioned, so a small noise acts as a Tikhonov regularizer that stabilizes the solve.
 
 === EPGP for Cavity Scattering
 
 The `cavity-epgp` layer specializes the BVP solver to the cavity scattering problem. The cavity enters only through the boundary data, and the prior is unchanged.
-The transmitter dipole sets the boundary trace: conditioning on the prescribed scattered-field trace $avec(d) = -pi_t Ev^i$ at the $N_b$ boundary points enforces the PEC condition and yields the posterior scattered field $Ev^s_star$.
+Each transmitter dipole sets a scattered-field boundary trace $hv = -pi_t Ev^i$. Conditioning on it at the $N_b$ boundary points enforces the PEC condition and yields the posterior scattered field $Ev^s_star$, whose tangential trace at the receivers fills one column of the reaction operator.
 
-The tangential trace of the posterior mean field at the receivers fills the reaction operator column by column.
+The $M = 2 N_Lambda$ transmitters share the same $N_b$ conditioning points and differ only in their boundary values $hv$. The conditioning matrix $amat(A)$ is therefore identical across transmitters, and only the right-hand side changes. We factor $amat(A)$ once and reuse the factorization for all $M$ excitations. The posterior covariance depends only on the conditioning points, not on the boundary values, so it is shared by all transmitters and computed once.
+
 Convergence is governed by two parameters, the number of spectral directions $N_s$ and the number of boundary conditioning points $N_b$.
 
 
@@ -217,11 +217,11 @@ $
 
 There is a more natural trace for BEM, the rotated tangential trace $gamma_times$.
 $
-  gamma_times avec(u) := nv times avec(u)
+  gamma_times avec(u) := nn times avec(u)
 $
 
 It differs from the projection tangential trace $pi_t$ by a quarter turn in the tangent plane, $
-  gamma_times = nv times pi_t
+  gamma_times = nn times pi_t
 $
 
 ==== Maxwell Single-Layer Operator
@@ -329,13 +329,13 @@ Bembel uses a NURBS boundary representation, where our cavity geometries can be 
 
 We discretize the EFIE by a Galerkin method, which discretizes the operator equation, not merely the unknown. The density is expanded in a finite basis $avec(phi)_1, dots, avec(phi)_N$,
 $
-  avec(j) approx sum_(b = 1)^N j_b avec(phi)_b
+  avec(j) approx sum_(i = 1)^N j_i avec(phi)_i
 $
 and the EFIE is tested against the same basis. The continuous equation $cal(V) avec(j) = avec(h)_times$ becomes a linear system for the coefficients,
 $
   amat(V) jv = bv
   quad
-  bv_a = integral_(partial D) avec(phi)_a dot avec(h)_times dif s
+  bv_i = integral_(partial D) avec(phi)_i dot avec(h)_times dif s
 $
 in which the single-layer operator $cal(V)$ is replaced by its Galerkin matrix $amat(V)$. Its entries are the single-layer bilinear form on pairs of basis functions. Integrating the gradients of the dyadic Green's function by parts onto the basis functions reduces it to a double surface integral over the scalar fundamental solution $Phi$,
 $

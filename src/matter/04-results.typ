@@ -11,12 +11,10 @@
 
 = Benchmark Results
 
-We present results for two cavity geometries, which differ in what we can validate against.
-On the spherical cavity a closed-form reaction operator is available, so each solver is validated independently against ground truth, establishing that both are correct.
-On the ellipsoidal cavity no analytic solution exists, so the two solvers are cross-validated against each other.
+We present results for two cavity geometries, which differ in what we can validate against. The spherical cavity admits a closed-form operator and is used to check each solver against ground truth; the ellipsoidal cavity admits none and is treated by cross-validation.
 Each geometry is treated in turn, covering the EPGP solver, the BEM solver, and, for the ellipsoid, a direct comparison of the two.
 
-Two relative error measures are used throughout. The reciprocity error $rho$ is reference-free: reciprocity forces the true operator to be symmetric, and $rho$ measures the violation of that symmetry. It is a necessary but not sufficient check. Because it constrains only the antisymmetric part of the error, a low $rho$ certifies internal consistency rather than accuracy, and it cannot be compared directly with the reference error below.
+Two relative error measures are used throughout. The reciprocity error $rho$ is reference-free: reciprocity forces the true operator to be symmetric, and $rho$ measures the violation of that symmetry. It is a necessary but not sufficient check.
 The reference error $epsilon$ is the distance to a trusted reference operator $amat(T)_"ref"$,
 which is the analytic operator $amat(T)_"anal"$ on the sphere and the high-fidelity BEM operator $amat(T)_"BEM"$ on the ellipsoid.
 $
@@ -27,14 +25,14 @@ $
 We use the Frobenius norm to quantify distance between operators.
 The operator norm is bounded by the Frobenius norm, so convergence in $epsilon$ implies convergence in the operator norm.
 $
-  norm(amat(B))_"op" <= norm(amat(B))_"F"
+  norm(amat(T))_"op" <= norm(amat(T))_"F"
 $
 
 #pagebreak(weak: true)
 == Spherical Cavity
 
 The spherical cavity is a PEC sphere of radius $R = 4$.
-It admits a closed-form reaction operator $amat(T)_"anal"$ of unlimited accuracy, which serves as ground truth for both solvers.
+It admits a closed-form reaction operator of unlimited accuracy, which serves as ground truth for both solvers.
 
 === EPGP Field
 
@@ -44,7 +42,7 @@ We begin with a qualitative look at the EPGP solution for a single transmitter d
 
 @fig:sphere-field shows the posterior mean field. The top row is the real part of the $x$-component as a heatmap, the bottom row the field lines via line-integral convolution (LIC). The three columns are the incident, scattered, and total field. The incident field is the dipole near field, sharply localized at the source. Scattering off the wall produces the scattered field, and together they form the total field.
 
-The result matches physical expectations. Both the incident and scattered fields are traveling waves carrying energy, but their energy flows cancel, so the total field is a pure standing wave. The spherical symmetry of the cavity is clearly visible: the scattered wavefronts are concentric and the LIC field lines form smooth rings, in contrast to the ellipsoid below.
+The result matches physical expectations. Both the incident and scattered fields are traveling waves carrying energy, but their energy flows cancel, so the total field is a pure standing wave. The spherical symmetry of the cavity is clearly visible: the scattered wavefronts are concentric and the LIC field lines form smooth rings.
 
 #figure(
   grid(
@@ -80,7 +78,7 @@ This is because the posterior covariance is fixed only by where we condition and
 
 ==== Convergence
 
-We now quantify the operator's accuracy as the resolution grows. @fig:sphere-epgp-conv plots the reference error $epsilon$ against the number of spectral features $N_s$, one curve per boundary-point count $N_b$. For small $N_s$ all curves coincide, so spectral resolution alone limits accuracy. Past $N_s approx 200$ each curve flattens to a floor set by its $N_b$, with the finest curve reaching $epsilon approx 2 times 10^(-13)$ at $N_b = 8192$.
+We now quantify the operator's accuracy as the resolution grows. @fig:sphere-epgp-conv plots the reference error $epsilon$ against the number of spectral features $N_s$, one curve per boundary-point count $N_b$. For small $N_s$ all curves coincide, so spectral resolution alone limits accuracy. Past $N_s approx 200$ each curve flattens to a floor set by its $N_b$, with the finest curve reaching $epsilon approx 2 times 10^(-13)$ at $N_s = 1024$ and $N_b = 8192$.
 
 #figure(
   image("../../res/epgp_sphere_convergence.svg", width: 68%),
@@ -104,7 +102,7 @@ The BEM is deterministic, so it returns the operator without an uncertainty esti
 
 ==== Convergence
 
-@fig:sphere-bem-conv splits this convergence into two panels. The left panel performs $h$-refinement, varying the mesh level $m$ at each fixed polynomial degree $p$, while the right panel performs $p$-refinement, varying $p$ at each fixed mesh level. Each panel therefore holds a family of curves, one for every value of the parameter kept fixed in that panel. Both refinements behave as the theory predicts: $h$-refinement converges algebraically and $p$-refinement converges geometrically, and the finest resolutions reach $epsilon approx 3 times 10^(-12)$. The only exception is the $p = 5$, $m = 4$ point, which ticks back up as it reaches the floor of attainable accuracy.
+@fig:sphere-bem-conv splits this convergence into two panels, each a family of curves over one fixed parameter. The left panel performs $h$-refinement, varying the mesh level $m$ at each fixed polynomial degree $p$, plotted against degrees of freedom on log--log axes. Algebraic convergence appears as a straight line there, and each curve is one, with a slope that steepens with $p$, tracking the $prop N^(-3\/2)$ reference. The right panel performs $p$-refinement, varying $p$ at each fixed mesh level, plotted against $p$ on a semilog axis. Geometric convergence appears as a straight line there, and each curve is one. The two refinements thus behave as the theory predicts, and the finest resolutions reach $epsilon approx 3 times 10^(-12)$. The only exception is the $p = 5$, $m = 4$ point, which ticks back up as it reaches the floor of attainable accuracy.
 
 #figure(
   image("../../res/bem_sphere_convergence.svg"),
@@ -116,7 +114,7 @@ The BEM is deterministic, so it returns the operator without an uncertainty esti
 
 The ellipsoidal cavity has semi-axes $(4, 4, 6)$, keeping the same interior surface $Lambda$ and wavenumber $k = 2$. Unlike the sphere, it admits no analytic operator: the ellipsoid does not separate the vector Helmholtz equation in any standard coordinate system, so no closed-form eigenfunction expansion exists. The high-fidelity BEM solution therefore serves as the reference.
 
-One caveat concerns the wavenumber. $k = 2$ lies only $approx 0.0015$ above an interior resonance near $1.9985$, but its effect on the conditioning is mild and both solvers converge cleanly, so $k = 2$ is operationally non-resonant.
+One caveat concerns the wavenumber. $k = 2$ lies only $approx 0.0015$ above an interior resonance near $1.9985$, but its effect on the condition number is mild and both solvers converge cleanly, so $k = 2$ is operationally non-resonant.
 
 === EPGP Field
 
@@ -165,11 +163,11 @@ With no analytic operator available, we track accuracy through the reciprocity e
 
 === BEM Operator
 
-The BEM operator is the reference for this geometry, so we examine its convergence in some detail. As for the EPGP, the absence of an analytic operator leaves only the reciprocity error $rho$ as a self-contained measure.
+The BEM operator is the reference for this geometry. As for the EPGP, the absence of an analytic operator leaves only the reciprocity error $rho$ as a self-contained measure.
 
 ==== Convergence
 
-@fig:ellipse-bem-conv plots the BEM reciprocity error $rho$ over the $p times m$ grid, and @tab:ellipse-bem lists every run with its degrees of freedom, runtime, memory, and conditioning. As on the sphere, the analytic boundary makes $h$-refinement converge algebraically and $p$-refinement geometrically. The best grid run, $p = 5$, $m = 4$ ($4800$ DOFs), reaches $rho approx 1.4 times 10^(-10)$, and the reference operator $amat(T)_"BEM"$ is a dedicated off-grid run at $p = 6$, $m = 4$ ($5292$ DOFs, $rho approx 2.5 times 10^(-10)$). The slight increase in $rho$ from $p = 5$ to $p = 6$ reflects the same floating-point accuracy floor seen on the sphere: at this refinement the solver has reached the limit of attainable precision.
+@fig:ellipse-bem-conv plots the BEM reciprocity error $rho$ over the $p times m$ grid, and @tab:ellipse-bem lists every run with its degrees of freedom, runtime, memory, and conditioning. Here only $rho$ is available, which sees the antisymmetric part of the error and so cannot certify a convergence order, but its decay is consistent with the algebraic $h$-refinement and geometric $p$-refinement established on the sphere. The best grid run, $p = 5$, $m = 4$ ($4800$ DOFs), reaches $rho approx 1.4 times 10^(-10)$, and the reference operator $amat(T)_"BEM"$ is a dedicated off-grid run at $p = 6$, $m = 4$ ($5292$ DOFs, $rho approx 2.5 times 10^(-10)$). The slight increase in $rho$ from $p = 5$ to $p = 6$ reflects the same floating-point accuracy floor seen on the sphere: at this refinement the solver has reached the limit of attainable precision.
 
 #figure(
   image("../../res/bem_ellipse_convergence.svg"),

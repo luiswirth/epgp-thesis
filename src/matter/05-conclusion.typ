@@ -14,23 +14,23 @@ Beyond matching the reference, the EPGP satisfies the time-harmonic Maxwell equa
 
 ==== Validation Scope
 
-The validation rests most firmly on the spherical cavity. There an analytic operator is available, both solvers converge to it, and the correctness of each is established directly. On the ellipsoidal cavity there is no ground truth, so the evidence is the agreement between the two unrelated solvers. This agreement is strong, but it is mutual consistency rather than a direct measure of accuracy. The reciprocity error cannot close this gap, since it constrains only the antisymmetric part of the error.
+The validation rests most firmly on the spherical cavity, where each solver is checked directly against the analytic operator. On the ellipsoidal cavity there is no ground truth, so the evidence is the agreement between the two unrelated solvers, which is mutual consistency rather than a direct measure of accuracy. The reciprocity error cannot close this gap, since it constrains only the antisymmetric part of the error.
 
 Both test geometries, and the dipole surface $Lambda$, are fairly symmetric. A defect that appears only on strongly asymmetric domains would therefore not be caught here, though we have no specific reason to expect one.
 
-The benchmark is also confined to a single wavenumber and geometry pair. A sweep of the conditioning around $k = 2$ confirms that it is operationally non-resonant, but the accuracy itself is validated only at $k = 2$.
+The benchmark is also confined to a single wavenumber and geometry pair. A sweep of the condition number around $k = 2$ confirms that it is operationally non-resonant, but the accuracy itself is validated only at $k = 2$.
 
 ==== Cost Comparison
 
 The cost comparison should be read with care. Both solvers ran on identical hardware, but the absolute wall times reflect two particular implementations, a compiled C++ solver and a Python/JAX one, so the runtime factor mixes implementation quality with algorithmic cost. The implementation-independent statement is the asymptotic scaling.
 
-Several factors could shift the comparison in either direction. The EPGP wall time includes the JAX compilation and Python startup, which likely make up its near-constant offset, so timing only the numerical solve would isolate the algorithmic cost. The EPGP also ran on CPU, while JAX can target GPUs, which we did not test and which could lower its cost further. On the other side, the BEM is deliberately unoptimized: it uses a dense direct solve with no iterative solver, preconditioner, or matrix compression, all chosen for fidelity, so a tuned BEM could be considerably faster. The two solvers also parallelize differently, and we did not study how the comparison scales with core count. A fairer comparison, controlling for these factors and counting operations or memory rather than wall time, is left to future work.
+Several factors could shift the comparison in either direction. The EPGP wall time includes the JAX compilation and Python startup, which likely make up its near-constant offset, so timing only the numerical solve would isolate the algorithmic cost. The EPGP also ran on CPU, while JAX can target GPUs, which we did not test and which could lower its cost further. On the other side, the BEM is unoptimized: it uses a dense direct solve with no iterative solver, preconditioner, or matrix compression for fidelity, so a tuned BEM could be considerably faster. The two solvers also parallelize differently, and we did not study how the comparison scales with core count. A fairer comparison, controlling for these factors and counting operations or memory rather than wall time, is left to future work.
 
 ==== Uncertainty Quantification
 
 The uncertainty quantification is descriptive and correctly ranks where the field is well or poorly determined by the boundary data, growing in the regions the data constrains least. However what it does not represent is the true reconstruction error. This is because the dominant error comes from truncating the plane-wave expansion at a finite number of spectral features, which is a systematic bias, and a Gaussian variance cannot represent a bias.
 
-The scale of the uncertainty is set by the assumed noise $sigma_n$, so one might try to calibrate it by tuning $sigma_n$ to the data. This does not help. Optimizing $sigma_n$ by maximizing the marginal likelihood drives it toward a floor rather than toward the true error level. The plane-wave features are overcomplete and strongly correlated, so the system conditioning grows like $1\/sigma_n^2$ as the noise decreases. Below a certain noise level the matrix becomes too ill-conditioned to solve stably, and the floating-point floor, rather than the data, determines the smallest usable $sigma_n$.
+The scale of the uncertainty is set by the assumed noise $sigma_n$, so one might try to calibrate it by tuning $sigma_n$ to the data. This does not help. Optimizing $sigma_n$ by maximizing the marginal likelihood drives it toward a floor rather than toward the true error level. The plane-wave features are overcomplete and strongly correlated, so the system's condition number grows like $1\/sigma_n^2$ as the noise decreases. Below a certain noise level the matrix becomes too ill-conditioned to solve stably, and the floating-point floor, rather than the data, determines the smallest usable $sigma_n$.
 A more principled quadrature would relieve this.
 
 == Future Work
@@ -39,7 +39,7 @@ We see two natural directions to extend this work, one that sharpens the EPGP's 
 
 === Spherical Designs and Lebedev Quadrature
 
-The EPGP draws its wavevector directions from a Fibonacci sphere, a quasi-Monte Carlo rule. A more principled choice is Lebedev quadrature, which integrates spherical harmonics exactly up to a chosen degree. It should reach the same kernel accuracy with fewer directions, giving a smaller and better-conditioned system. As noted in the limitations, the better conditioning would also let the assumed noise drop further, which is the main obstacle to calibrated uncertainty.
+The EPGP draws its wavevector directions from a Fibonacci sphere, a quasi-Monte Carlo rule. A more principled choice is Lebedev quadrature, which integrates spherical harmonics exactly up to a chosen degree. It should reach the same kernel accuracy with fewer directions, giving a smaller and better-conditioned system. As noted in the limitations, the lower condition number would also let the assumed noise drop further, which is the main obstacle to calibrated uncertainty.
 
 === Operator-Learning Perspective
 

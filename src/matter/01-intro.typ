@@ -36,7 +36,7 @@ The *Ehrenpreis--Palamodov (EP)* principle @ehrenpreis provides a constructive r
 priors for *linear PDEs with constant coefficients* inspired by the *inverse
 Fourier transform*. It represents every solution as a superposition of *plane waves*
 with wavevectors on the *characteristic variety* of the operator and amplitudes
-in the kernel of the symbol. Its GP realization,
+in the *kernel of the symbol*. Its GP realization,
 the *Ehrenpreis--Palamodov Gaussian Process (EPGP)* @harkonen, uses a Gaussian prior based on this principle. The prior and the posterior both lie exactly in the solution space of the operator.
 
 A particularly well-understood PDE system is *Maxwell's equations*, which
@@ -87,7 +87,7 @@ correct.
 This thesis makes the following contributions.
 
 - Maxwell EPGP library:
-  Improved existing JAX implementation `maxwellgp`, fixing bugs, adding support
+  Improved existing JAX implementation `maxwellgp`, fixed bugs, added support
   for tangential traces, posterior covariance computation, and sampling.
 - Cavity EPGP solver:
   Built a probabilistic EPGP solver `cavity-epgp` for the cavity reaction
