@@ -149,7 +149,7 @@ $
   Ev^i (xv; delta) = amat(G)(xv; zv) pv
 $
 
-This defines the free-space electric dyadic Green's function $amat(G)$, which is the fundamental solution of the curl--curl operator,
+This defines the free-space electric dyadic Green's function $amat(G)$, which is the Green's function of the operator $cal(L) = curl curl - k^2$,
 $
   amat(G)(xv; zv) pv := i/k curl_xv curl_xv (Phi(xv; zv) pv)
 $

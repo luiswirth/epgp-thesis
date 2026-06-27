@@ -346,9 +346,9 @@ The surface divergence $div_Gamma avec(phi)$ appears in the bilinear form, so th
 
 ==== Linear Solver
 
-Bembel provides no preconditioner, such as a Calderon projector, so an iterative solver is unattractive. We rely on direct solves instead.
+Bembel provides no preconditioner, such as a Calderón projector, so an iterative solver is unattractive. We rely on direct solves instead.
 
-Furthermore we don't use any matrix compression techniques like fast-multipole or hierarchical matrices, because we need high-fidelity reference solutions to compare with the EPGP solutions.
+Furthermore we do not use any matrix compression techniques like fast-multipole or hierarchical matrices, because we need high-fidelity reference solutions to compare with the EPGP solutions.
 Hence we assemble the dense matrix and solve it by a direct LU factorization.
 
 ==== Time-Harmonic Convention

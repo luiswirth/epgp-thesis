@@ -8,7 +8,7 @@ We established a high-fidelity benchmark for the Maxwell EPGP method. The cavity
 
 On the spherical cavity, where the analytic operator is available, both solvers match the ground truth to about $10^(-10)$, which certifies each one independently. On the ellipsoidal cavity, where no analytic solution exists, the two solvers agree to about $10^(-8)$. Since both were already certified on the sphere, this agreement validates them on a geometry with no ground truth. The agreement of a boundary-integral and a spectral plane-wave method, which share no numerical machinery, is strong evidence that both are correct.
 
-Beyond matching the reference, the EPGP satisfies the time-harmonic Maxwell equations exactly by construction, needs no surface mesh, and provides a posterior uncertainty estimate as a byproduct. It is also the cheaper solver at any demanding tolerance, reaching a given reciprocity error two to three orders of magnitude faster than the BEM. The benchmark thus establishes the EPGP as a trustworthy, Maxwell-consistent, uncertainty-aware surrogate for the interior cavity reaction operator.
+Beyond matching the reference, the EPGP satisfies the time-harmonic Maxwell equations exactly by construction, needs no surface mesh, and provides a posterior uncertainty estimate as a byproduct. It is also the cheaper solver at any demanding tolerance, reaching a given reciprocity error two to three orders of magnitude faster than the BEM. The benchmark thus establishes the EPGP as a Maxwell-consistent, uncertainty-aware surrogate for the interior cavity reaction operator, and the cheaper solver at any demanding tolerance.
 
 == Limitations
 

@@ -47,7 +47,7 @@
     accuracy--runtime trade-off against the BEM, and uncertainty quantification.
   ]
 
-#v(1cm)
+#v(0.3cm)
 #text(20pt)[
   _Luis Wirth_
 ]
@@ -57,9 +57,9 @@
   #weblink("http://ethz.lwirth.com", "ethz.lwirth.com")
 ]
 
-#v(1cm)
+#v(0.5cm)
 Supervised by
-
+#v(-0.1cm)
 #text(16pt)[
   _Prof. Dr.-Ing. Stefan Kurz_ \
 ]

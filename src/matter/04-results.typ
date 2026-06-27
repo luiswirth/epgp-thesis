@@ -91,7 +91,7 @@ We now quantify the operator's accuracy as the resolution grows. @fig:sphere-epg
 
 A free parameter of the solver is the assumed boundary noise $sigma_n$, which regularizes the conditioning. @fig:sphere-noise sweeps it. We show the sweep for the sphere, where the true reconstruction error is available against the analytic operator. The ellipsoid behaves the same. More noise means stronger regularization, so both the reconstruction error and the predicted uncertainty grow. On the log-log axes the growth is nearly a straight line, indicating a power-law dependence on $sigma_n$.
 
-The two rise together not because the uncertainty measures the error, but because $sigma_n$ drives both: it inflates the predicted uncertainty directly, and through stronger regularization it also worsens the reconstruction. The predicted uncertainty is thus governed largely by the assumed noise, which is what makes its calibration delicate.
+Both rise because $sigma_n$ drives them: it inflates the predicted variance directly and, through stronger regularization, also worsens the reconstruction. Their covariation does not mean that uncertainty tracks the reconstruction error. The predicted uncertainty is thus governed largely by the assumed noise, which is what makes its calibration delicate.
 
 #figure(
   image("../../res/sphere_noise.svg", width: 68%),
@@ -156,11 +156,11 @@ As on the sphere, @fig:ellipse-operator shows the operator magnitude beside the 
 
 ==== Convergence
 
-With no analytic operator available, we track accuracy through the reciprocity error $rho$, which needs no reference. @fig:ellipse-epgp-conv plots $rho$ against the number of spectral features $N_s$. It decreases steadily and floors at $rho approx 3 times 10^(-11)$, confirming that the EPGP operator is symmetric to that level. @tab:ellipse-epgp lists the corresponding runs at the finest $N_b$, together with their runtime, memory, and conditioning.
+With no analytic operator available, we track accuracy through the reciprocity error $rho$, which needs no reference. @fig:ellipse-epgp-conv plots $rho$ against the number of spectral features $N_s$. It decreases steadily and floors at $rho approx 3 times 10^(-11)$, confirming that the EPGP operator is symmetric to that level. The cross-validation reference error $epsilon$ against the BEM reference is reported in the table below. @tab:ellipse-epgp lists the corresponding runs at the finest $N_b$, together with their runtime, memory, and conditioning.
 
 #figure(
   image("../../res/epgp_ellipse_convergence.svg", width: 68%),
-  caption: [EPGP reciprocity error on the ellipsoidal cavity versus $N_s$.],
+  caption: [EPGP reciprocity error on the ellipsoidal cavity versus $N_s$ (no analytic reference; cross-validation error $epsilon$ in @tab:ellipse-epgp).],
 ) <fig:ellipse-epgp-conv>
 
 === BEM Operator
@@ -169,7 +169,7 @@ The BEM operator is the reference for this geometry, so we examine its convergen
 
 ==== Convergence
 
-@fig:ellipse-bem-conv plots the BEM reciprocity error $rho$ over the $p times m$ grid, and @tab:ellipse-bem lists every run with its degrees of freedom, runtime, memory, and conditioning. As on the sphere, the analytic boundary makes $h$-refinement converge algebraically and $p$-refinement geometrically. The best grid run, $p = 5$, $m = 4$ ($4800$ DOFs), reaches $rho approx 1.4 times 10^(-10)$, and the reference operator $amat(T)_"BEM"$ is a dedicated off-grid run at $p = 6$, $m = 4$ ($5292$ DOFs, $rho approx 2.5 times 10^(-10)$).
+@fig:ellipse-bem-conv plots the BEM reciprocity error $rho$ over the $p times m$ grid, and @tab:ellipse-bem lists every run with its degrees of freedom, runtime, memory, and conditioning. As on the sphere, the analytic boundary makes $h$-refinement converge algebraically and $p$-refinement geometrically. The best grid run, $p = 5$, $m = 4$ ($4800$ DOFs), reaches $rho approx 1.4 times 10^(-10)$, and the reference operator $amat(T)_"BEM"$ is a dedicated off-grid run at $p = 6$, $m = 4$ ($5292$ DOFs, $rho approx 2.5 times 10^(-10)$). The slight increase in $rho$ from $p = 5$ to $p = 6$ reflects the same floating-point accuracy floor seen on the sphere: at this refinement the solver has reached the limit of attainable precision.
 
 #figure(
   image("../../res/bem_ellipse_convergence.svg"),
@@ -182,7 +182,7 @@ Having validated each solver on its own, we now compare them directly, first in 
 
 ==== Cross-Validation
 
-The two solvers share no numerical machinery, so their agreement is strong evidence for both. We quantify it by the reference error $epsilon$ of the EPGP operator against the BEM reference $amat(T)_"BEM"$. It decreases monotonically with $N_s$, reaching $epsilon approx 1.3 times 10^(-8)$ at $N_s = 1024$, and is still decreasing there. This value is therefore an upper bound: the two independently computed operators agree to at least this level.
+The two solvers share no numerical machinery, so their agreement is strong evidence for both. We quantify it by the reference error $epsilon$ of the EPGP operator against the BEM reference $amat(T)_"BEM"$. It decreases monotonically with $N_s$, reaching $epsilon approx 1.3 times 10^(-8)$ at $N_s = 1024$, and is still decreasing there, so $1.3 times 10^(-8)$ is an upper bound on the relative difference: the two operators are at least this close.
 
 Together with the independent certification of each solver on the analytic sphere, this is the central result of the benchmark. Two methodologically unrelated solvers, each validated on its own and then shown to agree on a geometry with no ground truth, give strong combined evidence that both compute the correct reaction operator.
 
