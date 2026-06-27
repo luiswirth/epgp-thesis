@@ -222,7 +222,7 @@ $
   r(delta_t, delta_r) = cal(R)(Ev^s) = pv_r dot Ev^s (zv_r; delta_t)
 $
 
-Exchanging the two roles leaves the measured response unchanged. This is the Lorentz (Rayleigh--Carson) reciprocity property, a consequence of the symmetry of the curl--curl Green's operator,
+Exchanging the two roles leaves the measured response unchanged. This is the Lorentz (Rayleigh--Carson) reciprocity property @colton, a consequence of the symmetry of the curl--curl Green's operator,
 $
   r(delta_t, delta_r) = r(delta_r, delta_t)
 $
@@ -419,5 +419,5 @@ $
 
 Projecting onto the receiver polarization gives the reference reaction operator,
 $
-  amat(T)_(i j) = en_(a_i) (zv_(n_i)) dot pi_t^Lambda Ev^s (zv_(n_i); delta_j)
+  amat(T)_(i j) = pv_i dot pi_t^Lambda Ev^s (zv_i; delta_j)
 $

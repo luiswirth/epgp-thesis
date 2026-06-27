@@ -18,7 +18,7 @@ Each geometry is treated in turn, covering the EPGP solver, the BEM solver, and,
 
 Two relative error measures are used throughout. The reciprocity error $rho$ is reference-free: reciprocity forces the true operator to be symmetric, and $rho$ measures the violation of that symmetry. It is a necessary but not sufficient check. Because it constrains only the antisymmetric part of the error, a low $rho$ certifies internal consistency rather than accuracy, and it cannot be compared directly with the reference error below.
 The reference error $epsilon$ is the distance to a trusted reference operator $amat(T)_"ref"$,
-which is the analytic operator $amat(T)_star$ on the sphere and the high-fidelity BEM operator $amat(T)_"BEM"$ on the ellipsoid.
+which is the analytic operator $amat(T)_"anal"$ on the sphere and the high-fidelity BEM operator $amat(T)_"BEM"$ on the ellipsoid.
 $
   rho := norm(amat(T) - amat(T)^transp) / norm(amat(T)) quad quad
   epsilon := norm(amat(T) - amat(T)_"ref") / norm(amat(T)_"ref")
@@ -34,7 +34,7 @@ $
 == Spherical Cavity
 
 The spherical cavity is a PEC sphere of radius $R = 4$.
-It admits a closed-form reaction operator $amat(T)_star$ of unlimited accuracy, which serves as ground truth for both solvers.
+It admits a closed-form reaction operator $amat(T)_"anal"$ of unlimited accuracy, which serves as ground truth for both solvers.
 
 === EPGP Field
 

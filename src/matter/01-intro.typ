@@ -18,7 +18,7 @@ Many physical laws take the form of *partial differential equations (PDEs)*, and
 there are two ways to make a model respect such a law. Weak enforcement adds the
 PDE residual as a penalty in the training objective, so the constraint is only
 satisfied approximately and is traded off against the data; the physics-informed
-neural network (PINN) is the canonical example. *Strong enforcement* instead restricts
+neural network (PINN) is the canonical example @raissi. *Strong enforcement* instead restricts
 the model to functions that satisfy the equation identically by construction.
 *Structure preservation* is the key advantage: unphysical phenomena, such as
 spurious modes or phantom charges, cannot arise. The model can
@@ -26,13 +26,13 @@ never violate the law it is meant to obey, regardless of the data. When
 the governing law is known exactly, strong enforcement is therefore preferable.
 
 Among ML models, the *Gaussian process (GP)* is particularly well suited to
-strong enforcement. A GP is a probabilistic model over functions that returns
+strong enforcement. A GP @rasmussen is a probabilistic model over functions that returns
 a full posterior distribution instead of just a point estimate. This enables
 *uncertainty quantification*: every prediction carries an estimate of its own reliability.
 If the GP prior is built so that its samples satisfy a PDE exactly, the model is
 strongly physics-informed and probabilistic at the same time.
 
-The *Ehrenpreis--Palamodov (EP)* principle provides a constructive route to such
+The *Ehrenpreis--Palamodov (EP)* principle @ehrenpreis provides a constructive route to such
 priors for *linear PDEs with constant coefficients* inspired by the *inverse
 Fourier transform*. It represents solutions as superpositions of *plane waves*
 supported on the *characteristic variety* of the operator. Its GP realization,

@@ -21,13 +21,13 @@ The Ehrenpreis--Palamodov Gaussian Process (EPGP) is a probabilistic, spectral m
 
 === Fundamental Principle
 
-A linear PDE with constant coefficients is governed by a differential operator $D$, a matrix-valued polynomial in the partial derivatives,
+A linear PDE with constant coefficients is governed by a differential operator $L$, a matrix-valued polynomial in the partial derivatives,
 $
-  D = D[partial_1, dots, partial_n]
+  L = L[partial_1, dots, partial_n]
 $
-The plane waves $exp(i kv dot xv)$ are the modes of the Fourier transform, under which differentiation becomes multiplication, $partial_j |-> i k_j$, so $D$ turns into multiplication by its symbol $P$,
+The plane waves $exp(i kv dot xv)$ are the modes of the Fourier transform, under which differentiation becomes multiplication, $partial_j |-> i k_j$, so $L$ turns into multiplication by its symbol $P$,
 $
-  D e^(i kv dot xv) = P[i kv] e^(i kv dot xv)
+  L e^(i kv dot xv) = P[i kv] e^(i kv dot xv)
 $
 We abbreviate $P(kv) := P[i k_1, dots, i k_n]$. A plane wave $av exp(i kv dot xv)$ is therefore a solution exactly when its amplitude lies in the kernel of the symbol, $P(kv) av = 0$.
 
@@ -90,7 +90,7 @@ The general feature map and EP representation thus specialize to a superposition
 $
   amat(Phi)_kv (xv) = amat(Pi)_kv exp(i kv dot xv)
   quad
-  Ev (rv) = integral_(V_k) amat(Phi)_kv (rv) avec(w)(kv) dif kv
+  Ev (xv) = integral_(V_k) amat(Phi)_kv (xv) avec(w)(kv) dif kv
 $
 
 #pagebreak()
@@ -113,21 +113,21 @@ An observation is a linear functional $cal(R)$ of the field, for instance its va
 We condition on $N_b$ observations at points $X_b$, collected with their measured values in a data vector $avec(d)$.
 
 Since the prior is a Gaussian process, conditioning is exact and the posterior is again a Gaussian process.
-Writing $amat(K)(dot.c, X_b)$ for the kernel evaluated against the observation functionals and $amat(K)_(b b)$ for the observation--observation block, and allowing a Gaussian observation noise of variance $sigma_"n"^2$, the posterior mean field is
+Writing $amat(K)(dot.c, X_b)$ for the kernel evaluated against the observation functionals and $amat(K)_(b b)$ for the observation--observation block, and allowing a Gaussian observation noise of variance $sigma_n^2$, the posterior mean field is
 $
-  Ev_star (xv) = amat(K)(xv, X_b) (amat(K)_(b b) + sigma_"n"^2 amat(I))^(-1) avec(d)
+  Ev_star (xv) = amat(K)(xv, X_b) (amat(K)_(b b) + sigma_n^2 amat(I))^(-1) avec(d)
 $
 and the posterior covariance is the Schur complement of the conditioning block,
 $
   amat(K)_star (xv, yv) = amat(K)(xv, yv)
-  - amat(K)(xv, X_b) (amat(K)_(b b) + sigma_"n"^2 amat(I))^(-1) amat(K)(X_b, yv)
+  - amat(K)(xv, X_b) (amat(K)_(b b) + sigma_n^2 amat(I))^(-1) amat(K)(X_b, yv)
 $
 Together they specify the posterior, again a Gaussian process,
 $
   Ev | avec(d) tilde cal(G P)(Ev_star, amat(K)_star)
 $
 The mean is the regularized best fit to the data, tempered by the prior and the noise. The covariance measures how underdetermined the field remains after conditioning, and is the solver's uncertainty.
-The noise variance $sigma_"n"^2$ trades off fitting the data against trusting the prior: as $sigma_"n"^2 -> 0$ the posterior mean interpolates the observations exactly, while $sigma_"n"^2 > 0$ relaxes this to a regression that smooths the fit.
+The noise variance $sigma_n^2$ trades off fitting the data against trusting the prior: as $sigma_n^2 -> 0$ the posterior mean interpolates the observations exactly, while $sigma_n^2 > 0$ relaxes this to a regression that smooths the fit.
 
 This is exact, infinite-dimensional GP regression: prior and posterior both live on the solution space.
 
@@ -142,7 +142,7 @@ $
 $
 so each direction contributes two scalar plane-wave features $avec(phi)_(j a) (xv) = av_(j a) exp(i kv_j dot xv)$, giving $F = 2 N_s$ features in total. The field becomes a finite superposition with one scalar coefficient per feature,
 $
-  Ev (rv) = sum_(j = 1)^(N_s) sum_(a = 1)^2 w_(j a) avec(phi)_(j a) (rv)
+  Ev (xv) = sum_(j = 1)^(N_s) sum_(a = 1)^2 w_(j a) avec(phi)_(j a) (xv)
 $
 
 These coefficients carry the prior. Gathering them in $avec(w) in CC^F$, the Gaussian measure becomes a finite circularly-symmetric complex Gaussian,
@@ -155,11 +155,11 @@ with covariance set by the quadrature weights, so directions that carry more of 
 
 Conditioning is now a finite linear-algebra problem. Evaluating the features at the observation points against $cal(R)$ gives the design matrix $amat(Phi) = amat(Phi)(X_b) in CC^(F times D_b)$, through which the data act on the coefficients, and the weight-space posterior is
 $
-  avec(w)_star = amat(A)^(-1) amat(Phi) avec(d) \/ sigma_"n"^2
+  avec(w)_star = amat(A)^(-1) amat(Phi) avec(d) \/ sigma_n^2
   quad
-  amat(A) = amat(W)^(-1) + amat(Phi) amat(Phi)^herm \/ sigma_"n"^2 in CC^(F times F)
+  amat(A) = amat(W)^(-1) + amat(Phi) amat(Phi)^herm \/ sigma_n^2 in CC^(F times F)
 $
-with the posterior mean field recovered as $Ev_star (rv) = amat(Phi)(rv)^herm avec(w)_star$.
+with the posterior mean field recovered as $Ev_star (xv) = amat(Phi)(xv)^herm avec(w)_star$.
 
 In the same features the kernel factors as
 $
@@ -167,7 +167,7 @@ $
 $
 so this $F times F$ weight-space solve and the $D_b times D_b$ function-space solve of the previous section are the same posterior, related by the matrix-inversion lemma. We are free to invert whichever is smaller, and the explicit EP features make the weight-space solve the cheaper choice whenever $F < D_b$.
 
-The model has a small set of hyperparameters: the spectral directions $kv_j$, the prior weights $amat(W)$, and the assumed noise $sigma_"n"$. In a Gaussian process these can be tuned by maximizing the marginal likelihood of the data, usually by gradient descent on its negative logarithm. We instead fix them on principled grounds. The directions come from the Fibonacci sphere, a quasi-uniform quadrature whose even coverage we prefer to keep, and the weights are fixed by that same quadrature. The noise is held fixed too, since its marginal-likelihood optimum is governed by the conditioning of the system rather than by the data.
+The model has a small set of hyperparameters: the spectral directions $kv_j$, the prior weights $amat(W)$, and the assumed noise $sigma_n$. In a Gaussian process these can be tuned by maximizing the marginal likelihood of the data, usually by gradient descent on its negative logarithm. We instead fix them on principled grounds. The directions come from the Fibonacci sphere, a quasi-uniform quadrature whose even coverage we prefer to keep, and the weights are fixed by that same quadrature. The noise is held fixed too, since its marginal-likelihood optimum is governed by the conditioning of the system rather than by the data.
 
 === Implementation `maxwellgp`
 
@@ -180,7 +180,7 @@ We refer to @felix for the full theory.
 The prior already solves the PDE in the interior, so conditioning turns it into a boundary value problem solver: observing the prescribed boundary trace yields the posterior field consistent with it.
 The relevant functional is the boundary trace. For the PEC Maxwell problem it is the tangential trace $cal(R) = pi_t$, evaluated at $N_b$ points on the boundary $partial D$, each carrying its outward normal $nv$.
 
-Although the prescribed boundary data is exact, we keep $sigma_"n"^2 > 0$. The finite feature space cannot represent the trace exactly, and the plane-wave Gram matrix is ill-conditioned, so a small noise acts as a Tikhonov regularizer that stabilizes the conditioning solve.
+Although the prescribed boundary data is exact, we keep $sigma_n^2 > 0$. The finite feature space cannot represent the trace exactly, and the plane-wave Gram matrix is ill-conditioned, so a small noise acts as a Tikhonov regularizer that stabilizes the conditioning solve.
 
 === Cavity Scattering
 
@@ -194,7 +194,7 @@ Convergence is governed by two parameters, the number of spectral directions $N_
 #pagebreak()
 == Boundary Element Method
 
-The boundary element method (BEM) is a deterministic, boundary-integral method. Its ansatz is a single-layer potential, which satisfies Maxwell's equations exactly. It leaves the surface density unknown and enforces the boundary condition by solving the resulting electric field integral equation, yielding a single solution.
+The boundary element method (BEM) is a deterministic, boundary-integral method @colton @buffa. Its ansatz is a single-layer potential, which satisfies Maxwell's equations exactly. It leaves the surface density unknown and enforces the boundary condition by solving the resulting electric field integral equation, yielding a single solution.
 
 === Formulation
 
@@ -202,9 +202,9 @@ The boundary element method (BEM) is a deterministic, boundary-integral method. 
 
 The Maxwell single-layer potential $Psi_"SL"$ is defined as
 $
-  Psi_"SL": Hv^(-1/2)(div_Gamma, partial D) -> Hv(curl, D)
+  Psi_"SL": H^(-1/2)(div_Gamma, partial D) -> H(curl, D)
   \
-  (Psi_"SL" avec(j))(xv) = i k integral_(partial D) amat(G)(xv, yv) avec(j)(yv) dif s(yv)
+  (Psi_"SL" avec(j))(xv) = i k integral_(partial D) amat(G)(xv; yv) avec(j)(yv) dif s(yv)
 $
 where $amat(G)$ is the free-space electric dyadic Green's function of the Helmholtz curl--curl equation and $avec(j): partial D -> T (partial D)$ is a tangential boundary density.
 
@@ -228,7 +228,7 @@ $
 
 The Maxwell single-layer operator $cal(V)$ is obtained by applying the rotated tangential trace $gamma_times$ to the single-layer potential.
 $
-  cal(V): Hv^(-1/2)(div_Gamma, partial D) -> Hv^(-1/2)(curl_Gamma, partial D)
+  cal(V): H^(-1/2)(div_Gamma, partial D) -> H^(-1/2)(curl_Gamma, partial D)
   \
   cal(V) := gamma_times Psi_"SL"
 $
@@ -342,7 +342,7 @@ $
   amat(V)_(a b) = i k integral_(partial D) integral_(partial D) Phi(xv, yv) (avec(phi)_a (xv) dot avec(phi)_b (yv) - 1/k^2 div_Gamma avec(phi)_a (xv) div_Gamma avec(phi)_b (yv)) dif s(yv) dif s(xv)
 $
 
-The surface divergence $div_Gamma avec(phi)$ appears in the bilinear form, so the basis must keep it square-integrable. This requires div-conforming elements, whose normal component is continuous across element edges. Bembel uses div-conforming isogeometric B-splines, the higher-order spline analogue of Raviart--Thomas elements, matching the $Hv^(-1/2)(div_Gamma, partial D)$ trace space of $cal(V)$.
+The surface divergence $div_Gamma avec(phi)$ appears in the bilinear form, so the basis must keep it square-integrable. This requires div-conforming elements, whose normal component is continuous across element edges. Bembel uses div-conforming isogeometric B-splines, the higher-order spline analogue of Raviart--Thomas elements, matching the $H^(-1/2)(div_Gamma, partial D)$ trace space of $cal(V)$.
 
 ==== Linear Solver
 
