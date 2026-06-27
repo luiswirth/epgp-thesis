@@ -118,7 +118,7 @@ The benchmark fixes $k = 2$. A cavity resonance, where the interior boundary val
 
 #figure(
   image("../../res/sphere_epgp_ksweep.svg", width: 78%),
-  caption: [Wavenumber sweep on the spherical cavity: smallest singular value $sigma_min$ versus $k$, with the analytic resonances (dashed) and the benchmark $k = 2$.],
+  caption: [Wavenumber sweep, spherical cavity.],
 ) <fig:sphere-ksweep>
 
 == Ellipsoidal Cavity
@@ -129,7 +129,7 @@ The same wavenumber sweep on the ellipsoid is shown in @fig:ellipse-ksweep. No a
 
 #figure(
   image("../../res/ellipse_epgp_ksweep.svg", width: 78%),
-  caption: [Wavenumber sweep on the ellipsoidal cavity: smallest singular value $sigma_min$ versus $k$, with the benchmark $k = 2$.],
+  caption: [Wavenumber sweep, ellipsoidal cavity.],
 ) <fig:ellipse-ksweep>
 
 === EPGP Field
