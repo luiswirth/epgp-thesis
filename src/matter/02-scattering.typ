@@ -230,11 +230,16 @@ $
 
 === Reaction Operator
 
-A single transmit-receive pair yields one number, the reaction $r(delta_t, delta_r)$. The object of study for the benchmark is the full map from excitation to response, which we now assemble from this pair.
+A single transmit-receive pair yields one number, the reaction $r(delta_t, delta_r)$.
+We now extend to a whole ensemble of dipoles.
 
-Transmitter and receiver are the same kind of object. Both are tangential dipoles on $Lambda$, and reciprocity makes their roles interchangeable, so there is no reason to keep two separate families. A single set of dipoles on $Lambda$ serves as transmitters and receivers at once, each dipole both radiating and reading.
+Transmitter and receiver are the same kind of object, both dipoles.
+By reciprocity their roles are interchangeable, so there is no reason to keep two separate families.
+A single set of dipoles serves both as transmitters and as receivers.
 
-A single dipole, though, is a point excitation. The object that naturally contains it is a continuous density of dipoles spread over $Lambda$, each still doing both jobs. We develop this continuous picture first, and discretize afterwards.
+We restrict all dipoles to a common surface $Lambda subset.eq D$, with locations $zv in Lambda$ and polarizations $pv in T_zv Lambda$ tangent to it.
+
+Acting together, this set of dipoles excites the field and reads it back. We are interested in the map from the full excitation to the full response, the reaction operator.
 
 ==== Continuous Operator
 
@@ -244,45 +249,66 @@ $
   quad
   avec(g)(zv) in T_zv Lambda,
 $
-assigning a dipole polarization $avec(g)(zv)$ to each point of $Lambda$. A single dipole $delta = (zv_0, pv)$ is the singular special case $avec(g) = pv delta_(zv_0)$.
+assigning a dipole polarization $avec(g)(zv)$ to each point of $Lambda$.
+A single dipole $delta = (zv_0, pv)$ is the singular special case
+$
+  avec(g) = pv delta_(zv_0)
+$
 
-By linearity of the problem, the density excites a scattered field that superposes the fields of its constituent dipoles,
+By linearity of the problem, the density excites a single incident field that superposes the fields of its constituent dipoles,
+$
+  Ev^i [avec(g)] (xv) = integral_Lambda Ev^i (xv; (zv, avec(g)(zv))) dif s(zv),
+$
+which is reflected into a single scattered field,
 $
   Ev^s [avec(g)] (xv) = integral_Lambda Ev^s (xv; (zv, avec(g)(zv))) dif s(zv).
 $
-Reading this field back on $Lambda$, the tangential trace a receiver density would measure, defines the continuous reaction operator
-$
-  cal(T): avec(g) |-> pi_t^Lambda Ev^s [avec(g)] |_Lambda.
-$
-Excitation and response are tangential vector fields of the same kind, so $cal(T)$ maps the space of tangential vector fields on $Lambda$ to itself.
 
-Being linear, $cal(T)$ is an integral operator. Its kernel is the point-to-point reaction, the tangential response at $zv'$ to a unit dipole $pv$ at $zv$,
+Reading the scattered field back on $Lambda$ gives the response density $avec(m): Lambda -> T Lambda$, the tangential projection trace of the scattered field.
 $
-  (cal(T) avec(g))(zv') = integral_Lambda amat(T)(zv', zv) avec(g)(zv) dif s(zv),
-  quad
-  amat(T)(zv', zv) pv := pi_t^Lambda Ev^s (zv'; (zv, pv)).
+  avec(m) := pi_t^Lambda Ev^s [avec(g)].
 $
-The kernel $amat(T)(zv', zv): T_zv Lambda -> T_(zv') Lambda$ is a tangential dyadic, and reciprocity makes it symmetric under exchanging the two points and transposing,
+
+The reaction operator is defined as the map from the excitation density to the response density,
 $
-  amat(T)(zv', zv) = amat(T)(zv, zv')^transp,
+  cal(T): avec(g) |-> avec(m).
 $
-so $cal(T)$ is complex-symmetric, not Hermitian.
+
+
+$cal(T)$ is a linear integral operator
+$
+  (cal(T) avec(g))(xv) = integral_Lambda amat(T)(xv, zv) avec(g)(zv) dif s(zv)
+$
+
+Its integral kernel $amat(T)$ is the point-to-point reaction, the response at $xv$ to a unit dipole $pv$ at $zv$,
+$
+  amat(T)(xv, zv): T_zv Lambda -> T_(xv) Lambda
+  \
+  amat(T)(xv, zv) pv := pi_t^Lambda Ev^s (xv; (zv, pv)).
+$
+
+Reciprocity makes the kernel and the operator complex-symmetric (not Hermitian): exchanging the two points and transposing leaves the kernel unchanged,
+$
+  amat(T)(xv, zv) = amat(T)(zv, xv)^transp
+$
+
+The scalar reaction is this kernel as a bilinear form in the two polarizations, one slot per dipole,
+$
+  r(delta_t, delta_r) = pv_r^transp amat(T)(zv_r, zv_t) pv_t.
+$
 
 ==== Discretization
 
-To compute with $cal(T)$ we discretize it on a finite set of dipoles. We sample $N_Lambda$ points $zv_n in Lambda$ and equip each with an orthonormal tangent basis $en_1(zv_n), en_2(zv_n)$ of $T_(zv_n) Lambda$, chosen to vary smoothly over the surface. Each point-and-polarization pair is one dipole $delta_(n a) = (zv_n, en_a(zv_n))$.
+To compute with $cal(T)$ we discretize it on a finite set of dipoles. We sample $N_Lambda$ points on $Lambda$ and give each an orthonormal tangent basis of two vectors, varying smoothly over the surface. Each point thus carries two dipoles, one per basis vector, for $M = 2 N_Lambda$ in total.
 
-Evaluating the kernel between two such dipoles gives the entries of the reaction matrix, each one a reaction between a pair of dipoles,
+We enumerate the dipoles by a single index $i in {1, ..., M}$, writing $delta_i = (zv_i, pv_i)$ for the dipole with location $zv_i$ and unit polarization $pv_i$. Consecutive pairs share a location, the two polarizations at one point.
+
+The discretized operator is then a matrix $amat(T) in CC^(M times M)$, whose entries are the kernel evaluated at the two dipoles $delta_i$ and $delta_j$,
 $
-  amat(T)_(n' a', n a) = en_(a')(zv_(n')) dot amat(T)(zv_(n'), zv_n) en_a(zv_n) = r(delta_(n a), delta_(n' a')).
+  amat(T)_(i j) = pv_i^transp amat(T)(zv_i, zv_j) pv_j = r(delta_j, delta_i),
 $
-Collecting the $M = 2 N_Lambda$ dipoles under a single index gives the square reaction matrix
-$
-  amat(T) in CC^(M times M),
-  quad
-  M = 2 N_Lambda,
-$
-which inherits the symmetry of the kernel,
+
+inheriting the kernel's symmetry,
 $
   amat(T) = amat(T)^transp.
 $
@@ -299,7 +325,7 @@ $
   Lambda := { xv in RR^3 mid(:) norm(xv) = 1 } subset.eq D
 $
 
-We choose $N_Lambda = 32$ dipole locations ${zv_1, ..., zv_(N_Lambda)}$ using a low-discrepancy quasi-uniform Fibonacci sphere distribution.
+We choose $N_Lambda = 32$ dipole locations using a low-discrepancy quasi-uniform Fibonacci sphere distribution.
 Together with the 2 polarizations per point, this gives $M = 2 N_Lambda = 64$ configurations.
 
 There are two cavity geometries: an ellipsoidal cavity and a spherical cavity. The ellipsoidal cavity is the original geometry from @cavity, while the spherical cavity is a new addition that allows for an analytic solution.
@@ -385,7 +411,7 @@ $
 
 Evaluating the scattered field on the dipole surface $Lambda$ ($r = r_0$) and taking its tangential trace gives the measured response,
 $
-  pi_t^Lambda Ev^s|_Lambda
+  pi_t^Lambda Ev^s
   = -sum_(l m) (
     R/r_0 (psi_l'(k r_0))/(psi_l'(k R)) p_(l m) avec(Psi)_(l m)
     + (j_l (k r_0))/(j_l (k R)) q_(l m) avec(Phi)_(l m)
