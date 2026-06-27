@@ -102,7 +102,7 @@ The BEM is deterministic, so it returns the operator without an uncertainty esti
 
 ==== Convergence
 
-@fig:sphere-bem-conv splits this convergence into two panels, each a family of curves over one fixed parameter. The left panel performs $h$-refinement, varying the mesh level $m$ at each fixed polynomial degree $p$, plotted against degrees of freedom on log--log axes. Algebraic convergence appears as a straight line there, and each curve is one, with a slope that steepens with $p$, tracking the $prop N^(-3\/2)$ reference. The right panel performs $p$-refinement, varying $p$ at each fixed mesh level, plotted against $p$ on a semilog axis. Geometric convergence appears as a straight line there, and each curve is one. The two refinements thus behave as the theory predicts, and the finest resolutions reach $epsilon approx 3 times 10^(-12)$. The only exception is the $p = 5$, $m = 4$ point, which ticks back up as it reaches the floor of attainable accuracy.
+@fig:sphere-bem-conv splits this convergence into two panels, each a family of curves over one fixed parameter. The left panel performs $h$-refinement, varying the mesh level $m$ at each fixed polynomial degree $p$, plotted against degrees of freedom on log--log axes. Algebraic convergence appears as a straight line there, and each curve is one, with a slope that steepens with $p$; a $prop N^(-3\/2)$ reference line is included for comparison. The right panel performs $p$-refinement, varying $p$ at each fixed mesh level, plotted against $p$ on a semilog axis. Geometric convergence appears as a straight line there, and each curve is one. The two refinements thus behave as the theory predicts, and the finest resolutions reach $epsilon approx 3 times 10^(-12)$. The only exception is the $p = 5$, $m = 4$ point, which ticks back up as it reaches the floor of attainable accuracy.
 
 #figure(
   image("../../res/bem_sphere_convergence.svg"),
@@ -110,11 +110,27 @@ The BEM is deterministic, so it returns the operator without an uncertainty esti
 ) <fig:sphere-bem-conv>
 
 #pagebreak(weak: true)
+=== Wavenumber Sweep
+
+The benchmark fixes $k = 2$. A cavity resonance, where the interior boundary value problem is not uniquely solvable, would make the reconstruction ill-posed, so we check that $k = 2$ avoids one. We sweep $k$ and record the smallest singular value $sigma_min$ of the orthonormalized boundary trace of the plane-wave feature space, which collapses toward zero at a resonance and is bounded away from it otherwise.
+
+@fig:sphere-ksweep shows the sweep on the sphere over $k in [1.5, 2.5]$. Every dip of $sigma_min$ coincides with an analytic resonance of the sphere (dashed), so the diagnostic locates resonances correctly. The benchmark wavenumber $k = 2$ sits at a local maximum, far from any resonance, confirming that it is non-resonant.
+
+#figure(
+  image("../../res/sphere_epgp_ksweep.svg", width: 78%),
+  caption: [Wavenumber sweep on the spherical cavity: smallest singular value $sigma_min$ versus $k$, with the analytic resonances (dashed) and the benchmark $k = 2$.],
+) <fig:sphere-ksweep>
+
 == Ellipsoidal Cavity
 
 The ellipsoidal cavity has semi-axes $(4, 4, 6)$, keeping the same interior surface $Lambda$ and wavenumber $k = 2$. Unlike the sphere, it admits no analytic operator: the ellipsoid does not separate the vector Helmholtz equation in any standard coordinate system, so no closed-form eigenfunction expansion exists. The high-fidelity BEM solution therefore serves as the reference.
 
-One caveat concerns the wavenumber. $k = 2$ lies only $approx 0.0015$ above an interior resonance near $1.9985$, but its effect on the condition number is mild and both solvers converge cleanly, so $k = 2$ is operationally non-resonant.
+The same wavenumber sweep on the ellipsoid is shown in @fig:ellipse-ksweep. No analytic resonances are available for comparison, but $k = 2$ again sits at a local maximum of $sigma_min$, away from the dips, so it is non-resonant for this geometry too.
+
+#figure(
+  image("../../res/ellipse_epgp_ksweep.svg", width: 78%),
+  caption: [Wavenumber sweep on the ellipsoidal cavity: smallest singular value $sigma_min$ versus $k$, with the benchmark $k = 2$.],
+) <fig:ellipse-ksweep>
 
 === EPGP Field
 
@@ -192,7 +208,7 @@ All runs were carried out on the Euler cluster, each on a single exclusive AMD E
 
 At the same reciprocity error the EPGP is two to three orders of magnitude faster, reaching $rho approx 10^(-9)$ to $10^(-10)$ in about $10$ s. The BEM is cheaper only at loose tolerance. For any demanding accuracy the EPGP is the cheaper solver.
 
-These wall times reflect two particular implementations, a compiled C++ solver and a Python/JAX one, so the absolute factor mixes implementation quality with algorithmic cost. The implementation-independent comparison is asymptotic. Both solvers factor their system once and reuse it across the $M = 64$ dipole right-hand sides. The dense BEM factorization costs $cal(O)(N^3)$ in the $N tilde p^2 4^m$ surface degrees of freedom, while the EPGP factorization costs $cal(O)(N_s^2 N_b)$ in the $N_s$ spectral features and $N_b$ boundary points.
+These wall times reflect two particular implementations, a compiled C++ solver and a Python/JAX one, so the absolute factor mixes implementation quality with algorithmic cost. The implementation-independent comparison is asymptotic. Both solvers factor their system once and reuse it across the $M = 64$ dipole right-hand sides. The dense BEM factorization costs $cal(O)(N^3)$ in the $N tilde p^2 4^m$ surface degrees of freedom, while the EPGP system assembly costs $cal(O)(N_s^2 N_b)$ and its factorization $cal(O)(N_s^3)$; since $N_b > N_s$ in practice, assembly dominates.
 
 #figure(
   image("../../res/pareto_ellipse.svg"),
@@ -219,7 +235,7 @@ These wall times reflect two particular implementations, a compiled C++ solver a
       [DOFs],           ..bem-runs.map(r => [#r.at(2)]),
       [mem [GiB]],      ..bem-runs.map(r => if float(r.at(4)) > 0 { [#calc.round(float(r.at(4)) / 1048576.0, digits: 1)] } else { [---] }),
       [$t$ [s]],        ..bem-runs.map(r => [#r.at(3)]),
-      [cond $amat(A)$], ..bem-runs.map(r => sci(r.at(5))),
+      [cond $amat(V)$], ..bem-runs.map(r => sci(r.at(5))),
       [$rho$],          ..bem-runs.map(r => sci(r.at(7))),
     )],
     caption: [BEM convergence on the ellipsoidal cavity.],

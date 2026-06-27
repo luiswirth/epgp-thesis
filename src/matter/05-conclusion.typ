@@ -8,7 +8,7 @@ We established a high-fidelity benchmark for the Maxwell EPGP method. The cavity
 
 On the spherical cavity, where the analytic operator is available, BEM matches the ground truth to $approx 3 times 10^(-12)$ and EPGP to $approx 1.3 times 10^(-10)$, certifying each independently. On the ellipsoidal cavity, where no analytic solution exists, the two solvers agree to about $10^(-8)$. Since both were already certified on the sphere, this agreement validates them on a geometry with no ground truth. The agreement of a boundary-integral and a spectral plane-wave method, which share no numerical machinery, is strong evidence that both are correct.
 
-Beyond matching the reference, the EPGP satisfies the time-harmonic Maxwell equations exactly by construction, needs no surface mesh, and provides a posterior uncertainty estimate as a byproduct. It is also the cheaper solver at any demanding tolerance, reaching a given reciprocity error two to three orders of magnitude faster than the BEM. The benchmark thus establishes the EPGP as a Maxwell-consistent, uncertainty-aware surrogate for the interior cavity reaction operator, and the cheaper solver at any demanding tolerance.
+Beyond matching the reference, the EPGP satisfies the time-harmonic Maxwell equations exactly by construction, needs no surface mesh, and provides a posterior uncertainty estimate as a byproduct. It is also the cheaper solver at any demanding tolerance, reaching a given reciprocity error two to three orders of magnitude faster than the BEM. The benchmark thus establishes the EPGP as a Maxwell-consistent, uncertainty-aware surrogate for the interior cavity reaction operator.
 
 == Limitations
 
@@ -18,7 +18,7 @@ The validation rests most firmly on the spherical cavity, where each solver is c
 
 Both test geometries, and the dipole surface $Lambda$, are fairly symmetric. A defect that appears only on strongly asymmetric domains would therefore not be caught here, though we have no specific reason to expect one.
 
-The benchmark is also confined to a single wavenumber and geometry pair. A sweep of the condition number around $k = 2$ confirms that it is operationally non-resonant, but the accuracy itself is validated only at $k = 2$.
+The benchmark is also confined to a single wavenumber and geometry pair. A wavenumber sweep confirms that $k = 2$ avoids the cavity resonances, but the accuracy itself is validated only at $k = 2$.
 
 ==== Cost Comparison
 

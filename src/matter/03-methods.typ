@@ -47,7 +47,7 @@ $
   uv(xv) = integral_V amat(Phi)_kv (xv) avec(w)(kv) dif kv
 $
 
-==== Time-Harmonic Maxwell's Equation
+==== Time-Harmonic Maxwell's Equations
 
 We specialize to the time-harmonic Maxwell's equations, equivalently the curl--curl Helmholtz equation. Its symbol, with the wavenumber $k$, is
 $

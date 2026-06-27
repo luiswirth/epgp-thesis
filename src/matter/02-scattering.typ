@@ -66,13 +66,13 @@ It is an interior problem in a bounded cavity.
 
 The problem is set up as follows:\
 A dipole source $delta_t$ is placed in the interior of a cavity $D$ and acts as a transmitter.
-It radiates an analytically-known incident field $Ev^i$. The incident field hits the cavity boundary $partial D$ and is reflected by it, creating an unknown scattered field $Ev^s$. The scattered field is read back by another dipole $delta_r$ acting as the receiver.
+It radiates an analytically known incident field $Ev^i$. The incident field hits the cavity boundary $partial D$ and is reflected by it, creating an unknown scattered field $Ev^s$. The scattered field is read back by another dipole $delta_r$ acting as the receiver.
 
 The total field is the superposition of the incident and scattered part,
 $
   Ev = Ev^i + Ev^s
 $
-where the scattered field satisfies the source-free curl--curl equation in the interior, while the incident field and the sum only satisfy it away from the source.
+where the scattered field satisfies the source-free curl--curl equation in the interior, while the incident field and the total field only satisfy it away from the source.
 
 The object of study is the mapping from a transmitter dipole to the measured response at a receiver dipole.
 
@@ -208,7 +208,7 @@ The receiver dipole $delta_r = (zv_r, pv_r)$ measures the scattered field $Ev^s$
 
 Mathematically this is a linear functional $cal(R): C^oo (D; CC^3) -> CC$ defined as
 $
-  cal(R)(Ev^s) := pv_r dot Ev^s (zv_r; delta_t)
+  cal(R)(Ev^s) := pv_r dot Ev^s (zv_r)
 $
 
 
