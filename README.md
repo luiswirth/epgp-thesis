@@ -15,16 +15,3 @@ For the implementation itself, see
 Requires [Typst](https://typst.app/).
 - `./build.sh` compiles `out/thesis.pdf`;
 - `./watch.sh` recompiles on save. 
-
-## Reproducing the results
-
-The four code repositories are independent; cross-repo dependencies resolve over
-https, so no particular directory layout is required. The benchmark harness can
-gather solver outputs from a cluster or from local sibling checkouts. End to end:
-
-1. Clone the four repos (side by side under one directory is convenient but not required).
-2. Produce the reaction operators with each solver, either locally
-   (`./run_local.sh grid` / `ref` in `cavity-bem` and `cavity-epgp`) or on a
-   SLURM cluster (`euler/{submit_grid.sh, submit_ref.sh}`).
-3. In `cavity-benchmark`: collect the outputs (`./pull-euler.sh`) and run `uv run make-figures`.
-4. In this repo: `./pull-results.sh` then `./build.sh`.

@@ -185,7 +185,7 @@ The BEM operator is the reference for this geometry. As for the EPGP, the absenc
 
 === Wavenumber Sweep
 
-The $k$-sweep on the ellipsoid is shown in @fig:ellipse-ksweep. No analytic resonances are available for comparison, and unlike the sphere the benchmark wavenumber sits close to one: $k = 2$ lies only $approx 0.0013$ above an interior resonance near $1.9987$, where $sigma_min$ dips to $approx 1.5 times 10^(-3)$. The dip is small but nonzero, so the boundary value problem remains solvable and both solvers converge cleanly. The benchmark is thus operationally non-resonant, though by a narrow margin.
+The $k$-sweep on the ellipsoid is shown in @fig:ellipse-ksweep. Unlike the sphere the benchmark wavenumber sits close to one: $k = 2$ lies only $Delta k approx 0.0013$ above an interior resonance near $k approx 1.9987$, where $sigma_min$ dips to $approx 1.5 times 10^(-3)$. The dip is small but nonzero, so the boundary value problem remains solvable and both solvers converge cleanly. The benchmark is thus operationally non-resonant, though by a narrow margin.
 
 #figure(
   image("../../res/ellipse_epgp_ksweep.svg", width: 78%),
