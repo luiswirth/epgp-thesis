@@ -125,13 +125,6 @@ The benchmark fixes $k = 2$. A cavity resonance, where the interior boundary val
 
 The ellipsoidal cavity has semi-axes $(4, 4, 6)$, keeping the same interior surface $Lambda$ and wavenumber $k = 2$. Unlike the sphere, it admits no analytic operator: the ellipsoid does not separate the vector Helmholtz equation in any standard coordinate system, so no closed-form eigenfunction expansion exists. The high-fidelity BEM solution therefore serves as the reference.
 
-The same wavenumber sweep on the ellipsoid is shown in @fig:ellipse-ksweep. No analytic resonances are available for comparison, but $k = 2$ again sits at a local maximum of $sigma_min$, away from the dips, so it is non-resonant for this geometry too.
-
-#figure(
-  image("../../res/ellipse_epgp_ksweep.svg", width: 78%),
-  caption: [Wavenumber sweep, ellipsoidal cavity.],
-) <fig:ellipse-ksweep>
-
 === EPGP Field
 
 We repeat the qualitative inspection of the previous section, visualizing the EPGP posterior for the same transmitter dipole at $zv = (0, 0, 1)$ on $Lambda$, polarized along $x$, on the same $x z$-plane through the cavity. The elongated geometry breaks the spherical symmetry, and the contrast with the sphere is the point of interest.
@@ -189,6 +182,15 @@ The BEM operator is the reference for this geometry. As for the EPGP, the absenc
   image("../../res/bem_ellipse_convergence.svg"),
   caption: [BEM reciprocity error on the ellipsoidal cavity.],
 ) <fig:ellipse-bem-conv>
+
+=== Wavenumber Sweep
+
+The same sweep on the ellipsoid is shown in @fig:ellipse-ksweep. No analytic resonances are available for comparison, but $k = 2$ again sits at a local maximum of $sigma_min$, away from the dips, so it is non-resonant for this geometry too.
+
+#figure(
+  image("../../res/ellipse_epgp_ksweep.svg", width: 78%),
+  caption: [Wavenumber sweep, ellipsoidal cavity.],
+) <fig:ellipse-ksweep>
 
 === Comparison
 
