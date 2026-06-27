@@ -1,8 +1,9 @@
 #!/bin/bash
 # Copy figures and CSVs from cavity-benchmark into thesis res/.
-# Run from the epgp-thesis root.
+# Run from the epgp-thesis root. Set BENCH to the cavity-benchmark checkout
+# (defaults to a sibling directory):  BENCH=/path/to/cavity-benchmark ./pull-results.sh
 set -euo pipefail
-BENCH=../cavity-benchmark
+BENCH="${BENCH:-../cavity-benchmark}"
 FIGS=$BENCH/out/figs
 
 cp "$FIGS/pareto_sphere.svg"            res/

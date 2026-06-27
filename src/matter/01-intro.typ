@@ -17,7 +17,7 @@ learning them from data.
 Many physical laws take the form of *partial differential equations (PDEs)*, and
 there are two ways to make a model respect such a law. Weak enforcement adds the
 PDE residual as a penalty in the training objective, so the constraint is only
-satisfied approximately and is traded off against the data; the physics-informed
+satisfied approximately and is traded off against the data. The physics-informed
 neural network (PINN) is the canonical example @raissi. *Strong enforcement* instead restricts
 the model to functions that satisfy the equation identically by construction.
 *Structure preservation* is the key advantage: unphysical phenomena, such as

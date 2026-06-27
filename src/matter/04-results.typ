@@ -9,7 +9,7 @@
   key: r => int(r.at(0))
 )
 
-= Results and Discussion
+= Benchmark Results
 
 We present results for two cavity geometries, which differ in what we can validate against.
 On the spherical cavity a closed-form reaction operator is available, so each solver is validated independently against ground truth, establishing that both are correct.

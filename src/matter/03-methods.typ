@@ -175,14 +175,14 @@ The prior and posterior above are implemented in the `maxwellgp` library @felix 
 The observation functional $cal(R)$ is supplied to the library and realized through the feature map. Only $cal(R)$ changes between applications, while the plane-wave features, the prior weights, the directions, and the posterior solve are identical.
 We refer to @felix for the full theory.
 
-=== Boundary Value Problems
+=== EPGP for Boundary Value Problems
 
 The prior already solves the PDE in the interior, so conditioning turns it into a boundary value problem solver: observing the prescribed boundary trace yields the posterior field consistent with it.
 The relevant functional is the boundary trace. For the PEC Maxwell problem it is the tangential trace $cal(R) = pi_t$, evaluated at $N_b$ points on the boundary $partial D$, each carrying its outward normal $nv$.
 
 Although the prescribed boundary data is exact, we keep $sigma_n^2 > 0$. The finite feature space cannot represent the trace exactly, and the plane-wave Gram matrix is ill-conditioned, so a small noise acts as a Tikhonov regularizer that stabilizes the conditioning solve.
 
-=== Cavity Scattering
+=== EPGP for Cavity Scattering
 
 The `cavity-epgp` layer specializes the BVP solver to the cavity scattering problem. The cavity enters only through the boundary data, and the prior is unchanged.
 The transmitter dipole sets the boundary trace: conditioning on the prescribed scattered-field trace $avec(d) = -pi_t Ev^i$ at the $N_b$ boundary points enforces the PEC condition and yields the posterior scattered field $Ev^s_star$.
@@ -261,7 +261,7 @@ $
   cal(S) = Psi_"SL" cal(V)^(-1)
 $
 
-=== Cavity Scattering
+=== BEM for Cavity Scattering
 
 ==== PEC Boundary Condition
 
