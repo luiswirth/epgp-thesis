@@ -112,7 +112,7 @@ The BEM is deterministic, so it returns the operator without an uncertainty esti
 #pagebreak(weak: true)
 === Wavenumber Sweep
 
-The benchmark fixes $k = 2$. A cavity resonance, where the interior boundary value problem is not uniquely solvable, would make the reconstruction ill-posed, so we check that $k = 2$ avoids one. We sweep $k$ and record the smallest singular value $sigma_min$ of the orthonormalized boundary trace of the plane-wave feature space, which collapses toward zero at a resonance and is bounded away from it otherwise.
+The benchmark fixes $k = 2$. A cavity resonance, where the interior boundary value problem is not uniquely solvable, would make the reconstruction ill-posed, so we check that $k = 2$ avoids one. We sweep $k$ and record $sigma_min$, the smallest singular value of the boundary tangential trace over the orthonormalized plane-wave feature space. It measures how nearly some interior field attains a zero boundary trace, so it collapses toward zero at a cavity resonance and is bounded away from it otherwise.
 
 @fig:sphere-ksweep shows the sweep on the sphere over $k in [1.5, 2.5]$. Every dip of $sigma_min$ coincides with an analytic resonance of the sphere (dashed), so the diagnostic locates resonances correctly. The benchmark wavenumber $k = 2$ sits at a local maximum, far from any resonance, confirming that it is non-resonant.
 
