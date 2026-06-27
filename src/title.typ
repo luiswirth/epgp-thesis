@@ -41,10 +41,12 @@
     operator with the EPGP and compare it against an independent boundary
     element method (BEM) reference using Bembel. We investigate two cavity geometries.
     On the spherical cavity, where the reaction operator is available in closed form,
-    both solvers match it to about $10^(-10)$. On the ellipsoidal cavity, which admits no analytic solution, the 
-    EPGP agrees with the BEM reference to about $10^(-8)$. This provides strong
-    evidence that both solvers are correct. We further study convergence, the
-    accuracy--runtime trade-off, and uncertainty quantification.
+    both solvers match it to between $10^(-10)$ and $10^(-12)$. On the ellipsoidal cavity, which admits no analytic solution, the
+    EPGP agrees with the BEM reference to about $10^(-8)$. This establishes the
+    EPGP as an accurate, Maxwell-consistent solver for the interior cavity
+    problem and certifies the reaction operator as a robust reference benchmark.
+    We further study convergence, the accuracy--runtime trade-off, and
+    uncertainty quantification.
   ]
 
 #v(0.3cm)

@@ -83,7 +83,6 @@ $
   Ev (xv) = integral_(V_k) amat(Phi)_kv (xv) avec(w)(kv) dif kv
 $
 
-#pagebreak()
 === Gaussian Maxwell Prior
 
 Since the field is linear in the weight, a Gaussian measure on $avec(w)$ makes the field a Gaussian process,
@@ -191,7 +190,6 @@ The $M = 2 N_Lambda$ transmitters share the same $N_b$ conditioning points and d
 Convergence is governed by two parameters, the number of spectral directions $N_s$ and the number of boundary conditioning points $N_b$.
 
 
-#pagebreak()
 == Boundary Element Method
 
 The boundary element method (BEM) is a deterministic, boundary-integral method @colton @buffa. Its ansatz is a single-layer potential, which satisfies Maxwell's equations exactly. It leaves the surface density unknown and enforces the boundary condition by solving the resulting electric field integral equation, yielding a single solution.

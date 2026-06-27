@@ -28,7 +28,6 @@ $
   norm(amat(T))_"op" <= norm(amat(T))_"F"
 $
 
-#pagebreak(weak: true)
 == Spherical Cavity
 
 The spherical cavity is a PEC sphere of radius $R = 4$.
@@ -109,7 +108,6 @@ The BEM is deterministic, so it returns the operator without an uncertainty esti
   caption: [BEM convergence on the spherical cavity versus analytic reference.],
 ) <fig:sphere-bem-conv>
 
-#pagebreak(weak: true)
 === Wavenumber Sweep
 
 The benchmark fixes $k = 2$. A cavity resonance, where the interior boundary value problem is not uniquely solvable, would make the reconstruction ill-posed, so we check that $k = 2$ avoids one. We sweep $k$ and record $sigma_min$, the smallest singular value of the boundary tangential trace over the orthonormalized plane-wave feature space. It measures how nearly some interior field attains a zero boundary trace, so it collapses toward zero at a cavity resonance and is bounded away from it otherwise.
