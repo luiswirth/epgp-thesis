@@ -101,7 +101,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Where: abstract, "…an independent boundary element method (BEM) reference using Bembel."
   Fix: cite Dölz et al. 2020 at first mention of Bembel in the abstract.
 
-- [ ] **2. [V2-DO] "between 10⁻¹⁰ and 10⁻¹²" — between what? (p.1)**
+- [x] **2. [V2-DO] "between 10⁻¹⁰ and 10⁻¹²" — between what? (p.1)**
   Verbatim: *"Between what? Relative accuracy in appropriate norms?"* (on "between").
   Where: abstract, "…both solvers match it to between 10⁻¹⁰ and 10⁻¹²."
   Fix: state that these are relative errors in the Frobenius norm (as defined in
@@ -366,7 +366,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   wave reading as consistent-with rather than demonstrated. The Poynting-vector
   computation is [PAPER] (backlog). Do NOT add a Poynting plot in V2.
 
-- [ ] **34. [V2-DO] ⚠ SUBSTANTIVE: "10⁻³ is small" needs normalization + σ_n (p.19)**
+- [x] **34. [V2-DO] ⚠ SUBSTANTIVE: "10⁻³ is small" needs normalization + σ_n (p.19)**
   Verbatim: *"Hm... Why is 10^-3 deemed small? The uncertainty is a physical quantity
   and bears the same physical dimension as the field, so '10^-3 = small' does not
   make sense per se. - What is the chosen normalization? One might safely say 'The
@@ -456,7 +456,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
 
 ## Chapter 4 — comparison & cost
 
-- [ ] **42. [V2-DO] "to" — in which norm? ×3 (p.29)**
+- [x] **42. [V2-DO] "to" — in which norm? ×3 (p.29)**
   Verbatim: *"In which norm?"* (on "to", three occurrences)
   Where: §5.1 Summary, "matches the ground truth to ≈…", "agree to about 10⁻⁸", etc.
   Fix: specify the norm (relative Frobenius) for each match/agreement figure. Same

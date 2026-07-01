@@ -168,7 +168,7 @@ Substituting this discretized kernel into the function-space mean and applying t
 
 ==== Hyperparameters
 
-The model has three hyperparameters: the spectral directions $kv_j$, the prior weights $amat(W)$, and the regularization parameter $sigma_n$. In a Gaussian process these can be tuned by maximizing the marginal likelihood of the data, usually by gradient descent on its negative logarithm. We instead fix them on principled grounds. The directions come from the Fibonacci sphere, whose even coverage we prefer to keep. The prior weights are set to $amat(W) = amat(I)$, treating all spectral directions equally. The regularization parameter is held fixed, since its marginal-likelihood optimum is governed by the condition number of the system rather than by the data.
+The model has three hyperparameters: the spectral directions $kv_j$, the prior weights $amat(W)$, and the regularization parameter $sigma_n$. In a Gaussian process these can be tuned by maximizing the marginal likelihood of the data, usually by gradient descent on its negative logarithm. We instead fix them on principled grounds. The directions come from the Fibonacci sphere, whose even coverage we prefer to keep. The prior weights are set to $amat(W) = amat(I)$, treating all spectral directions equally. The regularization parameter is held fixed, since its marginal-likelihood optimum is governed by the condition number of the system rather than by the data. #hl[In all benchmark runs it is fixed to $sigma_n^2 = e^(-12) approx 6.1 times 10^(-6)$, that is $sigma_n = e^(-6) approx 2.5 times 10^(-3)$.]
 
 === Implementation `maxwellgp`
 
