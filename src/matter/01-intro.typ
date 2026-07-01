@@ -28,7 +28,7 @@ never violate the law it is meant to obey, regardless of the data. When
 the governing law is known exactly, strong enforcement is therefore preferable.
 
 Among ML models, the *Gaussian process (GP)* is particularly well suited to
-strong enforcement. A GP @rasmussen is a probabilistic model over functions that returns
+strong enforcement. A GP #hl[(@rasmussen[Ch. 2])] is a probabilistic model over functions that returns
 a full posterior distribution instead of just a point estimate. This enables
 *uncertainty quantification*: every prediction carries an estimate of its own reliability.
 If the GP prior is built so that its samples satisfy a PDE exactly, the model is
@@ -56,7 +56,8 @@ reference benchmark does not. This thesis provides that benchmark.
 == Cavity Scattering Benchmark
 
 As a benchmark we use an *interior electromagnetic scattering problem* in
-a cavity with *perfectly electrically conducting (PEC)* boundaries. *Dipole
+a cavity with *perfectly electrically conducting (PEC)* boundaries, #hl[a setup
+we adapt from the cavity-scattering problem of @cavity.] *Dipole
 sources* placed inside the cavity act as transmitters, exciting a field. It
 scatters off the PEC boundary, reflects back into the interior, and is measured
 at receivers. This defines a *reaction operator* that maps the dipole
@@ -72,7 +73,7 @@ Maxwell EPGP library *`maxwellgp`* from the ongoing work @felix.
 For comparison, we compute the reaction operator in a second, independent
 way, with a *boundary element method (BEM)* built on a *boundary integral
 formulation* of the same underlying boundary value problem. For this we use the
-BEM library *`Bembel`*. The two solvers share only the problem setup and nothing
+BEM library *`Bembel`* #hl[@bembel]. The two solvers share only the problem setup and nothing
 of their internal discretizations.
 
 We benchmark on two cavity geometries. For a *spherical cavity*, the scattered

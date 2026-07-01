@@ -96,7 +96,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
 
 ## Front matter & introduction
 
-- [ ] **1. [V2-DO] Bembel needs a reference — abstract (p.1)**
+- [x] **1. [V2-DO] Bembel needs a reference — abstract (p.1)**
   Verbatim: *"Add reference"* (on "Bembel").
   Where: abstract, "…an independent boundary element method (BEM) reference using Bembel."
   Fix: cite Dölz et al. 2020 at first mention of Bembel in the abstract.
@@ -107,14 +107,14 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Fix: state that these are relative errors in the Frobenius norm (as defined in
   eq. 83). Make the norm explicit in the abstract sentence.
 
-- [ ] **3. [V2-DO] Cite the source paper for the cavity-scattering idea (p.4)**
+- [x] **3. [V2-DO] Cite the source paper for the cavity-scattering idea (p.4)**
   Verbatim: *"It might be good to add / cite the paper from which this idea was
   borrowed, to provide the context of the approach."*
   Where: §1.2, cavity scattering benchmark description.
   Fix: cite Zeng et al. 2011 explicitly as the origin of the cavity-scattering
   setup in the intro paragraph (currently only cited later in §2.2).
 
-- [ ] **4. [V2-DO] Bembel citation in §1.2 (p.4)**
+- [x] **4. [V2-DO] Bembel citation in §1.2 (p.4)**
   Verbatim: *"Add citation."* (on "Bembel").
   Where: §1.2, "…we use the BEM library Bembel."
   Fix: cite Dölz et al. 2020 here too.
@@ -138,7 +138,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   This is a throughout-the-document convention — apply globally, not just here.
   (Can fold into the copyedit cluster if you prefer, but it is document-wide.)
 
-- [ ] **7. [V2-DO] Standard EM reference + define quantities (p.5)**
+- [x] **7. [V2-DO] Standard EM reference + define quantities (p.5)**
   Verbatim: *"Please add a standard reference, such as
   https://en.wikipedia.org/wiki/Classical_Electrodynamics_(book) and mention that
   the definitions of all quantities that occur in (1)-(2) can be found there. Make
@@ -181,7 +181,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Where: §2.2.1, charge/current source description.
   Fix: insert "with density" where marked. → copyedit cluster.
 
-- [ ] **13. [V2-DO] Citation for dyadic Green's function form (p.6)**
+- [x] **13. [V2-DO] Citation for dyadic Green's function form (p.6)**
   Verbatim: *"Requires citation."* (on "is given by", eq. 15 explicit form)
   Where: §2.2.1, explicit form of G.
   Fix: cite a source for the closed-form dyadic Green's function (Tai 1994, or
@@ -192,7 +192,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Where: §2.2 / §2.3 domain and polarization descriptions.
   Fix: insert as marked. → copyedit cluster.
 
-- [ ] **15. [V2-DO] Specific book references throughout (p.7) — GLOBAL RULE**
+- [x] **15. [V2-DO] Specific book references throughout (p.7) — GLOBAL RULE**
   Verbatim: *"Whenever you cite a book, please provide a more specific reference,
   such as equation, section, page, etc. Can you please check this throughout?"*
   Where: on "(Colton and Kress 2019)", but applies document-wide.
@@ -223,7 +223,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   fixed reference vector. NOTE this connects to the basis-rotation question
   (items 24, 26): the frame has a residual rotational freedom about the normal.
 
-- [ ] **19. [V2-DO] Specific reference for Tai 1994 analytic solution (p.10)**
+- [x] **19. [V2-DO] Specific reference for Tai 1994 analytic solution (p.10)**
   Verbatim: *"See the general remark above: please provide a more detailed reference."*
   Where: §2.3.2, "We refer to (Tai 1994) for the full derivation…"
   Fix: give specific section/equation in Tai for the vector-spherical-harmonic
@@ -331,7 +331,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   cosmetic (it's a correctness hedge) but a one-word fix. Can go in copyedit cluster
   or its own tiny commit.
 
-- [ ] **30. [V2-DO] Reference for Galerkin double-integral form (p.17)**
+- [x] **30. [V2-DO] Reference for Galerkin double-integral form (p.17)**
   Verbatim: *"It would be good to add a specific reference here, e.g., from the
   papers of Ralf Hiptmair."*
   Where: §3.2.3, integration-by-parts reduction to double surface integral, eq. (82).
@@ -340,7 +340,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
 
 ## Chapter 4 — Results (spherical cavity)
 
-- [ ] **31. [V2-DO] Reference for Frobenius-bounds-operator-norm (p.18)**
+- [x] **31. [V2-DO] Reference for Frobenius-bounds-operator-norm (p.18)**
   Verbatim: *"Very good. Please add a reference for this result."*
   Where: §4 preamble, ‖T‖_op ≤ ‖T‖_F, eq. (84).
   Fix: cite a standard matrix-analysis reference (e.g. Horn & Johnson) for the norm
@@ -482,7 +482,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
 
 ## Chapter 5 — Outlook
 
-- [ ] **45. [V2-DO] Reference for Lebedev quadrature (p.30)**
+- [x] **45. [V2-DO] Reference for Lebedev quadrature (p.30)**
   Verbatim: *"Please add a reference."* (on "Lebedev quadrature")
   Where: §5.3 Future Work.
   Fix: cite Lebedev's quadrature (e.g. Lebedev & Laikov 1999).

@@ -41,10 +41,10 @@
     excite a field that is measured back on the same sphere, defining a reaction
     operator from dipole excitations to field responses. We reconstruct this
     operator with the EPGP and compare it against an independent boundary
-    element method (BEM) reference using Bembel. We investigate two cavity geometries.
+    element method (BEM) reference using Bembel #hl[@bembel]. We investigate two cavity geometries.
     On the spherical cavity, where the reaction operator is available in closed form,
-    both solvers match it to between $10^(-10)$ and $10^(-12)$. On the ellipsoidal cavity, which admits no analytic solution, the
-    EPGP agrees with the BEM reference to about $10^(-8)$. This establishes the
+    both solvers match it to #hl[a relative error, in the Frobenius norm, between] $10^(-10)$ and $10^(-12)$. On the ellipsoidal cavity, which admits no analytic solution, the
+    EPGP agrees with the BEM reference to #hl[a relative Frobenius-norm error of] about $10^(-8)$. This establishes the
     EPGP as an accurate, Maxwell-consistent solver for the interior cavity
     problem and certifies the reaction operator as a robust reference benchmark.
     We further study convergence, the accuracy--runtime trade-off, and
