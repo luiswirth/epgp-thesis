@@ -68,7 +68,7 @@ That the uncertainty is largest at the wall may look backwards, since the wall i
 
 === EPGP Operator
 
-Having inspected the field, we turn to the reaction operator itself. @fig:sphere-operator shows its magnitude alongside the posterior uncertainty. The left panel is a heatmap of the magnitude $|amat(T)|$, a $64 times 64$ matrix over receiver $i$ and transmitter $j$. The $64$ rows and columns are $32$ surface points on $Lambda$, each carrying two tangential polarizations, so consecutive index pairs share a $Lambda$ point. The largest entries lie along the diagonal, #hl[consistent with each dipole coupling most strongly to itself and its near neighbours]. The right panel is a heatmap of the per-receiver posterior standard deviation $sigma_i = sqrt(amat(Sigma)_(i i))$, which depends on the receiver but not the transmitter.
+Having inspected the field, we turn to the reaction operator itself. @fig:sphere-operator shows its magnitude alongside the posterior uncertainty. The left panel is a heatmap of the magnitude $|amat(T)|$, a $64 times 64$ matrix over receiver $i$ and transmitter $j$. The $64$ rows and columns #hl[correspond to the] $32$ surface points on $Lambda$, each carrying two tangential polarizations, so consecutive index pairs #hl[share a point on $Lambda$]. The largest entries lie along the diagonal, #hl[consistent with each dipole coupling most strongly to itself and its near neighbours]. The right panel is a heatmap of the per-receiver posterior standard deviation $sigma_i = sqrt(amat(Sigma)_(i i))$, which depends on the receiver but not the transmitter.
 
 This is because the posterior covariance is fixed only by where we condition and where we evaluate, not by the measured values. We always condition at the same boundary points for every transmitter, and only the boundary values change, so all transmitters share the same covariance. The receiver, by contrast, is the evaluation point, so the uncertainty can in general vary from receiver to receiver. On the sphere, symmetry makes all receivers equivalent, so here $sigma$ is uniform across the panel.
 
@@ -205,7 +205,7 @@ Together with the independent certification of each solver on the analytic spher
 
 ==== Accuracy--Runtime Trade-off
 
-All runs were carried out on the Euler cluster, each on a single exclusive AMD EPYC 7742 node with 128 cores, and wall time was recorded per run. For the EPGP the recorded time includes the JAX just-in-time compilation and the Python startup, so it is a conservative measure.
+All runs were carried out on the Euler cluster#hl[#footnote[Euler is the central high-performance computing cluster of ETH Zürich; see #link("https://scicomp.ethz.ch/wiki/Euler")[`scicomp.ethz.ch/wiki/Euler`].]], each on a single exclusive AMD EPYC 7742 node with 128 cores, and wall time was recorded per run. For the EPGP the recorded time includes the JAX just-in-time compilation and the Python startup, so it is a conservative measure.
 
 @fig:ellipse-pareto plots reciprocity error against wall time for both solvers. The faint points are all grid runs and the solid line is each solver's Pareto front. The two fronts have very different shapes. The EPGP front is nearly vertical, between $approx 6$ and $18$ s: its reciprocity error improves by orders of magnitude at almost fixed wall time, because the cost is dominated by the one-off factorization. The BEM front is a staircase that descends only with large increases in wall time, reaching $rho approx 1.4 times 10^(-10)$ at $approx 1600$ s at the finest grid run ($p = 5$, $m = 4$).
 

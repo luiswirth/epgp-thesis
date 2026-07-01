@@ -74,7 +74,9 @@ For comparison, we compute the reaction operator in a second, independent
 way, with a *boundary element method (BEM)* built on a *boundary integral
 formulation* of the same underlying boundary value problem. For this we use the
 BEM library *`Bembel`* #hl[@bembel]. The two solvers share only the problem setup and nothing
-of their internal discretizations.
+of their internal discretizations. #hl[All solver code and the experiment scripts
+are openly available on GitHub (Appendix A), so every result reported here is
+reproducible.]
 
 We benchmark on two cavity geometries. For a *spherical cavity*, the scattered
 field and the reaction operator are available in closed form. This lets us

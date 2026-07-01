@@ -119,7 +119,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Where: §1.2, "…we use the BEM library Bembel."
   Fix: cite Dölz et al. 2020 here too.
 
-- [ ] **5. [V2-DO] Mention code is on GitLab for reproducibility (p.4)**
+- [x] **5. [V2-DO] Mention code is on GitLab for reproducibility (p.4)**
   Verbatim: *"I expect this is available on GitLab. Please do mention this. This
   is important for reproducability."*
   Where: §1.2, near "…we must rely on numerical methods alone. Since both solvers
@@ -315,7 +315,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
 
 ## Chapter 3 — Methods (BEM)
 
-- [ ] **28. [V2-DO] State BEM-is-concise-on-purpose in intro (p.15)**
+- [x] **28. [V2-DO] State BEM-is-concise-on-purpose in intro (p.15)**
   Verbatim: *"You treat the BEM here extremely concisely. This is OK, we agreed on
   it. The reason is that BEM is well established and employed only as reference
   framework. I would make this explicit in the intro paragraph."*
@@ -518,7 +518,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
 
 ## Appendices / declaration
 
-- [ ] **47. [V2-DO] "Euler cluster" needs a gloss/reference (p.26)**
+- [x] **47. [V2-DO] "Euler cluster" needs a gloss/reference (p.26)**
   Verbatim: *"Requires some reference, since this is ETH-internal terminology."*
   Where: §4.2.5, "All runs were carried out on the Euler cluster…"
   Fix: add a footnote/reference identifying Euler as ETH Zürich's HPC cluster (link

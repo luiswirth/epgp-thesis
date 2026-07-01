@@ -199,7 +199,7 @@ The $M = 2 N_Lambda$ transmitters share the same $N_b$ conditioning points and d
 
 == Boundary Element Method
 
-The boundary element method (BEM) is a deterministic, boundary-integral method @colton @buffa. Its ansatz is a single-layer potential, which satisfies Maxwell's equations exactly. It leaves the surface density unknown and enforces the boundary condition by solving the resulting electric field integral equation, yielding a single solution.
+The boundary element method (BEM) is a deterministic, boundary-integral method @colton @buffa. Its ansatz is a single-layer potential, which satisfies Maxwell's equations exactly. It leaves the surface density unknown and enforces the boundary condition by solving the resulting electric field integral equation, yielding a single solution. #hl[The BEM is a well-established method and enters this work only as an independent reference framework; we therefore present it concisely by design, summarizing the formulation rather than developing it.]
 
 === Formulation
 
@@ -261,7 +261,7 @@ This is an electric field integral equation (EFIE) in indirect single-layer form
 As a first-kind Fredholm integral equation, it is inherently ill-conditioned.
 
 
-The electric field solution is obtained by applying the single-layer potential to the density, and the BVP solution operator is then
+The electric field solution is obtained by applying the single-layer potential to the density, and the BVP solution operator is then #hl[formally]
 $
   cal(S) = Psi_"SL" cal(V)^(-1)
 $
