@@ -1,3 +1,6 @@
 .DS_Store
 out/
 *.pdf
+
+# Local V2 working context (Kurz feedback briefing + attachments); not tracked
+.v2-context/
