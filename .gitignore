@@ -2,5 +2,6 @@
 out/
 *.pdf
 
-# Local V2 working context (Kurz feedback briefing + attachments); not tracked
-.v2-context/
+# V2 working context (Kurz feedback briefing + attachments) is tracked so
+# progress state survives across sessions; override the *.pdf rule for it.
+!.v2/**
