@@ -25,7 +25,7 @@ $
 $
 
 We use the Frobenius norm to quantify distance between operators.
-The operator norm is bounded by the Frobenius norm #hl[(@hornjohnson[Sec. 5.6])], so convergence in $epsilon$ implies convergence in the operator norm.
+The operator norm is bounded by the Frobenius norm #hl[(@hornjohnson[p. 370])], so convergence in $epsilon$ implies convergence in the operator norm.
 $
   norm(amat(T))_"op" <= norm(amat(T))_"F"
 $
@@ -57,7 +57,7 @@ The result matches physical expectations. Both the incident and scattered fields
 
 ==== Uncertainty
 
-The mean is paired with a posterior uncertainty, the standard deviation of the field about that mean. Only the scattered field is inferred and thus carries uncertainty. The incident field is exact, so the total field's uncertainty is identical to the scattered field's. @fig:sphere-field-std maps this standard deviation over the same slice. It is small, of order $10^(-3)$, and forms concentric rings that grow from the center toward the wall.
+The mean is paired with a posterior uncertainty, the standard deviation of the field about that mean. Only the scattered field is inferred and thus carries uncertainty. The incident field is exact, so the total field's uncertainty is identical to the scattered field's. @fig:sphere-field-std maps this standard deviation over the same slice. #hl[It is on the order of $10^(-3)$ in the chosen normalization, in which the dipole sources carry unit polarization, so it bears the same physical dimension as the field it quantifies.] It forms concentric rings that grow from the center toward the wall.
 
 That the uncertainty is largest at the wall may look backwards, since the wall is where we condition. The reason is that we condition only on the tangential part of the field. At the wall the tangential part is fixed, while the part pointing straight out of the wall, the normal component, is left free, and that free part stays uncertain. In the interior there is no such free direction: the field equations tie the components together and the plane-wave prior fills in the field from the boundary data, so the uncertainty fades toward the center. The map thus shows how well the boundary data determines the field, not the size of the true reconstruction error.
 

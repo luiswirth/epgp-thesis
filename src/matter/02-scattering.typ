@@ -158,7 +158,7 @@ $
   amat(G)(xv; zv) pv := i/k curl_xv curl_xv (Phi(xv; zv) pv)
 $
 
-Its explicit form is given by #hl[(see @tai[Ch. 2] for the derivation)]
+Its explicit form is given by #hl[(see @tai[Ch. 4] for the derivation)]
 $
   amat(G)(xv; zv) = i k Phi(xv; zv) [(1 + i/(k r) - 1/(k r)^2) amat(I) - (1 + (3 i)/(k r) - 3/(k r)^2) rn rn^transp]
 $
@@ -224,7 +224,7 @@ $
   r(delta_t, delta_r) = cal(R)(Ev^s) = pv_r dot Ev^s (zv_r; delta_t)
 $
 
-Exchanging the two roles leaves the measured response unchanged. This is the Lorentz (Rayleigh--Carson) reciprocity property #hl[(@colton[Ch. 6])], a consequence of the symmetry of the curl--curl Green's operator,
+Exchanging the two roles leaves the measured response unchanged. This is the Lorentz (Rayleigh--Carson) reciprocity property #hl[(@colton[Sec. 6.6])], a consequence of the symmetry of the curl--curl Green's operator,
 $
   r(delta_t, delta_r) = r(delta_r, delta_t)
 $
@@ -380,7 +380,7 @@ Thanks to the spherical symmetry, the interior BVP is separable and hence has a 
 Therefore both scattered field $Ev^s$ and the reaction operator $amat(T)$ have analytic formulas,
 which serve as exact reference solutions to validate both numerical solvers.
 
-We do not re-derive the analytic solution here. We refer to #hl[@tai[Ch. 7]] for the full derivation and record the resulting formulas below.
+We do not re-derive the analytic solution here. We refer to #hl[@tai[Ch. 10]] for the full derivation and record the resulting formulas below.
 
 The interior fields expand in the regular Hansen multipoles, the TM-type $avec(N)_(l m)$ and the TE-type $avec(M)_(l m)$. On a sphere of radius $r$ their tangential traces reduce to the tangential vector spherical harmonics $avec(Psi)_(l m)$ and $avec(Phi)_(l m)$,
 $
