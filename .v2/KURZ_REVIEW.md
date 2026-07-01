@@ -346,7 +346,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Fix: cite a standard matrix-analysis reference (e.g. Horn & Johnson) for the norm
   inequality.
 
-- [ ] **32. [V2-SOFTEN] LIC "field lines" terminology (p.18, p.23 ×2)**
+- [x] **32. [V2-SOFTEN] LIC "field lines" terminology (p.18, p.23 ×2)**
   Verbatim: *"Is it really field lines? In my understanding, LIC produces a texture
   whose streaks follow the local field direction."*
   Where: §4.1.1 and §4.2.1, LIC figure descriptions ("field lines via LIC").
@@ -355,7 +355,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   three occurrences. Terminology correction, not a claim to soften — but same
   mechanical nature.
 
-- [ ] **33. [V2-SOFTEN] ⚠ QUARANTINED (Poynting): energy-flow / standing-wave claim (p.18)**
+- [x] **33. [V2-SOFTEN] ⚠ QUARANTINED (Poynting): energy-flow / standing-wave claim (p.18)**
   Verbatim: *"Hm, this sounds slightly overconfident. To make statements on energy
   flows and standing waves, the Poynting vector should be computed and analyzed /
   plotted."*
@@ -378,7 +378,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   normalization" rather than calling it "small" bare. (b) document σ_n — same fix as
   item 26(3); do it once, reference here. No computation.
 
-- [ ] **35. [V2-SOFTEN] uncertainty-largest-at-wall explanation is speculative (p.19)**
+- [x] **35. [V2-SOFTEN] uncertainty-largest-at-wall explanation is speculative (p.19)**
   Verbatim: *"This is somewhat speculative. I would weaken this: 'A possible
   explanation might be ...' Same with the discussion above regarding the
   interpretation of Fig. 3."*
@@ -419,7 +419,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   ellipsoid against what we have learned / observed with the sphere."*
   Fix: none. Do not touch the structure.
 
-- [ ] **39. [V2-SOFTEN] ⚠ QUARANTINED (uncertainty-vs-normal): lobe explanation (p.24)**
+- [x] **39. [V2-SOFTEN] ⚠ QUARANTINED (uncertainty-vs-normal): lobe explanation (p.24)**
   Verbatim: *"The description of the uncertainty pattern is interesting. However, the
   explanation in terms of the incidence angle and the normal component appears
   speculative. Your interpretation should be supported by an additional numerical
@@ -430,7 +430,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   reading as a possible explanation. The uncertainty-vs-normal-component plot is
   [PAPER] (backlog). Do NOT add the plot in V2.
 
-- [ ] **40. [V2-SOFTEN] near-wall-constraint claim → conjecture (p.24)**
+- [x] **40. [V2-SOFTEN] near-wall-constraint claim → conjecture (p.24)**
   Verbatim: *"'..suggesting that the boundary data constrains receivers close to the
   wall more strongly than those deeper inside the cavity.' The language should
   indicate a possible interpretation rather than a demonstrated mechanism."*
@@ -438,7 +438,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   tightly than deep-interior ones."
   Fix: adopt Kurz's exact suggested wording ("…suggesting that…"). Direct swap.
 
-- [ ] **41. [V2-DO] ⚠ cheap re-plot ALLOWED: semilog convergence regimes (p.20-context / Fig 6)**
+- [x] **41. [V2-DO] ⚠ cheap re-plot ALLOWED: semilog convergence regimes (p.20-context / Fig 6)**
   Verbatim: *"This analysis very clearly illustrates the distinction between Bayesian
   uncertainty and numerical approximation error. --- Maybe write: 'The figure exhibits
   a crossover between two error regimes. For small Ns, the error is dominated by
@@ -462,7 +462,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Fix: specify the norm (relative Frobenius) for each match/agreement figure. Same
   underlying fix as item 2 — do consistently.
 
-- [ ] **43. [V2-SOFTEN] EPGP-faster-than-BEM caveat (p.29)**
+- [x] **43. [V2-SOFTEN] EPGP-faster-than-BEM caveat (p.29)**
   Verbatim: *"Great result, however - following our discussion - to be taken with a
   grain of salt, since we didn't consider fast BEM. We have to think about how to
   best present such kind of finding in the paper."*
@@ -472,7 +472,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   no fast multipole). Ensure the Summary's speed claim carries a pointer to that
   caveat / softens accordingly. The "how to present in the paper" part is [PAPER].
 
-- [ ] **44. [V2-DO] antisymmetric-part remark deserves elaboration (p.29)**
+- [x] **44. [V2-DO] antisymmetric-part remark deserves elaboration (p.29)**
   Verbatim: *"This is interesting and deserved more elaboration."*
   Where: §5.2 Limitations, "…since it constrains only the antisymmetric part of the
   error."
@@ -487,7 +487,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Where: §5.3 Future Work.
   Fix: cite Lebedev's quadrature (e.g. Lebedev & Laikov 1999).
 
-- [ ] **46. [V2-DO/PAPER split] ⚠ SUBSTANTIVE: Outlook UQ box — 4 points (p.30)**
+- [x] **46. [V2-DO/PAPER split] ⚠ SUBSTANTIVE: Outlook UQ box — 4 points (p.30)**
   Verbatim: *"This paragraph contains several interesting aspects: 1. Very important
   observation: the posterior variance does not inform us about the reconstruction
   error. This error does not disappear by conditioning on more data. 2. The optimizer

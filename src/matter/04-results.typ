@@ -41,9 +41,9 @@ We begin with a qualitative look at the EPGP solution for a single transmitter d
 
 ==== Mean
 
-@fig:sphere-field shows the posterior mean field. The top row is the real part of the $x$-component as a heatmap, the bottom row the field lines via line-integral convolution (LIC). The three columns are the incident, scattered, and total field. The incident field is the dipole near field, sharply localized at the source. Scattering off the wall produces the scattered field, and together they form the total field.
+@fig:sphere-field shows the posterior mean field. The top row is the real part of the $x$-component as a heatmap, the bottom row #hl[a line-integral-convolution (LIC) texture whose streaks follow the local field direction]. The three columns are the incident, scattered, and total field. The incident field is the dipole near field, sharply localized at the source. Scattering off the wall produces the scattered field, and together they form the total field.
 
-The result matches physical expectations. Both the incident and scattered fields are traveling waves carrying energy, but their energy flows cancel, so the total field is a pure standing wave. The spherical symmetry of the cavity is clearly visible: the scattered wavefronts are concentric and the LIC field lines form smooth rings.
+The figure matches physical expectations. The scattered wavefronts are concentric and the LIC texture forms smooth rings, and the spherical symmetry of the cavity is clearly visible. #hl[This ringlike pattern is consistent with a standing-wave interpretation, in which the incident and scattered contributions are traveling waves whose energy flows largely cancel; we do not compute the Poynting vector here, so we present this as an interpretation rather than a demonstrated fact.]
 
 #figure(
   grid(
@@ -59,7 +59,7 @@ The result matches physical expectations. Both the incident and scattered fields
 
 The mean is paired with a posterior uncertainty, the standard deviation of the field about that mean. Only the scattered field is inferred and thus carries uncertainty. The incident field is exact, so the total field's uncertainty is identical to the scattered field's. @fig:sphere-field-std maps this standard deviation over the same slice. #hl[It is on the order of $10^(-3)$ in the chosen normalization, in which the dipole sources carry unit polarization, so it bears the same physical dimension as the field it quantifies.] It forms concentric rings that grow from the center toward the wall.
 
-That the uncertainty is largest at the wall may look backwards, since the wall is where we condition. The reason is that we condition only on the tangential part of the field. At the wall the tangential part is fixed, while the part pointing straight out of the wall, the normal component, is left free, and that free part stays uncertain. In the interior there is no such free direction: the field equations tie the components together and the plane-wave prior fills in the field from the boundary data, so the uncertainty fades toward the center. The map thus shows how well the boundary data determines the field, not the size of the true reconstruction error.
+That the uncertainty is largest at the wall may look backwards, since the wall is where we condition. #hl[A possible explanation is that] we condition only on the tangential part of the field. At the wall the tangential part is fixed, while the part pointing straight out of the wall, the normal component, is left free, and #hl[on this reading] that free part stays uncertain. In the interior there is no such free direction: the field equations tie the components together and the plane-wave prior fills in the field from the boundary data, #hl[which would explain why] the uncertainty fades toward the center. The map thus shows how well the boundary data determines the field, not the size of the true reconstruction error.
 
 #figure(
   image("../../res/epgp_sphere_field_std.png", width: 40%),
@@ -68,7 +68,7 @@ That the uncertainty is largest at the wall may look backwards, since the wall i
 
 === EPGP Operator
 
-Having inspected the field, we turn to the reaction operator itself. @fig:sphere-operator shows its magnitude alongside the posterior uncertainty. The left panel is a heatmap of the magnitude $|amat(T)|$, a $64 times 64$ matrix over receiver $i$ and transmitter $j$. The $64$ rows and columns are $32$ surface points on $Lambda$, each carrying two tangential polarizations, so consecutive index pairs share a $Lambda$ point. The largest entries lie along the diagonal, where each dipole couples most strongly to itself and its near neighbours. The right panel is a heatmap of the per-receiver posterior standard deviation $sigma_i = sqrt(amat(Sigma)_(i i))$, which depends on the receiver but not the transmitter.
+Having inspected the field, we turn to the reaction operator itself. @fig:sphere-operator shows its magnitude alongside the posterior uncertainty. The left panel is a heatmap of the magnitude $|amat(T)|$, a $64 times 64$ matrix over receiver $i$ and transmitter $j$. The $64$ rows and columns are $32$ surface points on $Lambda$, each carrying two tangential polarizations, so consecutive index pairs share a $Lambda$ point. The largest entries lie along the diagonal, #hl[consistent with each dipole coupling most strongly to itself and its near neighbours]. The right panel is a heatmap of the per-receiver posterior standard deviation $sigma_i = sqrt(amat(Sigma)_(i i))$, which depends on the receiver but not the transmitter.
 
 This is because the posterior covariance is fixed only by where we condition and where we evaluate, not by the measured values. We always condition at the same boundary points for every transmitter, and only the boundary values change, so all transmitters share the same covariance. The receiver, by contrast, is the evaluation point, so the uncertainty can in general vary from receiver to receiver. On the sphere, symmetry makes all receivers equivalent, so here $sigma$ is uniform across the panel.
 
@@ -79,7 +79,7 @@ This is because the posterior covariance is fixed only by where we condition and
 
 ==== Convergence
 
-We now quantify the operator's accuracy as the resolution grows. @fig:sphere-epgp-conv plots the reference error $epsilon$ against the number of spectral features $N_s$, one curve per boundary-point count $N_b$. For small $N_s$ all curves coincide, so spectral resolution alone limits accuracy. Past $N_s approx 200$ each curve flattens to a floor set by its $N_b$, with the finest curve reaching $epsilon approx 1.3 times 10^(-10)$ at $N_s = 1024$ and $N_b = 8192$.
+We now quantify the operator's accuracy as the resolution grows. @fig:sphere-epgp-conv plots the reference error $epsilon$ against the number of spectral features $N_s$, one curve per boundary-point count $N_b$. #hl[The figure exhibits a crossover between two error regimes. For small $N_s$ all curves coincide: the error is dominated by truncation of the spectral representation and is essentially independent of the number of boundary observations. Once the spectral approximation is sufficiently rich (past $N_s approx 200$), the error becomes limited by the boundary discretization, producing an $N_b$-dependent floor.] The finest curve reaches $epsilon approx 1.3 times 10^(-10)$ at $N_s = 1024$ and $N_b = 8192$.
 
 #figure(
   image("../../res/epgp_sphere_convergence.svg", width: 55%),
@@ -132,7 +132,7 @@ We repeat the qualitative inspection of the previous section, visualizing the EP
 
 ==== Mean
 
-@fig:ellipse-field shows the posterior mean field in the same layout as before: the real part of the $x$-component as a heatmap (top) and the field lines via LIC (bottom), for the incident, scattered, and total field. The broken symmetry is clearly visible. The incident field is the same as before, since it is the same dipole, but the scattered field no longer shows the concentric wavefronts of the sphere. Instead it has a more intricate pattern, stretched along the long axis of the cavity, and the same is seen in the LIC field lines. The total field is again the sum of the two.
+@fig:ellipse-field shows the posterior mean field in the same layout as before: the real part of the $x$-component as a heatmap (top) and #hl[the LIC texture (bottom)], for the incident, scattered, and total field. The broken symmetry is clearly visible. The incident field is the same as before, since it is the same dipole, but the scattered field no longer shows the concentric wavefronts of the sphere. Instead it has a more intricate pattern, stretched along the long axis of the cavity, and the same is seen in #hl[the LIC texture]. The total field is again the sum of the two.
 
 #figure(
   grid(
@@ -146,7 +146,7 @@ We repeat the qualitative inspection of the previous section, visualizing the EP
 
 ==== Uncertainty
 
-@fig:ellipse-field-std maps the posterior uncertainty over the same slice. The same effect is at work, but the broken symmetry makes it richer. The uncertainty is again lowest in the interior and grows toward the wall, where the free normal component carries it, but now it breaks into separate lobes. The lobes sit where the field hits the wall most steeply, so its normal component there is large, while the quiet valleys between them are where the field runs almost along the wall and the tangential conditioning already fixes it. The scale is also an order of magnitude larger than on the sphere, of order $10^(-2)$.
+@fig:ellipse-field-std maps the posterior uncertainty over the same slice. The same effect appears to be at work, but the broken symmetry makes it richer. The uncertainty is again lowest in the interior and grows toward the wall, but now it breaks into separate lobes. #hl[One possible explanation, in line with the tangential-conditioning picture on the sphere, is that the lobes sit where the field would meet the wall most steeply, so that its normal component there is large, while the quiet valleys between them are where the field runs almost along the wall and the tangential conditioning already fixes it. We have not verified this reading against the boundary-normal field component, so we offer it as a conjecture only.] The scale is also an order of magnitude larger than on the sphere, of order $10^(-2)$.
 
 #figure(
   image("../../res/epgp_ellipse_field_std.png", width: 50%),
@@ -155,7 +155,7 @@ We repeat the qualitative inspection of the previous section, visualizing the EP
 
 === EPGP Operator
 
-As on the sphere, @fig:ellipse-operator shows the operator magnitude beside the posterior uncertainty. The magnitude $|amat(T)|$ keeps the same diagonal structure of strong self- and near-coupling. The uncertainty, however, is no longer uniform: the elongated geometry breaks the equivalence of receivers, so $sigma$ now varies from receiver to receiver, visible as the horizontal banding. It grows for receivers deeper inside the cavity, toward the elongated $z$-axis and away from the wall, because the boundary data constrains near-wall receivers more tightly than deep-interior ones.
+As on the sphere, @fig:ellipse-operator shows the operator magnitude beside the posterior uncertainty. The magnitude $|amat(T)|$ keeps the same diagonal structure of strong self- and near-coupling. The uncertainty, however, is no longer uniform: the elongated geometry breaks the equivalence of receivers, so $sigma$ now varies from receiver to receiver, visible as the horizontal banding. It grows for receivers deeper inside the cavity, toward the elongated $z$-axis and away from the wall, #hl[suggesting that the boundary data constrains receivers close to the wall more strongly than those deeper inside the cavity].
 
 #figure(
   image("../../res/ellipse_uq_operator.png", width: 90%),
