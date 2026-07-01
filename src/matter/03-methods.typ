@@ -115,6 +115,8 @@ The posterior mean field is the regularized best fit to the data, tempered by th
 $
   Ev_star (xv) = amat(K)(xv, X_b) (amat(K)_(b b) + sigma_n^2 amat(I))^(-1) hv
 $
+#hl[Here $amat(K)_(b b) := amat(K)(X_b, X_b)$ is the Gram matrix of the kernel
+evaluated at all pairs of the $N_b$ observation points.]
 
 The posterior covariance is the Schur complement of the conditioning block, measuring how underdetermined the field remains after conditioning.
 $
@@ -130,7 +132,7 @@ The posterior of the previous section is exact but not yet computable: the kerne
 
 ==== Finite Spectral Features
 
-We approximate the integral over $V_k$ by a finite sum over $N_s$ spectral directions $kv_j in V_k$, drawn from a Fibonacci sphere, a quasi-uniform low-discrepancy point set.
+We approximate the integral over $V_k$ by a finite sum over $N_s$ spectral directions $kv_j in V_k$, drawn from a Fibonacci sphere #hl[(@eq:fib), a deterministic point set that gives approximately equal spacing between neighboring points while maintaining a nearly uniform surface-area distribution].
 For each direction we pick an orthonormal basis $av_(j 1), av_(j 2)$ of the transverse plane, recovering the projector as an outer-product sum,
 $
   amat(Pi)_(kv_j) = sum_(a = 1)^2 av_(j a) av_(j a)^herm

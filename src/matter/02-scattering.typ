@@ -3,7 +3,7 @@
 
 = Cavity Scattering
 
-We present the interior electromagnetic scattering problem: the governing field equations, the cavity geometry, and the reaction operator that both solvers compute.
+We present the interior electromagnetic scattering problem: the governing field equations, the cavity geometry, and the reaction operator that both solvers compute. #hl[The problem is posed throughout in three-dimensional space $RR^3$.]
 
 == Time-Harmonic Maxwell's Equations
 
@@ -69,8 +69,8 @@ The scattering problem of interest is inspired by @cavity.
 It is an interior problem in a bounded cavity.
 
 The problem is set up as follows:\
-A dipole source $delta_t$ is placed in the interior of a cavity $D$ and acts as a transmitter.
-It radiates an analytically known incident field $Ev^i$. The incident field hits the cavity boundary $partial D$ and is reflected by it, creating an unknown scattered field $Ev^s$. The scattered field is read back by another dipole $delta_r$ acting as the receiver.
+A dipole source $delta_t$ #hl[(subscript $t$ for transmitter)] is placed in the interior of a cavity $D$ and acts as a transmitter.
+It radiates an analytically known incident field $Ev^i$. The incident field hits the cavity boundary $partial D$ and is reflected by it, creating an unknown scattered field $Ev^s$. The scattered field is read back by another dipole $delta_r$ #hl[(subscript $r$ for receiver)] acting as the receiver.
 
 The total field is the superposition of the incident and scattered part,
 $
@@ -131,7 +131,7 @@ The object of study is the mapping from a transmitter dipole to the measured res
 
 Before introducing oscillating dipoles, we first consider the simpler oscillating monopole.
 
-An oscillating monopole $delta^1 = (zv, q)$ is a charge source $rho(xv, t) = q delta_zv exp(-i omega t)$ at a point $zv in D$, with a charge $q in RR$ that gives its strength. The scalar potential it generates is $q Phi$, where $Phi$ is the free-space fundamental solution
+An oscillating monopole $delta^1 = (zv, q)$ is a charge source $rho(xv, t) = q delta_zv exp(-i omega t)$ at a point $zv in D$, with a charge $q in RR$ that gives its strength #hl[and $delta_zv$ the Dirac point mass (unit Dirac delta) centered at $zv$]. The scalar potential it generates is $q Phi$, where $Phi$ is the free-space fundamental solution
 $
   Phi(xv; zv) = 1/(4 pi) exp(i k r)/r
 $
@@ -270,6 +270,9 @@ Reading the scattered field back on $Lambda$ gives the response density $avec(m)
 $
   avec(m) := pi_t^Lambda Ev^s [avec(g)]
 $
+#hl[Here $pi_t^Lambda$ denotes the same tangential projection trace as $pi_t$,
+but taken on the dipole surface $Lambda$ with its own unit normal, so that
+$pi_t^Lambda Ev = Ev - (Ev dot nn_Lambda) nn_Lambda$ at each point of $Lambda$.]
 
 The reaction operator is a linear integral operator, defined as the map from the excitation density to the response density,
 $
@@ -298,7 +301,7 @@ $
 #pagebreak(weak: true)
 ==== Discretization
 
-To compute with $cal(T)$ we discretize it on a finite set of dipoles. Since each tangent space $T_zv Lambda$ is two-dimensional, we need a basis to coordinatize it. We sample $N_Lambda$ points on $Lambda$ and assign each an orthonormal tangent frame ${en_1(zv), en_2(zv)}$, computed from the outward normal via a reference-vector construction. Each point thus carries two dipoles, one per frame vector, for $M = 2 N_Lambda$ in total.
+To compute with $cal(T)$ we discretize it on a finite set of dipoles. Since each tangent space $T_zv Lambda$ is two-dimensional, we need a basis to coordinatize it. We sample $N_Lambda$ points on $Lambda$ and assign each an orthonormal tangent frame ${en_1(zv), en_2(zv)}$, computed from the outward normal via a reference-vector construction. #hl[That is, we fix a global reference vector $avec(c)$, remove its normal component to obtain the first tangent $en_1 prop avec(c) - (avec(c) dot nn) nn$, normalize it, and complete the frame by $en_2 = nn times en_1$; the reference $avec(c)$ is chosen not parallel to $nn$ at any sampled point.] Each point thus carries two dipoles, one per frame vector, for $M = 2 N_Lambda$ in total.
 
 We enumerate the dipoles by a single index $i in {1, ..., M}$, writing $delta_i = (zv_i, pn_i)$ for the dipole with location $zv_i$ and unit polarization $pn_i$. Consecutive pairs share a location, the two polarizations at one point.
 
@@ -321,7 +324,9 @@ $
   Lambda := { xv in RR^3 mid(:) norm(xv) = 1 } subset.eq D
 $
 
-We choose $N_Lambda = 32$ dipole locations using a low-discrepancy quasi-uniform Fibonacci sphere distribution.
+We choose $N_Lambda = 32$ dipole locations using a low-discrepancy quasi-uniform Fibonacci sphere distribution #hl[@gonzalez, a deterministic point set that provides an approximately uniform sampling of the sphere.]
+#hl[Explicitly, with the golden ratio $phi.alt = (1 + sqrt(5)) \/ 2$ and $k_i = i + 1 \/ 2$ for $i = 0, dots, N - 1$, the $N$ points on the unit sphere are]
+#hlb[$ z_i = 1 - (2 k_i) / N, quad theta_i = (2 pi) / phi.alt k_i, quad xv_i = (sqrt(1 - z_i^2) cos theta_i, sqrt(1 - z_i^2) sin theta_i, z_i). $ <eq:fib>]
 Together with the 2 polarizations per point, this gives $M = 2 N_Lambda = 64$ configurations.
 
 There are two cavity geometries: an ellipsoidal cavity and a spherical cavity. The ellipsoidal cavity is the original geometry from @cavity, while the spherical cavity is a new addition that allows for an analytic solution.
@@ -383,7 +388,7 @@ $
   wide
   pi_t avec(M)_(l m) = j_l (k r) avec(Phi)_(l m)
 $
-with the spherical Bessel function $j_l$ and the Riccati--Bessel function $psi_l (x) = x j_l (x)$.
+with the spherical Bessel function $j_l$ and the Riccati--Bessel function $psi_l (x) = x j_l (x)$. #hl[The prime in $psi_l'$ denotes the derivative of $psi_l$ with respect to its argument, $psi_l'(x) = dif / (dif x) (x j_l (x))$, not an operation on the index $l$.]
 
 We expand the incident tangential trace on the cavity wall ($r = R$) in these harmonics,
 $

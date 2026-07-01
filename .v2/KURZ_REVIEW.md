@@ -149,7 +149,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   link is to Jackson), with chapter/section, and state that E, H, D, B, ε, μ etc.
   are defined there. Make the citation specific (not just "Jackson").
 
-- [ ] **8. [V2-DO] Fix problem dimension at the start (p.6)**
+- [x] **8. [V2-DO] Fix problem dimension at the start (p.6)**
   Verbatim: *"In three dimensions! The dimension of the problem should be fixed in
   the beginning."*
   Where: §2.2 / start of Ch. 2.
@@ -166,12 +166,12 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   field. NOTE: this is a physics-clarity point, not just wording — make sure the
   reaction-operator definition downstream stays consistent with whatever you state.
 
-- [ ] **10. [V2-DO] Define t/r index notation (p.6)**
+- [x] **10. [V2-DO] Define t/r index notation (p.6)**
   Verbatim: *"Please define index notation 't= transmitter, r= receiver'"*
   Where: §2.2, first use of δt and δr.
   Fix: define subscripts t and r at first use.
 
-- [ ] **11. [V2-DO] Define qδ_z (p.6)**
+- [x] **11. [V2-DO] Define qδ_z (p.6)**
   Verbatim: *"Please define this."* (on "qδz")
   Where: §2.2.1, oscillating monopole.
   Fix: define the point-charge source term (q the charge, δz the Dirac mass at z).
@@ -200,14 +200,14 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Jackson once added) and add specific section/equation/page. This is a sweep, not
   a single edit. Treat as its own item/commit given its scope.
 
-- [ ] **16. [V2-DO] Define π_t^Λ notation (p.8)**
+- [x] **16. [V2-DO] Define π_t^Λ notation (p.8)**
   Verbatim: *"Define this notation."* (on the tangential projection trace on Λ)
   Where: §2.2.4.
   Fix: define the Λ-superscripted tangential trace explicitly where it first appears.
 
 ## Chapter 2 geometry & analytic solution
 
-- [ ] **17. [V2-DO] Reference + explicit formula for Fibonacci sphere (p.9)**
+- [x] **17. [V2-DO] Reference + explicit formula for Fibonacci sphere (p.9)**
   Verbatim: *"1. Requires a reference. 2. You might want to give the actual formula
   for these points. See box below."* Plus caret: *", which provides an approximately
   uniform sampling of the sphere"*.
@@ -216,7 +216,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   point formula (Kurz asks for it in two places — here and p.13, item 25). Insert
   the caret gloss. Do the formula once and cross-reference.
 
-- [ ] **18. [V2-DO] Define "reference-vector construction" (p.9)**
+- [x] **18. [V2-DO] Define "reference-vector construction" (p.9)**
   Verbatim: *"What is meant by 'reference-vector construction'?"*
   Where: §2.3 discretization, tangent frame construction.
   Fix: explain how the orthonormal tangent frame is built from the normal via a
@@ -229,7 +229,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Fix: give specific section/equation in Tai for the vector-spherical-harmonic
   cavity solution.
 
-- [ ] **20. [V2-DO] Define ψ_l′ (prime on index l) (p.10)**
+- [x] **20. [V2-DO] Define ψ_l′ (prime on index l) (p.10)**
   Verbatim: *"What is meant by index l \prime? Please define!"*
   Where: §2.3.2, Riccati–Bessel derivative in eq. (37).
   Fix: clarify that the prime denotes the derivative of the Riccati–Bessel function
@@ -251,12 +251,12 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   even though the full treatment is paper scope. Adopting Kurz's weight-space rewrite
   (Appendix W below) makes W visible naturally.
 
-- [ ] **22. [V2-DO] Define K_bb (p.13)**
+- [x] **22. [V2-DO] Define K_bb (p.13)**
   Verbatim: *"Define this: K_bb := K(X_b,X_b)"*
   Where: §3.1.3, posterior mean/covariance eqs (59)–(60).
   Fix: define K_bb := K(X_b, X_b) at first use.
 
-- [ ] **23. [V2-DO] Fibonacci sphere plain-language gloss + explicit points (p.13)**
+- [x] **23. [V2-DO] Fibonacci sphere plain-language gloss + explicit points (p.13)**
   Verbatim: *"1. May be something like: '...drawn from a Fibonacci sphere, a
   deterministic point set that provides approximately equal spacing between
   neighboring points while maintaining a nearly uniform surface-area distribution.'
