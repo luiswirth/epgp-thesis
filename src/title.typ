@@ -1,4 +1,5 @@
 #import "setup.typ": *
+#import "setup-math.typ": hl, hlx, hlb
 
 #show heading: none
 #heading()[Title]

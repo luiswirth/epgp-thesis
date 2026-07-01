@@ -1,3 +1,22 @@
+// ---------------------------------------------------------------------------
+// V2 review highlighting for Kurz feedback.
+// All content added/changed in V2 is wrapped in one of the three helpers below
+// so it shows up marked in the review build. To produce a clean final version,
+// flip `review` to false (identity pass, highlights vanish) or strip the
+// `#hl[`, `#hlx[`, `#hlb[` wrappers by text replace.
+//   hl   prose runs (wraps across lines; text only)
+//   hlx  short inline insertions that contain math (box fill covers glyphs)
+//   hlb  whole new display equations / block content
+#let review = true
+#let hl-fill = rgb("#fff29a")
+#let hl(body) = if review { highlight(fill: hl-fill, body) } else { body }
+#let hlx(body) = if review {
+  box(fill: hl-fill, outset: (y: 3pt), inset: (x: 1pt), body)
+} else { body }
+#let hlb(body) = if review {
+  block(fill: hl-fill, inset: (x: 6pt, y: 5pt), radius: 3pt, width: 100%, body)
+} else { body }
+
 #let math-template(doc) = {
   show math.equation: set text(font: "New Computer Modern Math")
   

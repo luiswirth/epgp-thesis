@@ -1,3 +1,5 @@
+#import "../setup-math.typ": *
+
 = Introduction
 
 == Context and Motivation
