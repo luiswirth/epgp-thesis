@@ -176,7 +176,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Where: §2.2.1, oscillating monopole.
   Fix: define the point-charge source term (q the charge, δz the Dirac mass at z).
 
-- [ ] **12. [COPYEDIT] "with density" insertions (p.6)**
+- [x] **12. [COPYEDIT] "with density" insertions (p.6)**
   Verbatim (caret ×2): *" with density"*
   Where: §2.2.1, charge/current source description.
   Fix: insert "with density" where marked. → copyedit cluster.
@@ -323,7 +323,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Fix: add a sentence stating BEM is presented concisely by design, as a
   well-established method used only as an independent reference.
 
-- [ ] **29. [COPYEDIT→borderline] insert "formally" (p.16)**
+- [x] **29. [COPYEDIT→borderline] insert "formally" (p.16)**
   Verbatim: *"' formally'. I would write 'formally' since you did not discuss
   existence of the inverse etc."*
   Where: §3.2.1, BVP solution operator S = Ψ_SL V⁻¹ (eq. 74).
@@ -390,7 +390,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   the size of the true reconstruction error" is GOOD (he highlighted it approvingly
   elsewhere) — keep that; soften only the mechanism explanation.
 
-- [ ] **36. [V2-COPYEDITS] inline caret/strikeout cluster — SINGLE COMMIT**
+- [x] **36. [V2-COPYEDITS] inline caret/strikeout cluster — SINGLE COMMIT**
   Bundle these trivial inline fixes into one commit `v2(copyedit): ...`:
     - p.12: "carry" → "carrying" (strikeout+caret).
     - p.20: strike "are"; "consecutive index pairs **correspond to the**…" (caret "correspond to the").

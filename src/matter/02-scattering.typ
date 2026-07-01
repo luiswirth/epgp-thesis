@@ -131,7 +131,7 @@ The object of study is the mapping from a transmitter dipole to the measured res
 
 Before introducing oscillating dipoles, we first consider the simpler oscillating monopole.
 
-An oscillating monopole $delta^1 = (zv, q)$ is a charge source $rho(xv, t) = q delta_zv exp(-i omega t)$ at a point $zv in D$, with a charge $q in RR$ that gives its strength #hl[and $delta_zv$ the Dirac point mass (unit Dirac delta) centered at $zv$]. The scalar potential it generates is $q Phi$, where $Phi$ is the free-space fundamental solution
+An oscillating monopole $delta^1 = (zv, q)$ is a charge source #hl[with density] $rho(xv, t) = q delta_zv exp(-i omega t)$ at a point $zv in D$, with a charge $q in RR$ that gives its strength #hl[and $delta_zv$ the Dirac point mass (unit Dirac delta) centered at $zv$]. The scalar potential it generates is $q Phi$, where $Phi$ is the free-space fundamental solution
 $
   Phi(xv; zv) = 1/(4 pi) exp(i k r)/r
 $
@@ -141,7 +141,7 @@ $
 $
 Here $r := norm(rv)$ is the distance to the source, with separation vector $rv := xv - zv$.
 
-An oscillating Hertzian dipole $delta^2 = (zv, pv)$ is a current source $Jv(xv, t) = pv delta_zv exp(-i omega t)$ at a point $zv in D$, together with a polarization $pv in RR^3$ that gives the dipole's orientation and strength.
+An oscillating Hertzian dipole $delta^2 = (zv, pv)$ is a current source #hl[with density] $Jv(xv, t) = pv delta_zv exp(-i omega t)$ at a point $zv in D$, together with a polarization $pv in RR^3$ that gives the dipole's orientation and strength.
 
 The electric field $Ev^i$ radiated by a dipole is obtained by applying the curl--curl operator to the Hertz vector potential $Phi pv$
 $
