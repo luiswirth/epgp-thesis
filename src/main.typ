@@ -17,6 +17,7 @@
 #appendix-style[
   #include "appendix/src-impl.typ"
   #include "appendix/src-doc.typ"
+  #include "appendix/ai-usage.typ"
 ]
 
 #postface-style[

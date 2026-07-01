@@ -531,7 +531,7 @@ Each item: verbatim Kurz comment → where it lands → the fix.
   Fix: no thesis change. Personal note — Kurz wants to chat about Typst. Log as a
   to-discuss, not a revision.
 
-- [ ] **49. [V2-DO] AI-usage appendix (p.34)**
+- [x] **49. [V2-DO] AI-usage appendix (p.34)**
   Verbatim: *"Absolutely fine with me. I recommended other students to include a
   small Appendix, to make explicit the exact usage of Generative AI."*
   Where: Declaration of Originality.
